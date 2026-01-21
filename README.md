@@ -40,46 +40,6 @@ A web application for creating and managing GURPS realm lists, spaceship sheets,
 - **Database**: TBD (for Phase 3)
 - **Authentication**: TBD (for Phase 3)
 
-## Project Structure
-
-```
-├── app.vue                 # Main app component
-├── nuxt.config.ts          # Nuxt configuration
-├── tsconfig.json           # TypeScript configuration
-├── package.json            # Dependencies and scripts
-├── pnpm-lock.yaml          # Package lock file
-├── README.md               # This file
-├── app/                    # App directory (Nuxt 4)
-│   ├── app.vue                 # Main app component
-│   ├── layouts/                # Page layouts
-│   │   └── default.vue
-│   └── pages/                  # Application pages
-│       ├── index.vue
-│       ├── calculator/
-│       │   └── index.vue
-│       ├── realms/
-│       │   └── index.vue
-│       └── spaceships/
-│           └── index.vue│   └── server/                 # Server-side code
-│       └── api/                # API endpoints
-│           └── magic/
-│               └── calculate.post.ts├── components/             # Reusable components
-│   ├── ui/                 # UI components
-│   ├── RitualMagicCalculator.vue
-│   ├── RealmList.vue
-│   └── SpaceshipSheet.vue
-├── composables/            # Reusable logic
-│   ├── useMagicCalculator.ts
-│   ├── useRealms.ts
-│   └── useSpaceships.ts
-├── types/                  # TypeScript types
-│   ├── magic.ts
-│   ├── realm.ts
-│   └── spaceship.ts
-└── utils/                  # Utility functions
-    └── calculations.ts
-```
-
 ## Setup
 
 ```
