@@ -114,7 +114,7 @@ export const useMagicCalculator = () => {
       skill,
       rolls,
       totalEnergy,
-      success: success && !criticalFailure,
+      success: !criticalFailure,
       quirks,
       criticalFailure
     }
