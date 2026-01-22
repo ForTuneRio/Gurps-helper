@@ -1,12 +1,3 @@
-export interface CalculationResult {
-  ritual: string
-  path: string
-  basePower: number
-  totalModifiers: number
-  finalResult: number
-  successChance: number
-}
-
 export interface RitualForm {
   ritual: string
   path: string
