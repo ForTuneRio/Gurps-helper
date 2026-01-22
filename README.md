@@ -5,7 +5,7 @@ A web application for creating and managing GURPS realm lists, spaceship sheets,
 ## Development Plan
 
 ### Phase 1: Raw Project with Basic UI and Local File Saving
-- Set up basic Nuxt.js project structure
++ Set up basic Nuxt.js project structure
 - Create default layouts, pages, components, and API endpoints
 - Implement basic UI for realm and spaceship management
 - Add functionality to save/load data locally (using localStorage or file downloads)
@@ -36,7 +36,7 @@ A web application for creating and managing GURPS realm lists, spaceship sheets,
 
 - **Framework**: Nuxt.js 4
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS (planned)
+- **Styling**: Tailwind CSS
 - **Database**: TBD (for Phase 3)
 - **Authentication**: TBD (for Phase 3)
 
