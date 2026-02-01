@@ -41,17 +41,26 @@
 
       <!-- Government -->
       <div class="border-b pb-4">
-        <h5 class="font-semibold mb-3 text-green-700">Government & Economy</h5>
+        <h5 class="font-semibold mb-3 text-green-700">Government</h5>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
           <p><strong>Type:</strong> {{ realm.government.type }}</p>
           <p><strong>Economy:</strong> {{ realm.government.economyType }}</p>
-          <p><strong>Tech Level:</strong> {{ realm.government.techLevel }}</p>
+          <p><strong>RTM:</strong> {{ realm.government.reactionTimeModifier }}</p>
           <p><strong>Control Rating:</strong> {{ realm.government.controlRating }}</p>
-          <p><strong>Conformity:</strong> {{ realm.government.conformityRating }}</p>
-          <p><strong>Openness:</strong> {{ realm.government.openessRating }}</p>
-          <p><strong>Education:</strong> {{ realm.government.educationRating }}</p>
-          <p><strong>Infrastructure:</strong> {{ realm.government.infrastructureRating }}</p>
-          <p><strong>Citizen Loyalty:</strong> {{ realm.government.citizenLoyalty }} ({{ realm.government.citizenLoyaltyValue }})</p>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="border-b pb-4">
+        <h5 class="font-semibold mb-3 text-green-700">Details</h5>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+          <p><strong>Tech Level:</strong> {{ realm.details.techLevel }}</p>
+          <p><strong>Conformity:</strong> {{ realm.details.conformityRating }}</p>
+          <p><strong>Openness:</strong> {{ realm.details.openessRating }}</p>
+          <p><strong>Education:</strong> {{ realm.details.educationRating }}</p>
+          <p><strong>Infrastructure:</strong> {{ realm.details.infrastructureRating }}</p>
+          <p><strong>Citizen Loyalty:</strong> {{ realm.details.citizenLoyalty }} ({{ realm.details.citizenLoyaltyValue }})</p>
+          <p v-if="realm.details.useDescription" class="md:col-span-3"><strong>Description:</strong> {{ realm.details.description }}</p>
         </div>
       </div>
 
@@ -81,22 +90,41 @@
             <strong>Wartime:</strong> {{ realm.military.wartime ? 'YES' : 'No' }}
           </p>
           <p><strong>Budget Factor:</strong> {{ realm.military.militaryBudgetFactor }}%</p>
-          <p><strong>Resources:</strong> {{ realm.military.militaryResources }}</p>
-          <p><strong>Agriculture (Animal):</strong> {{ realm.military.agricultureAnimal }}</p>
-          <p><strong>Agriculture (Farming):</strong> {{ realm.military.agricultureFarming }}</p>
-          <p><strong>Luxury/Precious:</strong> {{ realm.military.luxuryPrecious }}</p>
+          <p><strong>Military Resources:</strong> {{ realm.military.militaryResources.toLocaleString() }}</p>
+        </div>
+      </div>
+
+      <!-- Enhancements -->
+      <div v-if="realm.enhancements.length > 0" class="border-b pb-4">
+        <h5 class="font-semibold mb-3 text-green-700">Enhancements ({{ realm.enhancementsSum }}%)</h5>
+        <div class="space-y-2">
+          <div v-for="enhancement in realm.enhancements" :key="enhancement.id" class="text-sm bg-green-50 p-2 rounded">
+            <p><strong>{{ enhancement.name }}</strong> - Level {{ enhancement.level }} ({{ enhancement.totalCost }}%)</p>
+            <p class="text-gray-600 text-xs">{{ enhancement.details }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Limitations -->
+      <div v-if="realm.limitations.length > 0" class="border-b pb-4">
+        <h5 class="font-semibold mb-3 text-green-700">Limitations ({{ realm.limitationsSum }}%)</h5>
+        <div class="space-y-2">
+          <div v-for="limitation in realm.limitations" :key="limitation.id" class="text-sm bg-red-50 p-2 rounded">
+            <p><strong>{{ limitation.name }}</strong> - Level {{ limitation.level }} ({{ limitation.totalCost }}%)</p>
+            <p class="text-gray-600 text-xs">{{ limitation.details }}</p>
+          </div>
         </div>
       </div>
 
       <!-- Resources -->
       <div>
-        <h5 class="font-semibold mb-3 text-green-700">Resources</h5>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-          <p><strong>Point per Point:</strong> {{ realm.resources.pointPerPoint }}</p>
-          <p><strong>Natural Resources:</strong> {{ realm.resources.naturalResources }}</p>
-          <p><strong>Workforce (Physical):</strong> {{ realm.resources.workforcePhysical }}</p>
-          <p><strong>Workforce (Mental):</strong> {{ realm.resources.workforceMental }}</p>
+        <h5 class="font-semibold mb-3 text-green-700">Resources (Cost: {{ realm.resources.resourcePointCost }})</h5>
+        <div v-if="realm.resources.resourcePoints.length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+          <div v-for="rp in realm.resources.resourcePoints" :key="rp.id" class="bg-gray-100 p-2 rounded">
+            <p><strong>{{ rp.name }}:</strong> {{ rp.value }}</p>
+          </div>
         </div>
+        <p v-else class="text-sm text-gray-500">No resource points defined</p>
       </div>
     </div>
 
@@ -120,6 +148,6 @@
 <script setup lang="ts">
 import type { Realm } from '~/types/realm'
 
-defineProps<{ realm: Realm }>()
+defineProps<{ realm: Realm | Readonly<Realm> }>()
 defineEmits<{ edit: []; delete: [] }>()
 </script>

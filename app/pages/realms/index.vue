@@ -24,6 +24,12 @@
           @change="handleImport"
         />
       </label>
+      <button
+        @click="clearStorage"
+        class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+      >
+        🗑️ Clear Storage
+      </button>
       <div v-if="importMessage" :class="['px-4 py-2 rounded font-semibold', importMessage.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700']">
         {{ importMessage.text }}
       </div>
@@ -74,7 +80,9 @@ const fileInput = ref<HTMLInputElement>()
 const importMessage = ref<{ type: 'success' | 'error'; text: string } | null>(null)
 
 onMounted(() => {
+  console.log('Realms page mounted, loading realms...')
   loadRealms()
+  console.log('After loadRealms, realms count:', realms.value.length)
 })
 
 const closeBuilder = () => {
@@ -118,6 +126,14 @@ const editRealm = (realm: Readonly<Realm>) => {
 const deleteRealmFn = (id: string) => {
   if (confirm('Are you sure you want to delete this realm?')) {
     deleteRealm(id)
+  }
+}
+
+const clearStorage = () => {
+  if (confirm('Are you sure you want to clear all realm data? This cannot be undone.')) {
+    localStorage.removeItem('realms')
+    loadRealms()
+    console.log('Storage cleared')
   }
 }
 </script>
