@@ -73,6 +73,12 @@ import { ref, onMounted } from 'vue'
 import { useRealms } from '~/composables/useRealms'
 import type { Realm } from '~/types/realm'
 
+const user = useSupabaseUser()
+
+if (!user.value) {
+  await navigateTo('/auth/login')
+}
+
 const { realms, loadRealms, deleteRealm, exportRealms: exportRealmsComposable, importRealms: importRealmsComposable } = useRealms()
 const showBuilder = ref(false)
 const editingRealmId = ref<string>()

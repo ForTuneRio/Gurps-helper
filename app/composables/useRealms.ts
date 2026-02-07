@@ -1,61 +1,151 @@
 import { ref, readonly } from 'vue'
-import type { Realm, Surroundings, Government, Details, FundsAndPeople, Military, Resources, EnhancementItem, LimitationItem, ResourcePoint } from '~/types/realm'
+import type { Realm, ResourcePoint, EnhancementItem, LimitationItem } from '~/types/realm'
+import type { DbRealm } from '~/types/database'
 
 // Global state - shared across all composable instances
 const realms = ref<Realm[]>([])
+const loading = ref(false)
+const error = ref<string | null>(null)
 
 export const useRealms = () => {
-  const loadRealms = () => {
-    const stored = localStorage.getItem('realms')
-    console.log('Loading realms from localStorage:', stored)
-    if (stored) {
-      realms.value = JSON.parse(stored)
+  const supabase = useSupabaseClient()
+  const user = useSupabaseUser()
+
+  /**
+   * Load all realms for the current user from Supabase
+   */
+  const loadRealms = async () => {
+    if (!user.value) {
+      console.log('No user logged in, skipping realm load')
+      realms.value = []
+      return
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const { data, error: fetchError } = await supabase
+        .from('realms')
+        .select('*')
+        .eq('user_id', user.value.id)
+        .order('created_at', { ascending: false })
+
+      if (fetchError) throw fetchError
+
+      // Transform database records to Realm objects
+      realms.value = (data || []).map((dbRealm: DbRealm) => ({
+        ...dbRealm.data,
+        id: dbRealm.id,
+      }))
+
       console.log('Loaded realms:', realms.value.length, 'realms')
-    } else {
-      console.log('No realms found in localStorage')
+    } catch (e: any) {
+      error.value = e.message
+      console.error('Failed to load realms:', e)
+    } finally {
+      loading.value = false
     }
   }
 
-  const saveRealm = (realm: Realm) => {
-    console.log('saveRealm called with:', realm)
-    console.log('Current realms.value before save:', realms.value)
-    
-    // Ensure all data including nested arrays are properly set
-    const realmToSave: Realm = {
-      ...realm,
-      resources: {
-        ...realm.resources,
-        resourcePoints: realm.resources.resourcePoints || []
-      },
-      enhancements: realm.enhancements || [],
-      limitations: realm.limitations || []
+  /**
+   * Save a realm to Supabase (create or update)
+   */
+  const saveRealm = async (realm: Realm) => {
+    if (!user.value) {
+      throw new Error('You must be logged in to save realms')
     }
-    
-    console.log('Realm to save:', realmToSave)
-    
-    const existing = realms.value.findIndex(r => r.id === realmToSave.id)
-    if (existing >= 0) {
-      realms.value[existing] = realmToSave
-      console.log('Updated existing realm at index:', existing, realmToSave.name)
-    } else {
-      realms.value.push(realmToSave)
-      console.log('Added new realm:', realmToSave.name)
+
+    loading.value = true
+    error.value = null
+
+    try {
+      // Ensure all data including nested arrays are properly set
+      const realmToSave: Realm = {
+        ...realm,
+        resources: {
+          ...realm.resources,
+          resourcePoints: realm.resources.resourcePoints || []
+        },
+        enhancements: realm.enhancements || [],
+        limitations: realm.limitations || []
+      }
+
+      // Check if realm exists
+      const existing = realms.value.findIndex(r => r.id === realmToSave.id)
+      
+      if (existing >= 0) {
+        // Update existing realm
+        const { error: updateError } = await supabase
+          .from('realms')
+          .update({
+            name: realmToSave.name,
+            data: realmToSave,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', realmToSave.id)
+          .eq('user_id', user.value.id)
+
+        if (updateError) throw updateError
+        
+        realms.value[existing] = realmToSave
+        console.log('Updated existing realm:', realmToSave.name)
+      } else {
+        // Create new realm
+        const { data, error: insertError } = await supabase
+          .from('realms')
+          .insert({
+            id: realmToSave.id,
+            user_id: user.value.id,
+            name: realmToSave.name,
+            data: realmToSave
+          })
+          .select()
+          .single()
+
+        if (insertError) throw insertError
+        
+        realms.value.unshift(realmToSave)
+        console.log('Created new realm:', realmToSave.name)
+      }
+    } catch (e: any) {
+      error.value = e.message
+      console.error('Failed to save realm:', e)
+      throw e
+    } finally {
+      loading.value = false
     }
-    console.log('Total realms after save:', realms.value.length)
-    console.log('All realms:', realms.value)
-    
-    const jsonToSave = JSON.stringify(realms.value)
-    console.log('JSON to save to localStorage (length):', jsonToSave.length)
-    localStorage.setItem('realms', jsonToSave)
-    
-    // Verify it was saved
-    const verification = localStorage.getItem('realms')
-    console.log('Verification - localStorage now contains (length):', verification?.length)
   }
 
-  const deleteRealm = (id: string) => {
-    realms.value = realms.value.filter(r => r.id !== id)
-    localStorage.setItem('realms', JSON.stringify(realms.value))
+  /**
+   * Delete a realm from Supabase
+   */
+  const deleteRealm = async (id: string) => {
+    if (!user.value) {
+      throw new Error('You must be logged in to delete realms')
+    }
+
+    loading.value = true
+    error.value = null
+
+    try {
+      const { error: deleteError } = await supabase
+        .from('realms')
+        .delete()
+        .eq('id', id)
+        .eq('user_id', user.value.id)
+
+      if (deleteError) throw deleteError
+
+      realms.value = realms.value.filter(r => r.id !== id)
+      console.log('Deleted realm:', id)
+    } catch (e: any) {
+      error.value = e.message
+      console.error('Failed to delete realm:', e)
+      throw e
+    } finally {
+      loading.value = false
+    }
   }
 
   const calculateRealmValue = (enhancements: EnhancementItem[], limitations: LimitationItem[]): number => {
@@ -138,6 +228,9 @@ export const useRealms = () => {
 
   const cloneRealm = (realm: Realm | Readonly<Realm>): Realm => {
     const cloned = JSON.parse(JSON.stringify(realm)) as Realm
+    // Generate new ID for cloned realm
+    cloned.id = Math.random().toString(36).substr(2, 9)
+    cloned.name = `${cloned.name} (Copy)`
     // Ensure arrays are mutable by spreading them
     cloned.enhancements = [...(cloned.enhancements || [])]
     cloned.limitations = [...(cloned.limitations || [])]
@@ -149,9 +242,7 @@ export const useRealms = () => {
     if (typeof window === 'undefined') return
     
     console.log('Exporting realms. Count:', realms.value.length)
-    console.log('Realms data:', realms.value)
     const data = JSON.stringify(realms.value, null, 2)
-    console.log('JSON data length:', data.length)
     const blob = new Blob([data], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -163,21 +254,41 @@ export const useRealms = () => {
     URL.revokeObjectURL(url)
   }
 
-  const importRealms = (file: File): Promise<void> => {
+  const importRealms = async (file: File): Promise<void> => {
+    if (!user.value) {
+      throw new Error('You must be logged in to import realms')
+    }
+
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         try {
           const imported = JSON.parse(e.target?.result as string)
-          if (Array.isArray(imported)) {
-            realms.value = imported
-            localStorage.setItem('realms', JSON.stringify(realms.value))
-            resolve()
-          } else {
+          if (!Array.isArray(imported)) {
             reject(new Error('Invalid file format: expected array of realms'))
+            return
           }
-        } catch (error) {
-          reject(new Error(`Failed to parse JSON: ${error}`))
+
+          loading.value = true
+          error.value = null
+
+          // Save each imported realm to Supabase
+          for (const realm of imported) {
+            // Generate new ID to avoid conflicts
+            const realmToImport = {
+              ...realm,
+              id: Math.random().toString(36).substr(2, 9)
+            }
+            await saveRealm(realmToImport)
+          }
+
+          await loadRealms()
+          resolve()
+          } catch (importError: any) {
+            error.value = `Failed to import: ${importError.message}`
+            reject(new Error(`Failed to parse JSON: ${importError.message}`))
+        } finally {
+          loading.value = false
         }
       }
       reader.onerror = () => reject(new Error('Failed to read file'))
@@ -187,6 +298,8 @@ export const useRealms = () => {
 
   return {
     realms: readonly(realms),
+    loading: readonly(loading),
+    error: readonly(error),
     loadRealms,
     saveRealm,
     deleteRealm,

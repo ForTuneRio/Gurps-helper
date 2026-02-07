@@ -9,3 +9,10 @@
     <SpaceshipSheet />
   </div>
 </template>
+<script setup lang="ts">
+const user = useSupabaseUser()
+
+if (!user.value) {
+  await navigateTo('/auth/login')
+}
+</script>

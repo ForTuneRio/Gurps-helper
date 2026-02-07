@@ -1,0 +1,140 @@
+<template>
+  <div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center px-4">
+    <div class="max-w-md w-full">
+      <div class="bg-white rounded-2xl shadow-xl p-8">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+          <p class="text-gray-600">Join GURPS Helper today</p>
+        </div>
+
+        <form @submit.prevent="handleRegister" class="space-y-6">
+          <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            {{ error }}
+          </div>
+
+          <div v-if="success" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+            Account created! Check your email to verify your account, then sign in.
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+              Email Address
+            </label>
+            <input
+              id="email"
+              v-model="email"
+              type="email"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+              Password
+            </label>
+            <input
+              id="password"
+              v-model="password"
+              type="password"
+              required
+              minlength="6"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="At least 6 characters"
+            />
+            <p class="mt-1 text-xs text-gray-500">Must be at least 6 characters long</p>
+          </div>
+
+          <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+              Confirm Password
+            </label>
+            <input
+              id="confirmPassword"
+              v-model="confirmPassword"
+              type="password"
+              required
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Confirm your password"
+            />
+          </div>
+
+          <button
+            type="submit"
+            :disabled="loading"
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ loading ? 'Creating Account...' : 'Sign Up' }}
+          </button>
+        </form>
+
+        <div class="mt-6 text-center">
+          <p class="text-gray-600">
+            Already have an account?
+            <NuxtLink to="/auth/login" class="text-green-600 hover:text-green-700 font-medium">
+              Sign in
+            </NuxtLink>
+          </p>
+        </div>
+
+        <div class="mt-4 text-center">
+          <NuxtLink to="/" class="text-sm text-gray-500 hover:text-gray-700">
+            ← Back to Home
+          </NuxtLink>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+const { signUp } = useAuth()
+const router = useRouter()
+
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const error = ref('')
+const success = ref(false)
+const loading = ref(false)
+
+const handleRegister = async () => {
+  error.value = ''
+  success.value = false
+  loading.value = true
+
+  // Validate passwords match
+  if (password.value !== confirmPassword.value) {
+    error.value = 'Passwords do not match'
+    loading.value = false
+    return
+  }
+
+  // Validate password length
+  if (password.value.length < 6) {
+    error.value = 'Password must be at least 6 characters long'
+    loading.value = false
+    return
+  }
+
+  try {
+    await signUp(email.value, password.value)
+    success.value = true
+    
+    // Clear form
+    email.value = ''
+    password.value = ''
+    confirmPassword.value = ''
+    
+    // Redirect to login after 3 seconds
+    setTimeout(() => {
+      router.push('/auth/login')
+    }, 3000)
+  } catch (e: any) {
+    error.value = e.message || 'Failed to create account. Please try again.'
+  } finally {
+    loading.value = false
+  }
+}
+</script>
