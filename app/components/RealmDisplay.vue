@@ -133,7 +133,7 @@
         @click="$emit('edit')"
         class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition"
       >
-        Edit
+        Open
       </button>
       <button
         @click="$emit('delete')"

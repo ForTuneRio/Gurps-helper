@@ -1,9 +1,8 @@
 ## 🐛 Known Issues & Limitations
 
-1. **Spaceships not migrated yet** - Still uses localStorage
-2. **No password reset** - Can be added later
-3. **No OAuth providers** - Can add Google/GitHub later
-4. **No user profiles** - Basic email display only
+1. **No password reset** - Can be added later
+2. **No OAuth providers** - Can add Google/GitHub later
+3. **No user profiles** - Basic email display only
 
 ## 📚 Resources
 

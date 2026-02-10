@@ -235,29 +235,18 @@
               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
-          <div class="flex items-center gap-2 md:col-span-2">
-            <input
-              id="useDescription"
-              v-model="realmForm.details.useDescription"
-              type="checkbox"
-              class="rounded border-gray-300 text-green-600 focus:ring-green-500"
-            />
-            <label for="useDescription" class="text-sm font-medium text-gray-700">
-              Use Description
-            </label>
-          </div>
-          <div v-if="realmForm.details.useDescription" class="md:col-span-3">
-            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
-              Description
-            </label>
-            <textarea
-              id="description"
-              v-model="realmForm.details.description"
-              rows="3"
-              placeholder="Enter realm description..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
+        </div>
+        <div class="mt-4">
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
+            Description
+          </label>
+          <textarea
+            id="description"
+            v-model="realmForm.details.description"
+            rows="3"
+            placeholder="Enter realm description..."
+            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
         </div>
       </div>
 
@@ -747,10 +736,11 @@ import {
 const props = defineProps<{ realmId?: string }>()
 const emit = defineEmits<{ close: [] }>()
 
-const { saveRealm, createEmptyRealm, realms, cloneRealm } = useRealms()
+const { saveRealm, createEmptyRealm, realms, loadRealmForEdit } = useRealms()
 const realmForm = ref<Realm>(createEmptyRealm())
 const saving = ref(false)
 const saved = ref(false)
+const loadedRealmId = ref<string | null>(null)
 
 const isEditMode = computed(() => !!props.realmId)
 
@@ -938,14 +928,19 @@ const removeResourcePoint = (index: number) => {
   realmForm.value.resources.resourcePoints.splice(index, 1)
 }
 
-onMounted(() => {
-  if (props.realmId) {
-    const realm = realms.value.find(r => r.id === props.realmId)
-    if (realm) {
-      realmForm.value = cloneRealm(realm as Realm)
-    }
+const loadRealmFromStore = () => {
+  if (!props.realmId) return
+  if (loadedRealmId.value === props.realmId) return
+
+  const realm = realms.value.find(r => r.id === props.realmId)
+  if (realm) {
+    realmForm.value = loadRealmForEdit(realm as Realm)
+    loadedRealmId.value = props.realmId
   }
-})
+}
+
+onMounted(loadRealmFromStore)
+watch([() => props.realmId, realms], loadRealmFromStore)
 
 const saveRealmFn = async () => {
   saving.value = true
@@ -967,7 +962,7 @@ const saveRealmFn = async () => {
     realmForm.value.fundsAndPeople.bankPlusEarnings = bankPlusEarningsComputed.value
     realmForm.value.resources.resourcePointCost = resourcePointCostComputed.value
 
-    saveRealm(realmForm.value)
+    await saveRealm(realmForm.value)
     saved.value = true
     setTimeout(() => {
       saved.value = false

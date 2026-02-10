@@ -8,7 +8,7 @@ A web application for creating and managing GURPS realm lists, spaceship sheets,
 + Set up basic Nuxt.js project structure
 - Create default layouts, pages, components, and API endpoints
 - Implement basic UI for realm and spaceship management
-- Add functionality to save/load data locally (using localStorage or file downloads)
+- Save/load data using Supabase (cloud storage with user accounts)
 - Basic CRUD operations for realm and spaceship data
 
 ### Phase 2: UI Enhancement

@@ -11,11 +11,23 @@ export const useRealms = () => {
   const supabase = useSupabaseClient()
   const user = useSupabaseUser()
 
+  const getUserId = async (): Promise<string> => {
+    if (user.value?.id) return user.value.id
+
+    const { data, error: userError } = await supabase.auth.getUser()
+    if (userError) throw userError
+    if (!data.user?.id) throw new Error('You must be logged in to access realms')
+    return data.user.id
+  }
+
   /**
    * Load all realms for the current user from Supabase
    */
   const loadRealms = async () => {
-    if (!user.value) {
+    let userId: string
+    try {
+      userId = await getUserId()
+    } catch (e) {
       console.log('No user logged in, skipping realm load')
       realms.value = []
       return
@@ -28,7 +40,7 @@ export const useRealms = () => {
       const { data, error: fetchError } = await supabase
         .from('realms')
         .select('*')
-        .eq('user_id', user.value.id)
+        .eq('user_id', userId)
         .order('created_at', { ascending: false })
 
       if (fetchError) throw fetchError
@@ -51,10 +63,8 @@ export const useRealms = () => {
   /**
    * Save a realm to Supabase (create or update)
    */
-  const saveRealm = async (realm: Realm) => {
-    if (!user.value) {
-      throw new Error('You must be logged in to save realms')
-    }
+  const saveRealm = async (realm: Realm): Promise<Realm> => {
+    const userId = await getUserId()
 
     loading.value = true
     error.value = null
@@ -84,7 +94,7 @@ export const useRealms = () => {
             updated_at: new Date().toISOString()
           })
           .eq('id', realmToSave.id)
-          .eq('user_id', user.value.id)
+          .eq('user_id', userId)
 
         if (updateError) throw updateError
         
@@ -96,7 +106,7 @@ export const useRealms = () => {
           .from('realms')
           .insert({
             id: realmToSave.id,
-            user_id: user.value.id,
+            user_id: userId,
             name: realmToSave.name,
             data: realmToSave
           })
@@ -108,6 +118,8 @@ export const useRealms = () => {
         realms.value.unshift(realmToSave)
         console.log('Created new realm:', realmToSave.name)
       }
+
+      return realmToSave
     } catch (e: any) {
       error.value = e.message
       console.error('Failed to save realm:', e)
@@ -121,9 +133,7 @@ export const useRealms = () => {
    * Delete a realm from Supabase
    */
   const deleteRealm = async (id: string) => {
-    if (!user.value) {
-      throw new Error('You must be logged in to delete realms')
-    }
+    const userId = await getUserId()
 
     loading.value = true
     error.value = null
@@ -133,7 +143,7 @@ export const useRealms = () => {
         .from('realms')
         .delete()
         .eq('id', id)
-        .eq('user_id', user.value.id)
+        .eq('user_id', userId)
 
       if (deleteError) throw deleteError
 
@@ -226,74 +236,16 @@ export const useRealms = () => {
     }
   })
 
-  const cloneRealm = (realm: Realm | Readonly<Realm>): Realm => {
-    const cloned = JSON.parse(JSON.stringify(realm)) as Realm
-    // Generate new ID for cloned realm
-    cloned.id = Math.random().toString(36).substr(2, 9)
-    cloned.name = `${cloned.name} (Copy)`
+
+
+  const loadRealmForEdit = (realm: Realm | Readonly<Realm>): Realm => {
+    const copy = JSON.parse(JSON.stringify(realm)) as Realm
+    // IMPORTANT: Preserve the original ID for editing, don't generate a new one
     // Ensure arrays are mutable by spreading them
-    cloned.enhancements = [...(cloned.enhancements || [])]
-    cloned.limitations = [...(cloned.limitations || [])]
-    cloned.resources.resourcePoints = [...(cloned.resources.resourcePoints || [])]
-    return cloned
-  }
-
-  const exportRealms = () => {
-    if (typeof window === 'undefined') return
-    
-    console.log('Exporting realms. Count:', realms.value.length)
-    const data = JSON.stringify(realms.value, null, 2)
-    const blob = new Blob([data], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `realms-backup-${new Date().toISOString().split('T')[0]}.json`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
-  }
-
-  const importRealms = async (file: File): Promise<void> => {
-    if (!user.value) {
-      throw new Error('You must be logged in to import realms')
-    }
-
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onload = async (e) => {
-        try {
-          const imported = JSON.parse(e.target?.result as string)
-          if (!Array.isArray(imported)) {
-            reject(new Error('Invalid file format: expected array of realms'))
-            return
-          }
-
-          loading.value = true
-          error.value = null
-
-          // Save each imported realm to Supabase
-          for (const realm of imported) {
-            // Generate new ID to avoid conflicts
-            const realmToImport = {
-              ...realm,
-              id: Math.random().toString(36).substr(2, 9)
-            }
-            await saveRealm(realmToImport)
-          }
-
-          await loadRealms()
-          resolve()
-          } catch (importError: any) {
-            error.value = `Failed to import: ${importError.message}`
-            reject(new Error(`Failed to parse JSON: ${importError.message}`))
-        } finally {
-          loading.value = false
-        }
-      }
-      reader.onerror = () => reject(new Error('Failed to read file'))
-      reader.readAsText(file)
-    })
+    copy.enhancements = [...(copy.enhancements || [])]
+    copy.limitations = [...(copy.limitations || [])]
+    copy.resources.resourcePoints = [...(copy.resources.resourcePoints || [])]
+    return copy
   }
 
   return {
@@ -305,8 +257,6 @@ export const useRealms = () => {
     deleteRealm,
     calculateRealmValue,
     createEmptyRealm,
-    cloneRealm,
-    exportRealms,
-    importRealms
+    loadRealmForEdit
   }
 }
