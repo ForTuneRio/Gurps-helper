@@ -733,14 +733,6 @@
         />
       </div>
 
-      <!-- Submit Button -->
-      <button
-        type="submit"
-        class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition duration-200"
-        :disabled="saving"
-      >
-        {{ saving ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update Realm' : 'Save Realm') }}
-      </button>
     </form>
 
     <!-- Success Message -->
