@@ -214,23 +214,23 @@
       </div>
 
       <!-- SECOND BLOCK: Realm Value Showcase (horizontal row) -->
-      <div class="border border-gray-300 rounded-md p-3 bg-blue-50">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div class="text-center">
-            <div class="text-xs text-gray-600 mb-1">Realm Value</div>
-            <div class="text-lg font-bold text-blue-700">{{ realmValueComputed.toLocaleString() }}</div>
+      <div class="border border-gray-300 rounded-md p-3">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="flex items-center gap-2 text-sm">
+            <span class="text-gray-600">Realm Value:</span>
+            <span class="font-semibold text-gray-800">{{ realmValueComputed.toLocaleString() }}</span>
           </div>
-          <div class="text-center">
-            <div class="text-xs text-gray-600 mb-1">Enhancements</div>
-            <div class="text-lg font-bold text-green-700">+{{ enhancementsSumComputed }}%</div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="text-gray-600">Enhancements:</span>
+            <span class="font-semibold text-green-700">+{{ enhancementsSumComputed }}%</span>
           </div>
-          <div class="text-center">
-            <div class="text-xs text-gray-600 mb-1">Limitations</div>
-            <div class="text-lg font-bold text-red-700">{{ limitationsSumComputed }}%</div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="text-gray-600">Limitations:</span>
+            <span class="font-semibold text-red-700">{{ limitationsSumComputed }}%</span>
           </div>
-          <div class="text-center">
-            <div class="text-xs text-gray-600 mb-1">RV with Mod</div>
-            <div class="text-lg font-bold text-blue-900">{{ realmValueWithModComputed.toLocaleString() }}</div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="text-gray-600">RV with Mod:</span>
+            <span class="font-semibold text-gray-800">{{ realmValueWithModComputed.toLocaleString() }}</span>
           </div>
         </div>
       </div>
