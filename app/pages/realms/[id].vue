@@ -1,13 +1,20 @@
 <template>
   <div>
-    <div class="flex items-center justify-between mb-4">
-      <div>
-        <h1 class="text-3xl font-bold">{{ isNew ? 'New Realm' : 'Edit Realm' }}</h1>
-        <p v-if="!isNew && realm" class="text-gray-600">{{ realm.name }}</p>
-      </div>
-      <NuxtLink to="/realms" class="text-sm text-gray-600 hover:text-gray-900">
+    <div class="mb-4 flex items-center gap-2">
+      <NuxtLink
+        to="/realms"
+        class="inline-flex items-center gap-2 rounded-md bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+      >
+        <span aria-hidden="true">←</span>
         Back to list
       </NuxtLink>
+      <button
+        type="submit"
+        form="realm-form"
+        class="inline-flex items-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700"
+      >
+        Save
+      </button>
     </div>
 
     <div v-if="isNew" class="p-4 bg-white border border-green-200 rounded-lg">

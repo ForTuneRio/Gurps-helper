@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h3 class="text-lg font-semibold mb-4">{{ isEditMode ? 'Edit Realm' : 'Build Your Realm' }}</h3>
-
-    <form @submit.prevent="saveRealmFn" class="space-y-4">
+    <form id="realm-form" @submit.prevent="saveRealmFn" class="space-y-4">
       <!-- FIRST BLOCK: Basic Info (3 columns) -->
       <div class="border border-gray-300 rounded-md p-3">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
