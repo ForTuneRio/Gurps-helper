@@ -262,20 +262,20 @@
                 <!-- Readonly View -->
                 <div v-if="!editingEnhancement[idx]" class="p-2">
                   <div class="flex items-center justify-between gap-2 mb-1">
-                    <div class="flex items-center gap-2 flex-1 text-xs">
-                      <span class="font-semibold">{{ enhancement.name || 'Unnamed' }}</span>
+                    <span class="font-semibold text-xs flex-1">{{ enhancement.name || 'Unnamed' }}</span>
+                    <div class="flex items-center gap-2 text-xs">
                       <span class="text-gray-500">Cost: {{ enhancement.pointCost }}</span>
                       <span class="text-gray-500">Lvl: {{ enhancement.level }}</span>
                       <span class="px-1 bg-green-100 text-green-700 rounded font-semibold">+{{ enhancement.totalCost }}%</span>
+                      <button
+                        type="button"
+                        @click="toggleEnhancementEdit(idx)"
+                        class="text-gray-600 hover:text-green-600 text-sm"
+                        title="Edit"
+                      >
+                        ⚙️
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      @click="toggleEnhancementEdit(idx)"
-                      class="text-gray-600 hover:text-green-600 text-sm"
-                      title="Edit"
-                    >
-                      ⚙️
-                    </button>
                   </div>
                   <div v-if="enhancement.details" class="text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">
                     {{ enhancement.details }}
@@ -285,12 +285,15 @@
                 <!-- Edit View -->
                 <div v-else class="p-2 bg-gray-50">
                   <div class="flex items-start justify-between gap-2 mb-1">
-                    <input
-                      v-model="enhancement.name"
-                      type="text"
-                      placeholder="Name"
-                      class="flex-1 px-1 py-1 border rounded text-xs"
-                    />
+                    <div class="flex-1">
+                      <label class="text-xs text-gray-500">Name</label>
+                      <input
+                        v-model="enhancement.name"
+                        type="text"
+                        placeholder="Name"
+                        class="w-full px-1 py-1 border rounded text-xs"
+                      />
+                    </div>
                     <button
                       type="button"
                       @click="toggleEnhancementEdit(idx)"
@@ -300,6 +303,7 @@
                       ⚙️
                     </button>
                   </div>
+                  <label class="text-xs text-gray-500">Description</label>
                   <input
                     v-model="enhancement.details"
                     type="text"
@@ -367,20 +371,20 @@
                 <!-- Readonly View -->
                 <div v-if="!editingLimitation[idx]" class="p-2">
                   <div class="flex items-center justify-between gap-2 mb-1">
-                    <div class="flex items-center gap-2 flex-1 text-xs">
-                      <span class="font-semibold">{{ limitation.name || 'Unnamed' }}</span>
+                    <span class="font-semibold text-xs flex-1">{{ limitation.name || 'Unnamed' }}</span>
+                    <div class="flex items-center gap-2 text-xs">
                       <span class="text-gray-500">Cost: {{ limitation.pointCost }}</span>
                       <span class="text-gray-500">Lvl: {{ limitation.level }}</span>
                       <span class="px-1 bg-red-100 text-red-700 rounded font-semibold">{{ limitation.totalCost }}%</span>
+                      <button
+                        type="button"
+                        @click="toggleLimitationEdit(idx)"
+                        class="text-gray-600 hover:text-red-600 text-sm"
+                        title="Edit"
+                      >
+                        ⚙️
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      @click="toggleLimitationEdit(idx)"
-                      class="text-gray-600 hover:text-red-600 text-sm"
-                      title="Edit"
-                    >
-                      ⚙️
-                    </button>
                   </div>
                   <div v-if="limitation.details" class="text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">
                     {{ limitation.details }}
@@ -390,12 +394,15 @@
                 <!-- Edit View -->
                 <div v-else class="p-2 bg-gray-50">
                   <div class="flex items-start justify-between gap-2 mb-1">
-                    <input
-                      v-model="limitation.name"
-                      type="text"
-                      placeholder="Name"
-                      class="flex-1 px-1 py-1 border rounded text-xs"
-                    />
+                    <div class="flex-1">
+                      <label class="text-xs text-gray-500">Name</label>
+                      <input
+                        v-model="limitation.name"
+                        type="text"
+                        placeholder="Name"
+                        class="w-full px-1 py-1 border rounded text-xs"
+                      />
+                    </div>
                     <button
                       type="button"
                       @click="toggleLimitationEdit(idx)"
@@ -405,6 +412,7 @@
                       ⚙️
                     </button>
                   </div>
+                  <label class="text-xs text-gray-500">Description</label>
                   <input
                     v-model="limitation.details"
                     type="text"
@@ -417,6 +425,7 @@
                       <input
                         v-model.number="limitation.pointCost"
                         type="number"
+                        max="0"
                         class="w-full px-1 py-1 border rounded text-xs"
                       />
                     </div>
