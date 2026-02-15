@@ -2,712 +2,673 @@
   <div>
     <h3 class="text-lg font-semibold mb-4">{{ isEditMode ? 'Edit Realm' : 'Build Your Realm' }}</h3>
 
-    <form @submit.prevent="saveRealmFn" class="space-y-6">
-      <!-- Realm Name -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label for="realmName" class="block text-sm font-medium text-gray-700 mb-1">
-            Realm Name
-          </label>
-          <input
-            id="realmName"
-            v-model="realmForm.name"
-            type="text"
-            required
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            placeholder="Enter realm name"
-          />
-        </div>
-      </div>
+    <form @submit.prevent="saveRealmFn" class="space-y-4">
+      <!-- FIRST BLOCK: Basic Info (3 columns) -->
+      <div class="border border-gray-300 rounded-md p-3">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <!-- Column 1: Government Info -->
+          <div class="space-y-2">
+            <div>
+              <label for="realmName" class="block text-xs font-medium text-gray-700 mb-1">
+                Domain Name
+              </label>
+              <input
+                id="realmName"
+                v-model="realmForm.name"
+                type="text"
+                required
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                placeholder="Enter domain name"
+              />
+            </div>
+            <div>
+              <label for="govType" class="block text-xs font-medium text-gray-700 mb-1">
+                Government Type
+              </label>
+              <input
+                id="govType"
+                v-model="realmForm.government.type"
+                type="text"
+                placeholder="e.g., Dictator"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div>
+              <label for="economyType" class="block text-xs font-medium text-gray-700 mb-1">
+                Economy Type
+              </label>
+              <input
+                id="economyType"
+                v-model="realmForm.government.economyType"
+                type="text"
+                placeholder="e.g., Trad."
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div>
+              <label for="rtm" class="block text-xs font-medium text-gray-700 mb-1">
+                Reaction-Time Modifier (RTM)
+              </label>
+              <input
+                id="rtm"
+                v-model.number="realmForm.government.reactionTimeModifier"
+                type="number"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+          </div>
 
-      <!-- Surroundings Section -->
-      <div class="border-t pt-4">
-        <h4 class="text-md font-semibold mb-3 text-green-700">Surroundings</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label for="totalArea" class="block text-sm font-medium text-gray-700 mb-1">
-              Total Area (mile²)
-            </label>
-            <input
-              id="totalArea"
-              v-model.number="realmForm.surroundings.totalArea"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="sizeValue" class="block text-sm font-medium text-gray-700 mb-1">
-              Realm Size Value
-            </label>
-            <input
-              id="sizeValue"
-              v-model.number="realmForm.surroundings.realmSizeValue"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="areaKnowledge" class="block text-sm font-medium text-gray-700 mb-1">
-              Area Knowledge Class
-            </label>
-            <input
-              id="areaKnowledge"
-              v-model="realmForm.surroundings.areaKnowledgeClass"
-              type="text"
-              placeholder="e.g., Small county"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="defenseBonus" class="block text-sm font-medium text-gray-700 mb-1">
-              Defense Bonus
-            </label>
-            <input
-              id="defenseBonus"
-              v-model="realmForm.surroundings.defenseBonus"
-              type="text"
-              placeholder="e.g., +2"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="terrain" class="block text-sm font-medium text-gray-700 mb-1">
-              Terrain
-            </label>
-            <input
-              id="terrain"
-              v-model="realmForm.surroundings.terrain"
-              type="text"
-              placeholder="e.g., Plains"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="habitabilityValue" class="block text-sm font-medium text-gray-700 mb-1">
-              Habitability (Value)
-            </label>
-            <input
-              id="habitabilityValue"
-              v-model.number="realmForm.surroundings.habitabilityValue"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Habitability (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700">
-              {{ habitabilityComputed }}
+          <!-- Column 2: Surroundings -->
+          <div class="space-y-2">
+            <div>
+              <label for="totalArea" class="block text-xs font-medium text-gray-700 mb-1">
+                Total Area (mile²)
+              </label>
+              <input
+                id="totalArea"
+                v-model.number="realmForm.surroundings.totalArea"
+                type="number"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
             </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Government Section -->
-      <div class="border-t pt-4">
-        <h4 class="text-md font-semibold mb-3 text-green-700">Government</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label for="govType" class="block text-sm font-medium text-gray-700 mb-1">
-              Government Type
-            </label>
-            <input
-              id="govType"
-              v-model="realmForm.government.type"
-              type="text"
-              placeholder="e.g., Dictator"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="economyType" class="block text-sm font-medium text-gray-700 mb-1">
-              Economy Type
-            </label>
-            <input
-              id="economyType"
-              v-model="realmForm.government.economyType"
-              type="text"
-              placeholder="e.g., Trad."
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="rtm" class="block text-sm font-medium text-gray-700 mb-1">
-              Reaction-Time Modifier (RTM)
-            </label>
-            <input
-              id="rtm"
-              v-model.number="realmForm.government.reactionTimeModifier"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="cr" class="block text-sm font-medium text-gray-700 mb-1">
-              Control Rating (CR)
-            </label>
-            <input
-              id="cr"
-              v-model.number="realmForm.government.controlRating"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-        </div>
-      </div>
-
-      <!-- Details Section -->
-      <div class="border-t pt-4">
-        <h4 class="text-md font-semibold mb-3 text-green-700">Details</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label for="techLevel" class="block text-sm font-medium text-gray-700 mb-1">
-              Tech Level (TL)
-            </label>
-            <input
-              id="techLevel"
-              v-model.number="realmForm.details.techLevel"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="conr" class="block text-sm font-medium text-gray-700 mb-1">
-              Conformity Rating (ConR)
-            </label>
-            <input
-              id="conr"
-              v-model.number="realmForm.details.conformityRating"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="or" class="block text-sm font-medium text-gray-700 mb-1">
-              Openness Rating (OR)
-            </label>
-            <input
-              id="or"
-              v-model.number="realmForm.details.openessRating"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="er" class="block text-sm font-medium text-gray-700 mb-1">
-              Education Rating (ER)
-            </label>
-            <input
-              id="er"
-              v-model.number="realmForm.details.educationRating"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="citizenLoyaltyVal" class="block text-sm font-medium text-gray-700 mb-1">
-              Citizen Loyalty (Value)
-            </label>
-            <input
-              id="citizenLoyaltyVal"
-              v-model.number="realmForm.details.citizenLoyaltyValue"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Citizen Loyalty (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700">
-              {{ citizenLoyaltyComputed }}
+            <div>
+              <label for="sizeValue" class="block text-xs font-medium text-gray-700 mb-1">
+                Realm Size Value
+              </label>
+              <input
+                id="sizeValue"
+                v-model.number="realmForm.surroundings.realmSizeValue"
+                type="number"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
             </div>
-          </div>
-          <div>
-            <label for="ir" class="block text-sm font-medium text-gray-700 mb-1">
-              Infrastructure Rating (IR)
-            </label>
-            <input
-              id="ir"
-              v-model.number="realmForm.details.infrastructureRating"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-        </div>
-        <div class="mt-4">
-          <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
-            Description
-          </label>
-          <textarea
-            id="description"
-            v-model="realmForm.details.description"
-            rows="3"
-            placeholder="Enter realm description..."
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-      </div>
-
-      <!-- Funds and People Section -->
-      <div class="border-t pt-4">
-        <h4 class="text-md font-semibold mb-3 text-green-700">Funds & People</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label for="density" class="block text-sm font-medium text-gray-700 mb-1">
-              Density per mile²
-            </label>
-            <input
-              id="density"
-              v-model.number="realmForm.fundsAndPeople.densityPerMile"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Max Population (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 font-semibold">
-              {{ maxPopulationComputed.toLocaleString() }}
+            <div>
+              <label for="areaKnowledge" class="block text-xs font-medium text-gray-700 mb-1">
+                Area Knowledge Class
+              </label>
+              <input
+                id="areaKnowledge"
+                v-model="realmForm.surroundings.areaKnowledgeClass"
+                type="text"
+                placeholder="e.g., Small county"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
             </div>
-          </div>
-          <div>
-            <label for="population" class="block text-sm font-medium text-gray-700 mb-1">
-              Population
-            </label>
-            <input
-              id="population"
-              v-model.number="realmForm.fundsAndPeople.population"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Average Income (Calculated from TL)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 font-semibold">
-              {{ averageIncomeComputed.toLocaleString() }}
+            <div>
+              <label for="defenseBonus" class="block text-xs font-medium text-gray-700 mb-1">
+                Defense Bonus
+              </label>
+              <input
+                id="defenseBonus"
+                v-model="realmForm.surroundings.defenseBonus"
+                type="text"
+                placeholder="e.g., +2"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
             </div>
-          </div>
-          <div>
-            <label for="workDependMod" class="block text-sm font-medium text-gray-700 mb-1">
-              Work/Depend Mod (0-1)
-            </label>
-            <input
-              id="workDependMod"
-              v-model.number="realmForm.fundsAndPeople.workDependMod"
-              type="number"
-              step="0.01"
-              min="0"
-              max="1"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label for="manageSkill" class="block text-sm font-medium text-gray-700 mb-1">
-              Management Skill
-            </label>
-            <input
-              id="manageSkill"
-              v-model.number="realmForm.fundsAndPeople.managementSkill"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-        </div>
-      </div>
-
-      <!-- Realm Value Section -->
-      <div class="border-t pt-4">
-        <h4 class="text-md font-semibold mb-3 text-green-700">Realm</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Realm Value (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-blue-50 text-blue-700 font-bold">
-              {{ realmValueComputed.toLocaleString() }}
+            <div>
+              <label for="terrain" class="block text-xs font-medium text-gray-700 mb-1">
+                Terrain
+              </label>
+              <input
+                id="terrain"
+                v-model="realmForm.surroundings.terrain"
+                type="text"
+                placeholder="e.g., Plains"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
             </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Enhancements Sum
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-green-50 text-green-700 font-semibold">
-              +{{ enhancementsSumComputed }}%
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Limitations Sum
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-red-50 text-red-700 font-semibold">
-              {{ limitationsSumComputed }}%
-            </div>
-          </div>
-          <div class="md:col-span-3">
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Realm Value with Modifiers (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-blue-50 text-blue-700 font-bold text-lg">
-              {{ realmValueWithModComputed.toLocaleString() }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Enhancements Section -->
-      <div class="border-t pt-4">
-        <div class="flex justify-between items-center mb-3">
-          <h4 class="text-md font-semibold text-green-700">Realm Enhancements</h4>
-          <button
-            type="button"
-            @click="addEnhancement"
-            class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md"
-          >
-            + Add Enhancement
-          </button>
-        </div>
-        <div v-if="realmForm.enhancements.length === 0" class="text-gray-500 text-sm italic">
-          No enhancements added yet.
-        </div>
-        <div v-else class="space-y-3">
-          <div
-            v-for="(enhancement, idx) in realmForm.enhancements"
-            :key="enhancement.id"
-            class="border border-gray-300 rounded-md p-3 bg-gray-50"
-          >
-            <div class="grid grid-cols-1 md:grid-cols-6 gap-2">
-              <div class="md:col-span-2">
-                <label class="block text-xs font-medium text-gray-600 mb-1">Name</label>
+            <div>
+              <label for="habitabilityValue" class="block text-xs font-medium text-gray-700 mb-1">
+                Habitability
+              </label>
+              <div class="flex gap-1">
                 <input
-                  v-model="enhancement.name"
-                  type="text"
-                  placeholder="Enhancement name"
-                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                  id="habitabilityValue"
+                  v-model.number="realmForm.surroundings.habitabilityValue"
+                  type="number"
+                  class="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
+                <div class="flex-1 px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-700 text-xs">
+                  {{ habitabilityComputed }}
+                </div>
               </div>
-              <div class="md:col-span-2">
-                <label class="block text-xs font-medium text-gray-600 mb-1">Details</label>
+            </div>
+          </div>
+
+          <!-- Column 3: Details & Ratings -->
+          <div class="space-y-2">
+            <div>
+              <label for="cr" class="block text-xs font-medium text-gray-700 mb-1">
+                Control Rating (CR)
+              </label>
+              <input
+                id="cr"
+                v-model.number="realmForm.government.controlRating"
+                type="number"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div>
+              <label for="conr" class="block text-xs font-medium text-gray-700 mb-1">
+                Conformity Rating (ConR)
+              </label>
+              <input
+                id="conr"
+                v-model.number="realmForm.details.conformityRating"
+                type="number"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div>
+              <label for="or" class="block text-xs font-medium text-gray-700 mb-1">
+                Openness Rating (OR)
+              </label>
+              <input
+                id="or"
+                v-model.number="realmForm.details.openessRating"
+                type="number"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div>
+              <label for="er" class="block text-xs font-medium text-gray-700 mb-1">
+                Education Rating (ER)
+              </label>
+              <input
+                id="er"
+                v-model.number="realmForm.details.educationRating"
+                type="number"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+            <div>
+              <label for="citizenLoyaltyVal" class="block text-xs font-medium text-gray-700 mb-1">
+                Citizen Loyalty
+              </label>
+              <div class="flex gap-1">
+                <input
+                  id="citizenLoyaltyVal"
+                  v-model.number="realmForm.details.citizenLoyaltyValue"
+                  type="number"
+                  class="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                />
+                <div class="flex-1 px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-700 text-xs">
+                  {{ citizenLoyaltyComputed }}
+                </div>
+              </div>
+            </div>
+            <div>
+              <label for="ir" class="block text-xs font-medium text-gray-700 mb-1">
+                Infrastructure Rating (IR)
+              </label>
+              <input
+                id="ir"
+                v-model.number="realmForm.details.infrastructureRating"
+                type="number"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECOND BLOCK: Realm Value Showcase (horizontal row) -->
+      <div class="border border-gray-300 rounded-md p-3 bg-blue-50">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="text-center">
+            <div class="text-xs text-gray-600 mb-1">Realm Value</div>
+            <div class="text-lg font-bold text-blue-700">{{ realmValueComputed.toLocaleString() }}</div>
+          </div>
+          <div class="text-center">
+            <div class="text-xs text-gray-600 mb-1">Enhancements</div>
+            <div class="text-lg font-bold text-green-700">+{{ enhancementsSumComputed }}%</div>
+          </div>
+          <div class="text-center">
+            <div class="text-xs text-gray-600 mb-1">Limitations</div>
+            <div class="text-lg font-bold text-red-700">{{ limitationsSumComputed }}%</div>
+          </div>
+          <div class="text-center">
+            <div class="text-xs text-gray-600 mb-1">RV with Mod</div>
+            <div class="text-lg font-bold text-blue-900">{{ realmValueWithModComputed.toLocaleString() }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THIRD BLOCK: Enhancements & Limitations (2 columns) -->
+      <div class="border border-gray-300 rounded-md p-3">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <!-- Enhancements Column -->
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <h4 class="text-sm font-semibold text-green-700">Enhancements</h4>
+              <button
+                type="button"
+                @click="addEnhancement"
+                class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded"
+              >
+                + Add
+              </button>
+            </div>
+            <div v-if="realmForm.enhancements.length === 0" class="text-gray-400 text-xs italic">
+              No enhancements
+            </div>
+            <div v-else class="space-y-2">
+              <div
+                v-for="(enhancement, idx) in realmForm.enhancements"
+                :key="enhancement.id"
+                class="border border-gray-200 rounded p-2 bg-gray-50"
+              >
+                <div class="grid grid-cols-3 gap-1 mb-1">
+                  <input
+                    v-model="enhancement.name"
+                    type="text"
+                    placeholder="Name"
+                    class="col-span-2 px-1 py-1 border rounded text-xs"
+                  />
+                  <button
+                    type="button"
+                    @click="removeEnhancement(idx)"
+                    class="text-red-600 hover:text-red-800 text-xs"
+                  >
+                    Remove
+                  </button>
+                </div>
                 <input
                   v-model="enhancement.details"
                   type="text"
                   placeholder="Details"
-                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                  class="w-full px-1 py-1 border rounded text-xs mb-1"
                 />
+                <div class="grid grid-cols-3 gap-1">
+                  <div>
+                    <label class="text-xs text-gray-500">Cost</label>
+                    <input
+                      v-model.number="enhancement.pointCost"
+                      type="number"
+                      class="w-full px-1 py-1 border rounded text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label class="text-xs text-gray-500">Lvl</label>
+                    <input
+                      v-model.number="enhancement.level"
+                      type="number"
+                      class="w-full px-1 py-1 border rounded text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label class="text-xs text-gray-500">Total</label>
+                    <div class="px-1 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold text-center">
+                      +{{ enhancement.totalCost }}%
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <label class="block text-xs font-medium text-gray-600 mb-1">Point Cost</label>
-                <input
-                  v-model.number="enhancement.pointCost"
-                  type="number"
-                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                />
-              </div>
-              <div>
-                <label class="block text-xs font-medium text-gray-600 mb-1">Level</label>
-                <input
-                  v-model.number="enhancement.level"
-                  type="number"
-                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                />
-              </div>
-            </div>
-            <div class="flex justify-between items-center mt-2">
-              <div class="text-sm font-semibold text-green-700">
-                Total Cost: +{{ enhancement.totalCost }}%
-              </div>
-              <button
-                type="button"
-                @click="removeEnhancement(idx)"
-                class="text-red-600 hover:text-red-800 text-sm"
-              >
-                Remove
-              </button>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Limitations Section -->
-      <div class="border-t pt-4">
-        <div class="flex justify-between items-center mb-3">
-          <h4 class="text-md font-semibold text-red-700">Realm Limitations</h4>
-          <button
-            type="button"
-            @click="addLimitation"
-            class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded-md"
-          >
-            + Add Limitation
-          </button>
-        </div>
-        <div v-if="realmForm.limitations.length === 0" class="text-gray-500 text-sm italic">
-          No limitations added yet.
-        </div>
-        <div v-else class="space-y-3">
-          <div
-            v-for="(limitation, idx) in realmForm.limitations"
-            :key="limitation.id"
-            class="border border-gray-300 rounded-md p-3 bg-gray-50"
-          >
-            <div class="grid grid-cols-1 md:grid-cols-6 gap-2">
-              <div class="md:col-span-2">
-                <label class="block text-xs font-medium text-gray-600 mb-1">Name</label>
-                <input
-                  v-model="limitation.name"
-                  type="text"
-                  placeholder="Limitation name"
-                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                />
-              </div>
-              <div class="md:col-span-2">
-                <label class="block text-xs font-medium text-gray-600 mb-1">Details</label>
+          <!-- Limitations Column -->
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <h4 class="text-sm font-semibold text-red-700">Limitations</h4>
+              <button
+                type="button"
+                @click="addLimitation"
+                class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded"
+              >
+                + Add
+              </button>
+            </div>
+            <div v-if="realmForm.limitations.length === 0" class="text-gray-400 text-xs italic">
+              No limitations
+            </div>
+            <div v-else class="space-y-2">
+              <div
+                v-for="(limitation, idx) in realmForm.limitations"
+                :key="limitation.id"
+                class="border border-gray-200 rounded p-2 bg-gray-50"
+              >
+                <div class="grid grid-cols-3 gap-1 mb-1">
+                  <input
+                    v-model="limitation.name"
+                    type="text"
+                    placeholder="Name"
+                    class="col-span-2 px-1 py-1 border rounded text-xs"
+                  />
+                  <button
+                    type="button"
+                    @click="removeLimitation(idx)"
+                    class="text-red-600 hover:text-red-800 text-xs"
+                  >
+                    Remove
+                  </button>
+                </div>
                 <input
                   v-model="limitation.details"
                   type="text"
                   placeholder="Details"
-                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                  class="w-full px-1 py-1 border rounded text-xs mb-1"
                 />
+                <div class="grid grid-cols-3 gap-1">
+                  <div>
+                    <label class="text-xs text-gray-500">Cost</label>
+                    <input
+                      v-model.number="limitation.pointCost"
+                      type="number"
+                      class="w-full px-1 py-1 border rounded text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label class="text-xs text-gray-500">Lvl</label>
+                    <input
+                      v-model.number="limitation.level"
+                      type="number"
+                      class="w-full px-1 py-1 border rounded text-xs"
+                    />
+                  </div>
+                  <div>
+                    <label class="text-xs text-gray-500">Total</label>
+                    <div class="px-1 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold text-center">
+                      {{ limitation.totalCost }}%
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <label class="block text-xs font-medium text-gray-600 mb-1">Point Cost (negative)</label>
-                <input
-                  v-model.number="limitation.pointCost"
-                  type="number"
-                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                />
-              </div>
-              <div>
-                <label class="block text-xs font-medium text-gray-600 mb-1">Level</label>
-                <input
-                  v-model.number="limitation.level"
-                  type="number"
-                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                />
-              </div>
-            </div>
-            <div class="flex justify-between items-center mt-2">
-              <div class="text-sm font-semibold text-red-700">
-                Total Cost: {{ limitation.totalCost }}%
-              </div>
-              <button
-                type="button"
-                @click="removeLimitation(idx)"
-                class="text-red-600 hover:text-red-800 text-sm"
-              >
-                Remove
-              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Taxation Section -->
-      <div class="border-t pt-4">
-        <h4 class="text-md font-semibold mb-3 text-green-700">Taxation</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label for="taxCR" class="block text-sm font-medium text-gray-700 mb-1">
-              Taxation CR
-            </label>
-            <input
-              id="taxCR"
-              v-model.number="realmForm.fundsAndPeople.taxationCR"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Revenue Factor (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 font-semibold">
-              {{ (revenueFactorComputed * 100).toFixed(1) }}%
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Revenue (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 font-semibold">
-              {{ revenueComputed.toLocaleString() }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Income Modifiers Section (conditional) -->
-      <div v-if="showIncomeMods" class="border-t pt-4">
-        <h4 class="text-md font-semibold mb-3 text-green-700">Income Modifiers</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div v-if="hasIndependentIncome" class="flex items-center gap-2">
-            <input
-              id="independentIncome"
-              v-model="realmForm.fundsAndPeople.independentIncome"
-              type="checkbox"
-              class="rounded border-gray-300 text-green-600 focus:ring-green-500"
-            />
-            <label for="independentIncome" class="text-sm font-medium text-gray-700">
-              Use Independent Income
-            </label>
-          </div>
-          <div v-if="hasCorrupt" class="flex items-center gap-2">
-            <input
-              id="corrupt"
-              v-model="realmForm.fundsAndPeople.corrupt"
-              type="checkbox"
-              class="rounded border-gray-300 text-green-600 focus:ring-green-500"
-            />
-            <label for="corrupt" class="text-sm font-medium text-gray-700">
-              Corrupt (-20%)
-            </label>
-          </div>
-          <div v-if="hasDebt" class="flex items-center gap-2">
-            <input
-              id="debt"
-              v-model="realmForm.fundsAndPeople.debt"
-              type="checkbox"
-              class="rounded border-gray-300 text-green-600 focus:ring-green-500"
-            />
-            <label for="debt" class="text-sm font-medium text-gray-700">
-              Debt
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Money Section -->
-      <div class="border-t pt-4">
-        <h4 class="text-md font-semibold mb-3 text-green-700">Money</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label for="bank" class="block text-sm font-medium text-gray-700 mb-1">
-              Bank
-            </label>
-            <input
-              id="bank"
-              v-model.number="realmForm.fundsAndPeople.bank"
-              type="number"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Earnings at Turn (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 font-semibold">
-              {{ earningsAtTurnComputed.toLocaleString() }}
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Bank + Earnings (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 font-semibold">
-              {{ bankPlusEarningsComputed.toLocaleString() }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Military Section -->
-      <div class="border-t pt-4">
-        <h4 class="text-md font-semibold mb-3 text-green-700">Military</h4>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="flex items-center gap-2">
-            <input
-              id="wartime"
-              v-model="realmForm.military.wartime"
-              type="checkbox"
-              class="rounded border-gray-300 text-green-600 focus:ring-green-500"
-            />
-            <label for="wartime" class="text-sm font-medium text-gray-700">
-              Wartime
-            </label>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Military Budget Factor (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 font-semibold">
-              {{ (militaryBudgetFactorComputed * 100).toFixed(1) }}%
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-              Military Resources (Calculated)
-            </label>
-            <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 font-semibold">
-              {{ militaryResourcesComputed.toLocaleString() }}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Resource Points Section -->
-      <div class="border-t pt-4">
-        <div class="flex justify-between items-center mb-3">
-          <h4 class="text-md font-semibold text-green-700">
-            Resource Points (Cost: {{ resourcePointCostComputed.toLocaleString() }} each)
-          </h4>
-          <button
-            type="button"
-            @click="addResourcePoint"
-            class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md"
-          >
-            + Add Resource Point
-          </button>
-        </div>
+      <!-- FOURTH BLOCK: People, Funds, Resources (3 columns) -->
+      <div class="border border-gray-300 rounded-md p-3">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div
-            v-for="(rp, idx) in realmForm.resources.resourcePoints"
-            :key="rp.id"
-            class="border border-gray-300 rounded-md p-2 bg-gray-50"
-          >
-            <div class="flex gap-2 items-start">
-              <div class="flex-1">
-                <label class="block text-xs font-medium text-gray-600 mb-1">Name</label>
+          <!-- Column 1: People -->
+          <div>
+            <h4 class="text-sm font-semibold text-green-700 mb-2">People</h4>
+            <div class="space-y-2">
+              <div>
+                <label for="density" class="block text-xs font-medium text-gray-700 mb-1">
+                  Density per mile²
+                </label>
                 <input
-                  v-model="rp.name"
-                  type="text"
-                  placeholder="Resource name"
-                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                />
-              </div>
-              <div class="w-20">
-                <label class="block text-xs font-medium text-gray-600 mb-1">Value</label>
-                <input
-                  v-model.number="rp.value"
+                  id="density"
+                  v-model.number="realmForm.fundsAndPeople.densityPerMile"
                   type="number"
-                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
+              <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1">Max Pop.</label>
+                <div class="w-full px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-700 text-sm font-semibold">
+                  {{ maxPopulationComputed.toLocaleString() }}
+                </div>
+              </div>
+              <div>
+                <label for="population" class="block text-xs font-medium text-gray-700 mb-1">
+                  Population
+                </label>
+                <input
+                  id="population"
+                  v-model.number="realmForm.fundsAndPeople.population"
+                  type="number"
+                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                />
+              </div>
+              <div>
+                <label for="techLevel" class="block text-xs font-medium text-gray-700 mb-1">
+                  Tech Level (TL)
+                </label>
+                <input
+                  id="techLevel"
+                  v-model.number="realmForm.details.techLevel"
+                  type="number"
+                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-gray-700 mb-1">Average Income</label>
+                <div class="w-full px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-700 text-sm font-semibold">
+                  {{ averageIncomeComputed.toLocaleString() }}
+                </div>
+              </div>
+              <div>
+                <label for="workDependMod" class="block text-xs font-medium text-gray-700 mb-1">
+                  Work/Depend Mod
+                </label>
+                <input
+                  id="workDependMod"
+                  v-model.number="realmForm.fundsAndPeople.workDependMod"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="1"
+                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                />
+              </div>
+              <div>
+                <label for="manageSkill" class="block text-xs font-medium text-gray-700 mb-1">
+                  Management Skill
+                </label>
+                <input
+                  id="manageSkill"
+                  v-model.number="realmForm.fundsAndPeople.managementSkill"
+                  type="number"
+                  class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2: Funds (2 sub-columns) -->
+          <div>
+            <h4 class="text-sm font-semibold text-green-700 mb-2">Funds</h4>
+            <div class="grid grid-cols-2 gap-2">
+              <!-- Sub-column 1: Taxation & Military -->
+              <div class="space-y-2">
+                <!-- Taxation Box -->
+                <div class="border border-gray-200 rounded p-2 bg-gray-50">
+                  <div>
+                    <label for="taxCR" class="block text-xs font-medium text-gray-700 mb-1">
+                      Taxation CR
+                    </label>
+                    <input
+                      id="taxCR"
+                      v-model.number="realmForm.fundsAndPeople.taxationCR"
+                      type="number"
+                      class="w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                    />
+                  </div>
+                  <div class="mt-2">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Rev. Factor</label>
+                    <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
+                      {{ (revenueFactorComputed * 100).toFixed(1) }}%
+                    </div>
+                  </div>
+                  <div class="mt-2">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Revenue</label>
+                    <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
+                      {{ revenueComputed.toLocaleString() }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Military Box -->
+                <div class="border border-gray-200 rounded p-2 bg-gray-50">
+                  <div class="flex items-center gap-2 mb-2">
+                    <input
+                      id="wartime"
+                      v-model="realmForm.military.wartime"
+                      type="checkbox"
+                      class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                    <label for="wartime" class="text-xs font-medium text-gray-700">
+                      Wartime
+                    </label>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Mil. Budget Factor</label>
+                    <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
+                      {{ (militaryBudgetFactorComputed * 100).toFixed(1) }}%
+                    </div>
+                  </div>
+                  <div class="mt-2">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Military Resources</label>
+                    <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
+                      {{ militaryResourcesComputed.toLocaleString() }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sub-column 2: Bank & Income Modifiers -->
+              <div class="space-y-2">
+                <!-- Bank Box -->
+                <div class="border border-gray-200 rounded p-2 bg-gray-50">
+                  <div>
+                    <label for="bank" class="block text-xs font-medium text-gray-700 mb-1">
+                      Bank
+                    </label>
+                    <input
+                      id="bank"
+                      v-model.number="realmForm.fundsAndPeople.bank"
+                      type="number"
+                      class="w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                    />
+                  </div>
+                  <div class="mt-2">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Earnings at Turn</label>
+                    <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
+                      {{ earningsAtTurnComputed.toLocaleString() }}
+                    </div>
+                  </div>
+                  <div class="mt-2">
+                    <label class="block text-xs font-medium text-gray-600 mb-1">Bank + Earnings</label>
+                    <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
+                      {{ bankPlusEarningsComputed.toLocaleString() }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Income Modifiers Box (always visible) -->
+                <div class="border border-gray-200 rounded p-2 bg-gray-50">
+                  <div class="flex items-center gap-2 mb-1">
+                    <input
+                      id="corrupt"
+                      v-model="realmForm.fundsAndPeople.corrupt"
+                      type="checkbox"
+                      class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                    <label for="corrupt" class="text-xs font-medium text-gray-700">
+                      Corrupt
+                    </label>
+                  </div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <input
+                      id="independentIncome"
+                      v-model="realmForm.fundsAndPeople.independentIncome"
+                      type="checkbox"
+                      class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                    <label for="independentIncome" class="text-xs font-medium text-gray-700">
+                      Indep. Income
+                    </label>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <input
+                      id="debt"
+                      v-model="realmForm.fundsAndPeople.debt"
+                      type="checkbox"
+                      class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                    <label for="debt" class="text-xs font-medium text-gray-700">
+                      Debt
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 3: Resource Points -->
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <h4 class="text-sm font-semibold text-green-700">
+                Resource Points <span class="text-xs text-gray-500 font-normal">({{ resourcePointCostComputed.toLocaleString() }} ea)</span>
+              </h4>
               <button
                 type="button"
-                @click="removeResourcePoint(idx)"
-                class="text-red-600 hover:text-red-800 text-xs mt-5"
+                @click="addResourcePoint"
+                class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded"
               >
-                ✕
+                + Add
               </button>
+            </div>
+            <div v-if="realmForm.resources.resourcePoints.length === 0" class="text-gray-400 text-xs italic">
+              No resources
+            </div>
+            <div v-else class="space-y-2">
+              <div
+                v-for="(rp, idx) in realmForm.resources.resourcePoints"
+                :key="rp.id"
+                class="border border-gray-200 rounded p-2 bg-gray-50"
+              >
+                <div class="flex gap-1 mb-1">
+                  <input
+                    v-model="rp.name"
+                    type="text"
+                    placeholder="Name"
+                    class="flex-1 px-1 py-1 border rounded text-xs"
+                  />
+                  <button
+                    type="button"
+                    @click="removeResourcePoint(idx)"
+                    class="text-red-600 hover:text-red-800 text-xs px-1"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div>
+                  <label class="text-xs text-gray-500">Value</label>
+                  <input
+                    v-model.number="rp.value"
+                    type="number"
+                    class="w-full px-1 py-1 border rounded text-xs"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Description (optional, at bottom) -->
+      <div class="border border-gray-300 rounded-md p-3">
+        <label for="description" class="block text-xs font-medium text-gray-700 mb-1">
+          Description
+        </label>
+        <textarea
+          id="description"
+          v-model="realmForm.details.description"
+          rows="2"
+          placeholder="Enter realm description..."
+          class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+        />
+      </div>
+
+      <!-- Submit Button -->
       <button
         type="submit"
-        class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200"
+        class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded transition duration-200"
         :disabled="saving"
       >
         {{ saving ? (isEditMode ? 'Updating...' : 'Saving...') : (isEditMode ? 'Update Realm' : 'Save Realm') }}
       </button>
     </form>
 
-    <div v-if="saved" class="p-4 bg-green-50 rounded-md mt-4">
-      <p class="text-green-700 font-semibold">✓ Realm {{ isEditMode ? 'updated' : 'saved' }} successfully!</p>
+    <!-- Success Message -->
+    <div v-if="saved" class="p-3 bg-green-50 rounded mt-3">
+      <p class="text-green-700 font-semibold text-sm">✓ Realm {{ isEditMode ? 'updated' : 'saved' }} successfully!</p>
     </div>
   </div>
 </template>
@@ -864,23 +825,6 @@ const bankPlusEarningsComputed = computed(() =>
 
 const resourcePointCostComputed = computed(() => 
   calculateResourcePointCost(realmValueWithModComputed.value)
-)
-
-// Computed properties for conditional display
-const hasIndependentIncome = computed(() => 
-  realmForm.value.enhancements.some(e => e.name.toLowerCase().includes('independent income'))
-)
-
-const hasCorrupt = computed(() => 
-  realmForm.value.limitations.some(l => l.name.toLowerCase().includes('corrupt'))
-)
-
-const hasDebt = computed(() => 
-  realmForm.value.limitations.some(l => l.name.toLowerCase().includes('debt'))
-)
-
-const showIncomeMods = computed(() => 
-  hasIndependentIncome.value || hasCorrupt.value || hasDebt.value
 )
 
 // Enhancement management

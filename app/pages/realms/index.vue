@@ -55,7 +55,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRealms } from '~/composables/useRealms'
-import type { Realm } from '~/types/realm'
 
 const router = useRouter()
 
