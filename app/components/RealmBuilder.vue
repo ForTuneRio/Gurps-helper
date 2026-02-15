@@ -751,7 +751,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRealms } from '~/composables/useRealms'
 import type { Realm } from '~/types/realm'
 import {
@@ -779,6 +779,8 @@ const realmForm = ref<Realm>(createEmptyRealm())
 const saving = ref(false)
 const saved = ref(false)
 const loadedRealmId = ref<string | null>(null)
+const isDirty = ref(false)
+const autoSaveTimer = ref<number | null>(null)
 
 // Edit state tracking for enhancements and limitations
 const editingEnhancement = ref<Record<number, boolean>>({})
@@ -979,13 +981,38 @@ const loadRealmFromStore = () => {
   if (realm) {
     realmForm.value = loadRealmForEdit(realm as Realm)
     loadedRealmId.value = props.realmId
+    isDirty.value = false
   }
 }
 
 onMounted(loadRealmFromStore)
 watch([() => props.realmId, realms], loadRealmFromStore)
 
-const saveRealmFn = async () => {
+watch(
+  realmForm,
+  () => {
+    isDirty.value = true
+  },
+  { deep: true }
+)
+
+onMounted(() => {
+  autoSaveTimer.value = window.setInterval(() => {
+    if (saving.value || !isDirty.value) return
+    if (!realmForm.value.name.trim()) return
+    void saveRealmFn({ showSaved: false, closeAfter: false })
+  }, 10 * 60 * 1000)
+})
+
+onUnmounted(() => {
+  if (autoSaveTimer.value !== null) {
+    window.clearInterval(autoSaveTimer.value)
+  }
+})
+
+const saveRealmFn = async (options?: { showSaved?: boolean; closeAfter?: boolean }) => {
+  const showSaved = options?.showSaved ?? true
+  const closeAfter = options?.closeAfter ?? true
   saving.value = true
   try {
     // Sync all computed values before saving
@@ -1006,13 +1033,18 @@ const saveRealmFn = async () => {
     realmForm.value.resources.resourcePointCost = resourcePointCostComputed.value
 
     await saveRealm(realmForm.value)
-    saved.value = true
-    setTimeout(() => {
-      saved.value = false
-      if (isEditMode.value) {
-        emit('close')
-      }
-    }, 2000)
+    isDirty.value = false
+    if (showSaved) {
+      saved.value = true
+      setTimeout(() => {
+        saved.value = false
+        if (closeAfter && isEditMode.value) {
+          emit('close')
+        }
+      }, 2000)
+    } else if (closeAfter && isEditMode.value) {
+      emit('close')
+    }
   } finally {
     saving.value = false
   }
