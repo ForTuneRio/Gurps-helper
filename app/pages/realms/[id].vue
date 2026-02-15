@@ -21,7 +21,7 @@
       <RealmBuilder />
     </div>
     <div v-else>
-      <div v-if="loading" class="py-8 text-gray-600">Loading realm...</div>
+      <div v-if="loading && !realm" class="py-8 text-gray-600">Loading realm...</div>
       <div v-else-if="!realm" class="py-8 text-red-600">Realm not found.</div>
       <div v-else class="p-4 bg-white border border-green-200 rounded-lg">
         <RealmBuilder :realm-id="realmId" />
