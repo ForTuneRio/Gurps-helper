@@ -257,52 +257,87 @@
               <div
                 v-for="(enhancement, idx) in realmForm.enhancements"
                 :key="enhancement.id"
-                class="border border-gray-200 rounded p-2 bg-gray-50"
+                class="border border-gray-200 rounded bg-white"
               >
-                <div class="grid grid-cols-3 gap-1 mb-1">
+                <!-- Readonly View -->
+                <div v-if="!editingEnhancement[idx]" class="p-2">
+                  <div class="flex items-center justify-between gap-2 mb-1">
+                    <div class="flex items-center gap-2 flex-1 text-xs">
+                      <span class="font-semibold">{{ enhancement.name || 'Unnamed' }}</span>
+                      <span class="text-gray-500">Cost: {{ enhancement.pointCost }}</span>
+                      <span class="text-gray-500">Lvl: {{ enhancement.level }}</span>
+                      <span class="px-1 bg-green-100 text-green-700 rounded font-semibold">+{{ enhancement.totalCost }}%</span>
+                    </div>
+                    <button
+                      type="button"
+                      @click="toggleEnhancementEdit(idx)"
+                      class="text-gray-600 hover:text-green-600 text-sm"
+                      title="Edit"
+                    >
+                      ⚙️
+                    </button>
+                  </div>
+                  <div v-if="enhancement.details" class="text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">
+                    {{ enhancement.details }}
+                  </div>
+                </div>
+
+                <!-- Edit View -->
+                <div v-else class="p-2 bg-gray-50">
+                  <div class="flex items-start justify-between gap-2 mb-1">
+                    <input
+                      v-model="enhancement.name"
+                      type="text"
+                      placeholder="Name"
+                      class="flex-1 px-1 py-1 border rounded text-xs"
+                    />
+                    <button
+                      type="button"
+                      @click="toggleEnhancementEdit(idx)"
+                      class="text-gray-600 hover:text-green-600 text-sm"
+                      title="Done"
+                    >
+                      ⚙️
+                    </button>
+                  </div>
                   <input
-                    v-model="enhancement.name"
+                    v-model="enhancement.details"
                     type="text"
-                    placeholder="Name"
-                    class="col-span-2 px-1 py-1 border rounded text-xs"
+                    placeholder="Details"
+                    class="w-full px-1 py-1 border rounded text-xs mb-1"
                   />
+                  <div class="grid grid-cols-3 gap-1 mb-2">
+                    <div>
+                      <label class="text-xs text-gray-500">Cost</label>
+                      <input
+                        v-model.number="enhancement.pointCost"
+                        type="number"
+                        class="w-full px-1 py-1 border rounded text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label class="text-xs text-gray-500">Lvl</label>
+                      <input
+                        v-model.number="enhancement.level"
+                        type="number"
+                        class="w-full px-1 py-1 border rounded text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label class="text-xs text-gray-500">Total</label>
+                      <div class="px-1 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold text-center">
+                        +{{ enhancement.totalCost }}%
+                      </div>
+                    </div>
+                  </div>
                   <button
                     type="button"
                     @click="removeEnhancement(idx)"
-                    class="text-red-600 hover:text-red-800 text-xs"
+                    class="text-red-600 hover:text-red-800 text-sm"
+                    title="Remove"
                   >
-                    Remove
+                    🗑️
                   </button>
-                </div>
-                <input
-                  v-model="enhancement.details"
-                  type="text"
-                  placeholder="Details"
-                  class="w-full px-1 py-1 border rounded text-xs mb-1"
-                />
-                <div class="grid grid-cols-3 gap-1">
-                  <div>
-                    <label class="text-xs text-gray-500">Cost</label>
-                    <input
-                      v-model.number="enhancement.pointCost"
-                      type="number"
-                      class="w-full px-1 py-1 border rounded text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label class="text-xs text-gray-500">Lvl</label>
-                    <input
-                      v-model.number="enhancement.level"
-                      type="number"
-                      class="w-full px-1 py-1 border rounded text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label class="text-xs text-gray-500">Total</label>
-                    <div class="px-1 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold text-center">
-                      +{{ enhancement.totalCost }}%
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -327,52 +362,87 @@
               <div
                 v-for="(limitation, idx) in realmForm.limitations"
                 :key="limitation.id"
-                class="border border-gray-200 rounded p-2 bg-gray-50"
+                class="border border-gray-200 rounded bg-white"
               >
-                <div class="grid grid-cols-3 gap-1 mb-1">
+                <!-- Readonly View -->
+                <div v-if="!editingLimitation[idx]" class="p-2">
+                  <div class="flex items-center justify-between gap-2 mb-1">
+                    <div class="flex items-center gap-2 flex-1 text-xs">
+                      <span class="font-semibold">{{ limitation.name || 'Unnamed' }}</span>
+                      <span class="text-gray-500">Cost: {{ limitation.pointCost }}</span>
+                      <span class="text-gray-500">Lvl: {{ limitation.level }}</span>
+                      <span class="px-1 bg-red-100 text-red-700 rounded font-semibold">{{ limitation.totalCost }}%</span>
+                    </div>
+                    <button
+                      type="button"
+                      @click="toggleLimitationEdit(idx)"
+                      class="text-gray-600 hover:text-red-600 text-sm"
+                      title="Edit"
+                    >
+                      ⚙️
+                    </button>
+                  </div>
+                  <div v-if="limitation.details" class="text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded">
+                    {{ limitation.details }}
+                  </div>
+                </div>
+
+                <!-- Edit View -->
+                <div v-else class="p-2 bg-gray-50">
+                  <div class="flex items-start justify-between gap-2 mb-1">
+                    <input
+                      v-model="limitation.name"
+                      type="text"
+                      placeholder="Name"
+                      class="flex-1 px-1 py-1 border rounded text-xs"
+                    />
+                    <button
+                      type="button"
+                      @click="toggleLimitationEdit(idx)"
+                      class="text-gray-600 hover:text-red-600 text-sm"
+                      title="Done"
+                    >
+                      ⚙️
+                    </button>
+                  </div>
                   <input
-                    v-model="limitation.name"
+                    v-model="limitation.details"
                     type="text"
-                    placeholder="Name"
-                    class="col-span-2 px-1 py-1 border rounded text-xs"
+                    placeholder="Details"
+                    class="w-full px-1 py-1 border rounded text-xs mb-1"
                   />
+                  <div class="grid grid-cols-3 gap-1 mb-2">
+                    <div>
+                      <label class="text-xs text-gray-500">Cost</label>
+                      <input
+                        v-model.number="limitation.pointCost"
+                        type="number"
+                        class="w-full px-1 py-1 border rounded text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label class="text-xs text-gray-500">Lvl</label>
+                      <input
+                        v-model.number="limitation.level"
+                        type="number"
+                        class="w-full px-1 py-1 border rounded text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label class="text-xs text-gray-500">Total</label>
+                      <div class="px-1 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold text-center">
+                        {{ limitation.totalCost }}%
+                      </div>
+                    </div>
+                  </div>
                   <button
                     type="button"
                     @click="removeLimitation(idx)"
-                    class="text-red-600 hover:text-red-800 text-xs"
+                    class="text-red-600 hover:text-red-800 text-sm"
+                    title="Remove"
                   >
-                    Remove
+                    🗑️
                   </button>
-                </div>
-                <input
-                  v-model="limitation.details"
-                  type="text"
-                  placeholder="Details"
-                  class="w-full px-1 py-1 border rounded text-xs mb-1"
-                />
-                <div class="grid grid-cols-3 gap-1">
-                  <div>
-                    <label class="text-xs text-gray-500">Cost</label>
-                    <input
-                      v-model.number="limitation.pointCost"
-                      type="number"
-                      class="w-full px-1 py-1 border rounded text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label class="text-xs text-gray-500">Lvl</label>
-                    <input
-                      v-model.number="limitation.level"
-                      type="number"
-                      class="w-full px-1 py-1 border rounded text-xs"
-                    />
-                  </div>
-                  <div>
-                    <label class="text-xs text-gray-500">Total</label>
-                    <div class="px-1 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold text-center">
-                      {{ limitation.totalCost }}%
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -703,6 +773,10 @@ const saving = ref(false)
 const saved = ref(false)
 const loadedRealmId = ref<string | null>(null)
 
+// Edit state tracking for enhancements and limitations
+const editingEnhancement = ref<Record<number, boolean>>({})
+const editingLimitation = ref<Record<number, boolean>>({})
+
 const isEditMode = computed(() => !!props.realmId)
 
 // Computed lookups
@@ -829,6 +903,7 @@ const resourcePointCostComputed = computed(() =>
 
 // Enhancement management
 const addEnhancement = () => {
+  const newIndex = realmForm.value.enhancements.length
   realmForm.value.enhancements.push({
     id: Math.random().toString(36).substr(2, 9),
     name: '',
@@ -837,14 +912,23 @@ const addEnhancement = () => {
     level: 1,
     totalCost: 0
   })
+  // Put new enhancement in edit mode
+  editingEnhancement.value[newIndex] = true
 }
 
 const removeEnhancement = (index: number) => {
   realmForm.value.enhancements.splice(index, 1)
+  // Clean up edit state
+  delete editingEnhancement.value[index]
+}
+
+const toggleEnhancementEdit = (index: number) => {
+  editingEnhancement.value[index] = !editingEnhancement.value[index]
 }
 
 // Limitation management
 const addLimitation = () => {
+  const newIndex = realmForm.value.limitations.length
   realmForm.value.limitations.push({
     id: Math.random().toString(36).substr(2, 9),
     name: '',
@@ -853,10 +937,18 @@ const addLimitation = () => {
     level: 1,
     totalCost: 0
   })
+  // Put new limitation in edit mode
+  editingLimitation.value[newIndex] = true
 }
 
 const removeLimitation = (index: number) => {
   realmForm.value.limitations.splice(index, 1)
+  // Clean up edit state
+  delete editingLimitation.value[index]
+}
+
+const toggleLimitationEdit = (index: number) => {
+  editingLimitation.value[index] = !editingLimitation.value[index]
 }
 
 // Resource Point management
