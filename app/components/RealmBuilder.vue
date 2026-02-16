@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form id="realm-form" @submit.prevent="saveRealmFn" class="space-y-4">
+    <form id="realm-form" @submit.prevent="handleSubmit" class="space-y-4">
       <!-- FIRST BLOCK: Basic Info (3 columns) -->
       <div class="border border-gray-300 rounded-md p-3">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -1040,5 +1040,10 @@ const saveRealmFn = async (options?: { showSaved?: boolean; closeAfter?: boolean
   } finally {
     saving.value = false
   }
+}
+
+const handleSubmit = (event: SubmitEvent) => {
+  event.preventDefault()
+  void saveRealmFn()
 }
 </script>
