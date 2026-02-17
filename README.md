@@ -1,55 +1,31 @@
 # GURPS Helper App
 
-A web application for creating and managing GURPS realm lists, spaceship sheets, and automatic ritual path magic calculations.
+GURPS Helper is a Nuxt 4 web app for managing GURPS realms and spaceships and for calculating Ritual Path Magic. It uses Vue 3, TypeScript, Tailwind CSS, and Supabase for authentication and data persistence.
 
-## Development Plan
+## Current Status
 
-### Phase 1: Raw Project with Basic UI and Local File Saving
-+ Set up basic Nuxt.js project structure
-- Create default layouts, pages, components, and API endpoints
-- Implement basic UI for realm and spaceship management
-- Save/load data using Supabase (cloud storage with user accounts)
-- Basic CRUD operations for realm and spaceship data
+### Working
 
-### Phase 2: UI Enhancement
-- Improve user interface with better styling and UX
-- Add form validation and error handling
-- Implement responsive design
-- Add more detailed realm and spaceship components
-- Enhance navigation and layout
+- **Auth pages** for register/login using Supabase (`/auth/register`, `/auth/login`).
+- **Realm management** with Supabase-backed CRUD:
+	- list, create, edit, delete (requires login).
+	- detailed Realm Builder form with calculations and summaries.
+- **Ritual Path Magic** calculator:
+	- Spell Crafter (effects + modifiers -> total energy).
+	- Spell Roller (rolls until required energy, with crit rules).
 
-### Phase 3: Authentication and Cloud Saving
-- Implement simple user registration and login
-- Add user accounts and session management
-- Enable saving data to user accounts (database integration)
-- Add sharing and collaboration features
+### Partial / Placeholder
 
-## Features
+- **Spaceships** page and sheet UI are placeholders (no full editor or list yet).
 
-- **Realm Lists**: Manage lists of realms
-- **Spaceship Sheets**: Create spaceship sheets
-- **Ritual Path Magic Calculator**: Automatic calculation of ritual path magic
-- **Local Storage**: Save files locally for offline use
-- **User Accounts**: Register/login to save data in the cloud
+## What To Do Next
+
+- Build the Spaceship CRUD UI and connect it to Supabase data.
+- Add collaborative or sharing features.
 
 ## Tech Stack
 
-- **Framework**: Nuxt.js 4
-- **Language**: TypeScript
+- **Framework**: Nuxt 4
+- **Language**: TypeScript (strict mode)
 - **Styling**: Tailwind CSS
-- **Database**: TBD (for Phase 3)
-- **Authentication**: TBD (for Phase 3)
-
-## Setup
-
-```
-pnpm install
-
-pnpm dev
-```
-## Production
-```
-pnpm build
-
-pnpm preview
-```
+- **Auth & Data**: Supabase
