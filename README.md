@@ -26,6 +26,6 @@ GURPS Helper is a Nuxt 4 web app for managing GURPS realms and spaceships and fo
 ## Tech Stack
 
 - **Framework**: Nuxt 4
-- **Language**: TypeScript (strict mode)
+- **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Auth & Data**: Supabase
