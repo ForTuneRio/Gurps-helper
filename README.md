@@ -10,9 +10,9 @@ GURPS Helper is a Nuxt 4 web app for managing GURPS realms and spaceships and fo
 - **Realm management** with Supabase-backed CRUD:
 	- list, create, edit, delete (requires login).
 	- detailed Realm Builder form with calculations and summaries.
-- **Ritual Path Magic** calculator:
-	- Spell Crafter (effects + modifiers -> total energy).
-	- Spell Roller (rolls until required energy, with crit rules).
+- **Ritual Path Magic**
+	- Spell Crafter
+	- Spell Roller
 
 ### Partial / Placeholder
 
