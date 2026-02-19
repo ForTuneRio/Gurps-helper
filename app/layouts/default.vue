@@ -13,19 +13,19 @@
             </span>
             <button 
               @click="handleSignOut"
-              class="bg-red-600 hover:bg-red-700 px-3 py-2 rounded-full transition text-lg"
+              class="bg-red-600 hover:bg-red-700 p-2 rounded-full transition"
               title="Log Out"
             >
-              🚪
+              <ArrowRightOnRectangleIcon class="w-5 h-5" />
             </button>
           </template>
           <template v-else>
             <NuxtLink 
               to="/auth/login" 
-              class="bg-green-600 hover:bg-green-700 px-3 py-2 rounded-full transition text-lg"
+              class="bg-green-600 hover:bg-green-700 p-2 rounded-full transition"
               title="Account"
             >
-              👤
+              <UserIcon class="w-5 h-5" />
             </NuxtLink>
           </template>
         </div>
@@ -38,6 +38,8 @@
 </template>
 
 <script setup lang="ts">
+import { UserIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/solid'
+
 const { user, isAuthenticated, signOut } = useAuth()
 
 const handleSignOut = async () => {

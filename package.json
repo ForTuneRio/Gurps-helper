@@ -10,8 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.2.0",
     "@nuxtjs/supabase": "^2.0.3",
     "@supabase/supabase-js": "^2.95.3",
+    "heroicons": "^2.2.0",
     "nuxt": "^4.2.2",
     "vue": "^3.5.27",
     "vue-router": "^4.6.4"
