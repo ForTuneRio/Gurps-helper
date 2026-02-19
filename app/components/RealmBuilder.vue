@@ -314,6 +314,7 @@
                       <input
                         v-model.number="enhancement.pointCost"
                         type="number"
+                        min="0"
                         class="w-full px-1 py-1 border rounded text-xs"
                       />
                     </div>
@@ -322,6 +323,7 @@
                       <input
                         v-model.number="enhancement.level"
                         type="number"
+                        min="1"
                         class="w-full px-1 py-1 border rounded text-xs"
                       />
                     </div>
@@ -432,6 +434,7 @@
                       <input
                         v-model.number="limitation.level"
                         type="number"
+                        min="1"
                         class="w-full px-1 py-1 border rounded text-xs"
                       />
                     </div>
@@ -764,7 +767,10 @@ import {
 } from '~/utils/realmCalculations'
 
 const props = defineProps<{ realmId?: string }>()
-const emit = defineEmits<{ close: [] }>()
+const emit = defineEmits<{ 
+  close: []
+  dirty: [isDirty: boolean]
+}>()
 
 const { saveRealm, createEmptyRealm, realms, loadRealmForEdit } = useRealms()
 const realmForm = ref<Realm>(createEmptyRealm())
@@ -773,6 +779,8 @@ const saved = ref(false)
 const loadedRealmId = ref<string | null>(null)
 const isDirty = ref(false)
 const autoSaveTimer = ref<number | null>(null)
+
+
 
 // Edit state tracking for enhancements and limitations
 const editingEnhancement = ref<Record<number, boolean>>({})
@@ -799,6 +807,11 @@ const maxPopulationComputed = computed(() =>
     realmForm.value.surroundings.totalArea
   )
 )
+
+// Watch isDirty and emit when it changes
+watch(isDirty, (dirty) => {
+  emit('dirty', dirty)
+}, { immediate: true })
 
 // Watchers for automatic totalCost calculation
 watch(() => realmForm.value.enhancements, (enhancements) => {
@@ -994,12 +1007,22 @@ onMounted(() => {
     if (!realmForm.value.name.trim()) return
     void saveRealmFn({ showSaved: false, closeAfter: false })
   }, 10 * 60 * 1000)
-})
 
-onUnmounted(() => {
-  if (autoSaveTimer.value !== null) {
-    window.clearInterval(autoSaveTimer.value)
+  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    if (isDirty.value) {
+      e.preventDefault()
+      e.returnValue = ''
+      return ''
+    }
   }
+  window.addEventListener('beforeunload', handleBeforeUnload)
+
+  onUnmounted(() => {
+    if (autoSaveTimer.value !== null) {
+      window.clearInterval(autoSaveTimer.value)
+    }
+    window.removeEventListener('beforeunload', handleBeforeUnload)
+  })
 })
 
 const saveRealmFn = async (options?: { showSaved?: boolean; closeAfter?: boolean }) => {
