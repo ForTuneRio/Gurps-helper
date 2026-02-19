@@ -6,7 +6,7 @@ GURPS Helper is a Nuxt 4 web app for managing GURPS realms and spaceships and fo
 
 ### Working
 
-- **Auth pages** for register/login using Supabase (`/auth/register`, `/auth/login`).
+- **Auth pages**
 - **Realm management** with Supabase-backed CRUD:
 	- list, create, edit, delete (requires login).
 	- detailed Realm Builder form with calculations and summaries.
