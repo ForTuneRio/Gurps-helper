@@ -268,10 +268,10 @@
                       <button
                         type="button"
                         @click="toggleEnhancementEdit(idx)"
-                        class="text-gray-600 hover:text-green-600 text-sm"
+                        class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
                         title="Edit"
                       >
-                        ⚙️
+                        <Cog6ToothIcon class="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -295,10 +295,10 @@
                     <button
                       type="button"
                       @click="toggleEnhancementEdit(idx)"
-                      class="text-gray-600 hover:text-green-600 text-sm"
+                      class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
                       title="Done"
                     >
-                      ⚙️
+                      <Cog6ToothIcon class="w-4 h-4" />
                     </button>
                   </div>
                   <label class="text-xs text-gray-500">Description</label>
@@ -337,10 +337,10 @@
                   <button
                     type="button"
                     @click="removeEnhancement(idx)"
-                    class="text-red-600 hover:text-red-800 text-sm"
+                    class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
                     title="Remove"
                   >
-                    🗑️
+                    <TrashIcon class="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -379,10 +379,10 @@
                       <button
                         type="button"
                         @click="toggleLimitationEdit(idx)"
-                        class="text-gray-600 hover:text-red-600 text-sm"
+                        class="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400"
                         title="Edit"
                       >
-                        ⚙️
+                        <Cog6ToothIcon class="w-4 h-4" />
                       </button>
                     </div>
                   </div>
@@ -406,10 +406,10 @@
                     <button
                       type="button"
                       @click="toggleLimitationEdit(idx)"
-                      class="text-gray-600 hover:text-red-600 text-sm"
+                      class="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400"
                       title="Done"
                     >
-                      ⚙️
+                      <Cog6ToothIcon class="w-4 h-4" />
                     </button>
                   </div>
                   <label class="text-xs text-gray-500">Description</label>
@@ -448,10 +448,10 @@
                   <button
                     type="button"
                     @click="removeLimitation(idx)"
-                    class="text-red-600 hover:text-red-800 text-sm"
+                    class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
                     title="Remove"
                   >
-                    🗑️
+                    <TrashIcon class="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -750,6 +750,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useRealms } from '~/composables/useRealms'
+import { Cog6ToothIcon, TrashIcon } from '@heroicons/vue/24/solid'
 import type { Realm } from '~/types/realm'
 import {
   getHabitabilityLabel,
