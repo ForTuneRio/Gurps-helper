@@ -3,9 +3,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  css: ['~/assets/css/main.css'],
+
   modules: [
     '@nuxtjs/tailwindcss',
-    '@nuxtjs/supabase'
+    '@nuxtjs/supabase',
+    '@nuxtjs/color-mode'
   ],
 
   supabase: {
@@ -14,6 +17,13 @@ export default defineNuxtConfig({
       callback: '/confirm',
       exclude: ['/', '/auth/*', '/calculator*'],
     }
+  },
+
+  colorMode: {
+    classSuffix: '',
+    preference: 'system',
+    fallback: 'light',
+    storageKey: 'theme'
   },
 
   // Nuxt 4 optimizations

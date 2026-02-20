@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="realm-builder">
     <form id="realm-form" @submit.prevent="handleSubmit" class="space-y-4">
       <!-- FIRST BLOCK: Basic Info (3 columns) -->
       <div class="border border-gray-300 rounded-md p-3">
@@ -127,7 +127,7 @@
                   type="number"
                   class="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
-                <div class="flex-1 px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-700 text-xs">
+                <div class="flex-1 px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-700 text-xs">
                   {{ habitabilityComputed }}
                 </div>
               </div>
@@ -191,7 +191,7 @@
                   type="number"
                   class="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
-                <div class="flex-1 px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-700 text-xs">
+                <div class="flex-1 px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-700 text-xs">
                   {{ citizenLoyaltyComputed }}
                 </div>
               </div>
@@ -264,7 +264,7 @@
                     <div class="flex items-center gap-2 text-xs">
                       <span class="text-gray-500">Cost: {{ enhancement.pointCost }}</span>
                       <span class="text-gray-500">Lvl: {{ enhancement.level }}</span>
-                      <span class="px-1 bg-green-100 text-green-700 rounded font-semibold">+{{ enhancement.totalCost }}%</span>
+                      <span class="px-1 bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-200 rounded font-semibold">+{{ enhancement.totalCost }}%</span>
                       <button
                         type="button"
                         @click="toggleEnhancementEdit(idx)"
@@ -329,7 +329,7 @@
                     </div>
                     <div>
                       <label class="text-xs text-gray-500">Total</label>
-                      <div class="px-1 py-1 bg-green-100 text-green-700 rounded text-xs font-semibold text-center">
+                      <div class="px-1 py-1 bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-200 rounded text-xs font-semibold text-center">
                         +{{ enhancement.totalCost }}%
                       </div>
                     </div>
@@ -375,7 +375,7 @@
                     <div class="flex items-center gap-2 text-xs">
                       <span class="text-gray-500">Cost: {{ limitation.pointCost }}</span>
                       <span class="text-gray-500">Lvl: {{ limitation.level }}</span>
-                      <span class="px-1 bg-red-100 text-red-700 rounded font-semibold">{{ limitation.totalCost }}%</span>
+                      <span class="px-1 bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200 rounded font-semibold">{{ limitation.totalCost }}%</span>
                       <button
                         type="button"
                         @click="toggleLimitationEdit(idx)"
@@ -440,7 +440,7 @@
                     </div>
                     <div>
                       <label class="text-xs text-gray-500">Total</label>
-                      <div class="px-1 py-1 bg-red-100 text-red-700 rounded text-xs font-semibold text-center">
+                      <div class="px-1 py-1 bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200 rounded text-xs font-semibold text-center">
                         {{ limitation.totalCost }}%
                       </div>
                     </div>
@@ -480,7 +480,7 @@
               </div>
               <div>
                 <label class="block text-xs font-medium text-gray-700 mb-1">Max Pop.</label>
-                <div class="w-full px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-700 text-sm font-semibold">
+                <div class="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-700 text-sm font-semibold">
                   {{ maxPopulationComputed.toLocaleString() }}
                 </div>
               </div>
@@ -508,7 +508,7 @@
               </div>
               <div>
                 <label class="block text-xs font-medium text-gray-700 mb-1">Average Income</label>
-                <div class="w-full px-2 py-1 border border-gray-300 rounded bg-gray-50 text-gray-700 text-sm font-semibold">
+                <div class="w-full px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-700 text-sm font-semibold">
                   {{ averageIncomeComputed.toLocaleString() }}
                 </div>
               </div>

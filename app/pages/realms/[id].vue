@@ -3,7 +3,7 @@
     <div class="mb-4 flex items-center gap-2">
       <button
         @click="goBackToList"
-        class="inline-flex items-center gap-2 rounded-md bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
+        class="inline-flex items-center gap-2 rounded-md bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100 dark:bg-blue-900/40 dark:text-blue-200 dark:hover:bg-blue-900/60"
       >
         <span aria-hidden="true">←</span>
         Back to list
@@ -17,13 +17,13 @@
       </button>
     </div>
 
-    <div v-if="isNew" class="p-4 bg-white border border-green-200 rounded-lg">
+    <div v-if="isNew" class="p-4 bg-white dark:bg-gray-800 border border-green-200 dark:border-green-900 rounded-lg">
       <RealmBuilder @dirty="realmBuilderDirty = $event" />
     </div>
     <div v-else>
-      <div v-if="loading && !realm" class="py-8 text-gray-600">Loading realm...</div>
-      <div v-else-if="!realm" class="py-8 text-red-600">Realm not found.</div>
-      <div v-else class="p-4 bg-white border border-green-200 rounded-lg">
+      <div v-if="loading && !realm" class="py-8 text-gray-600 dark:text-gray-300">Loading realm...</div>
+      <div v-else-if="!realm" class="py-8 text-red-600 dark:text-red-400">Realm not found.</div>
+      <div v-else class="p-4 bg-white dark:bg-gray-800 border border-green-200 dark:border-green-900 rounded-lg">
         <RealmBuilder :realm-id="realmId" @dirty="realmBuilderDirty = $event" />
       </div>
     </div>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3 class="text-lg font-semibold mb-4">Build Your Spell</h3>
+        <h3 class="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Build Your Spell</h3>
 
         <form @submit.prevent="craftSpell" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -19,9 +19,9 @@
             </div>
         </div>
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-            Spell Effects
-            </label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Spell Effects
+          </label>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
             <select v-model="effectDraft.path" class="input">
                 <option disabled value="">Path</option>
@@ -35,9 +35,9 @@
                 <option value="Greater">Greater</option>
             </select>
             <button
-                type="button"
-                @click="addEffect"
-                class="bg-blue-600 text-white px-3 py-2 rounded"
+              type="button"
+              @click="addEffect"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded"
             >
                 Add Effect
             </button>
@@ -46,12 +46,12 @@
             <li
                 v-for="(effect, i) in selectedEffects"
                 :key="i"
-                class="flex justify-between items-center bg-gray-100 px-3 py-2 rounded"
+              class="flex justify-between items-center bg-gray-100 dark:bg-gray-800 px-3 py-2 rounded"
             >
-                <span>{{ effect.name }} — {{ effect.cost }}</span>
+              <span class="text-gray-900 dark:text-gray-100">{{ effect.name }} — {{ effect.cost }}</span>
                 <button
                 @click="selectedEffects.splice(i, 1)"
-                class="text-red-600 text-sm"
+              class="text-red-600 dark:text-red-400 text-sm"
                 >
                 Remove
                 </button>
@@ -60,9 +60,9 @@
         </div>
 
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-            Modifiers
-            </label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Modifiers
+          </label>
             <div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                     <label
@@ -97,14 +97,14 @@
         </form>
     </div>
 
-    <div v-if="craftedSpell" class="p-4 bg-gray-50 rounded-md">
-        <h4 class="text-lg font-semibold mb-3">Spell Details</h4>
+    <div v-if="craftedSpell" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-md">
+      <h4 class="text-lg font-semibold mb-3 text-gray-900 dark:text-gray-100">Spell Details</h4>
         <div class="space-y-2">
-        <p><strong>Name:</strong> {{ craftedSpell.name }}</p>
-        <p><strong>Effects:</strong> {{ craftedSpell.effects.map(e => e.name).join(', ') }}</p>
-        <p><strong>Modifiers:</strong>{{ craftedSpell.modifiers.map(m => `${m.name} (${m.cost})`).join(', ') }}</p>
-        <p><strong>Greater Effects:</strong> {{ craftedSpell.greaterEffects }}</p>
-        <p><strong>Total Energy Required:</strong> <span class="text-xl font-bold text-blue-600">{{ craftedSpell.totalEnergy }}</span></p>
+      <p class="text-gray-900 dark:text-gray-100"><strong>Name:</strong> {{ craftedSpell.name }}</p>
+      <p class="text-gray-900 dark:text-gray-100"><strong>Effects:</strong> {{ craftedSpell.effects.map(e => e.name).join(', ') }}</p>
+      <p class="text-gray-900 dark:text-gray-100"><strong>Modifiers:</strong>{{ craftedSpell.modifiers.map(m => `${m.name} (${m.cost})`).join(', ') }}</p>
+      <p class="text-gray-900 dark:text-gray-100"><strong>Greater Effects:</strong> {{ craftedSpell.greaterEffects }}</p>
+      <p class="text-gray-900 dark:text-gray-100"><strong>Total Energy Required:</strong> <span class="text-xl font-bold text-blue-600 dark:text-blue-400">{{ craftedSpell.totalEnergy }}</span></p>
         </div>
     </div>
 </template>

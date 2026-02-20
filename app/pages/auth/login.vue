@@ -1,19 +1,19 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
     <div class="max-w-md w-full">
-      <div class="bg-white rounded-2xl shadow-xl p-8">
+      <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8">
         <div class="text-center mb-8">
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-          <p class="text-gray-600">Sign in to your GURPS Helper account</p>
+          <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Welcome Back</h1>
+          <p class="text-gray-600 dark:text-gray-400">Sign in to your GURPS Helper account</p>
         </div>
 
         <form @submit.prevent="handleLogin" class="space-y-6">
-          <div v-if="error" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+          <div v-if="error" class="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-200 px-4 py-3 rounded-lg">
             {{ error }}
           </div>
 
           <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Email Address
             </label>
             <input
@@ -21,13 +21,13 @@
               v-model="email"
               type="email"
               required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Password
             </label>
             <input
@@ -35,7 +35,7 @@
               v-model="password"
               type="password"
               required
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your password"
             />
           </div>
@@ -50,16 +50,16 @@
         </form>
 
         <div class="mt-6 text-center">
-          <p class="text-gray-600">
+          <p class="text-gray-600 dark:text-gray-400">
             Don't have an account?
-            <NuxtLink to="/auth/register" class="text-blue-600 hover:text-blue-700 font-medium">
+            <NuxtLink to="/auth/register" class="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium">
               Sign up
             </NuxtLink>
           </p>
         </div>
 
         <div class="mt-4 text-center">
-          <NuxtLink to="/" class="text-sm text-gray-500 hover:text-gray-700">
+          <NuxtLink to="/" class="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
             ← Back to Home
           </NuxtLink>
         </div>

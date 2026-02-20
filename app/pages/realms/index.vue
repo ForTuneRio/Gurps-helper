@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold mb-4">Realms</h1>
+    <h1 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Realms</h1>
     <div class="mb-4 flex gap-2">
       <button
         @click="createAndOpenRealm"
@@ -9,44 +9,42 @@
       >
         {{ creating ? 'Creating...' : '+ New Realm' }}
       </button>
-      <div v-if="createError" class="text-sm text-red-600 self-center">
+      <div v-if="createError" class="text-sm text-red-600 dark:text-red-400 self-center">
         {{ createError }}
       </div>
     </div>
 
     <!-- Loading State -->
-    <div v-if="loading" class="py-8 text-gray-600">
+    <div v-if="loading" class="py-8 text-gray-600 dark:text-gray-300">
       <p>Loading your realms...</p>
     </div>
 
     <!-- Realms List -->
     <div v-else-if="realms.length > 0" class="space-y-4">
-      <h2 class="text-2xl font-semibold mb-4">Your Realms</h2>
-      <div v-for="realm in realms" :key="realm.id" class="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
-        <div class="flex justify-between items-start gap-4">
-          <div class="flex-1">
-            <h3 class="text-xl font-bold text-gray-900">{{ realm.name }}</h3>
-            <p v-if="realm.details.description" class="text-gray-600 mt-2">{{ realm.details.description }}</p>
-            <p v-else class="text-gray-400 italic mt-2">No description</p>
+      <h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Your Realms</h2>
+      <div v-for="realm in realms" :key="realm.id" class="border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 hover:shadow-md transition-shadow overflow-hidden">
+        <div class="flex justify-between items-stretch gap-0">
+          <div 
+            @click="openRealm(realm.id)"
+            class="flex-1 p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
+          >
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ realm.name }}</h3>
+            <p v-if="realm.details.description" class="text-gray-600 dark:text-gray-300 mt-2">{{ realm.details.description }}</p>
+            <p v-else class="text-gray-400 dark:text-gray-500 italic mt-2">No description</p>
           </div>
-          <div class="flex gap-2 flex-shrink-0">
-            <button
-              @click="openRealm(realm.id)"
-              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded text-sm"
-            >
-              Edit
-            </button>
+          <div class="flex gap-2 flex-shrink-0 p-4 border-l border-gray-200 dark:border-gray-700">
             <button
               @click="deleteRealmFn(realm.id)"
-              class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded text-sm"
+              class="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-2 rounded transition"
+              title="Delete Realm"
             >
-              Delete
+              <TrashIcon class="w-5 h-5" />
             </button>
           </div>
         </div>
       </div>
     </div>
-    <div v-else class="text-center py-8 text-gray-600">
+    <div v-else class="text-center py-8 text-gray-600 dark:text-gray-300">
       <p class="text-lg">No realms yet. Create one to get started!</p>
     </div>
   </div>
@@ -54,6 +52,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { TrashIcon } from '@heroicons/vue/24/solid'
 import { useRealms } from '~/composables/useRealms'
 
 const router = useRouter()

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
+    "@nuxtjs/color-mode": "^4.0.0",
     "@nuxtjs/supabase": "^2.0.3",
     "@supabase/supabase-js": "^2.95.3",
     "heroicons": "^2.2.0",
