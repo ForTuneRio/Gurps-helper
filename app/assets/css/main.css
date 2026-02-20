@@ -64,3 +64,9 @@
 		color: #9ca3af !important;
 	}
 }
+
+.realm-builder input:focus,
+.realm-builder textarea:focus,
+.realm-builder select:focus {
+	--tw-ring-color: #9ca3af !important;
+}

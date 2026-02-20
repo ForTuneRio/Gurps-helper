@@ -2,7 +2,7 @@
   <div class="realm-builder">
     <form id="realm-form" @submit.prevent="handleSubmit" class="space-y-4">
       <!-- FIRST BLOCK: Basic Info (3 columns) -->
-      <div class="border border-gray-300 rounded-md p-3">
+      <div class="border border-gray-300 rounded-md p-3 bg-white dark:bg-gray-800">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <!-- Column 1: Government Info -->
           <div class="space-y-2">
@@ -15,7 +15,7 @@
                 v-model="realmForm.name"
                 type="text"
                 required
-                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
                 placeholder="Enter domain name"
               />
             </div>
@@ -28,7 +28,7 @@
                 v-model="realmForm.government.type"
                 type="text"
                 placeholder="e.g., Dictator"
-                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
             </div>
             <div>
@@ -40,7 +40,7 @@
                 v-model="realmForm.government.economyType"
                 type="text"
                 placeholder="e.g., Trad."
-                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
             </div>
             <div>
@@ -212,7 +212,7 @@
       </div>
 
       <!-- SECOND BLOCK: Realm Value Showcase (horizontal row) -->
-      <div class="border border-gray-300 rounded-md p-3">
+      <div class="border border-gray-300 rounded-md p-3 bg-white dark:bg-gray-800">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="flex items-center gap-2 text-sm">
             <span class="text-gray-600">Realm Value:</span>
@@ -234,7 +234,7 @@
       </div>
 
       <!-- THIRD BLOCK: Enhancements & Limitations (2 columns) -->
-      <div class="border border-gray-300 rounded-md p-3">
+      <div class="border border-gray-300 rounded-md p-3 bg-white dark:bg-gray-800">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
           <!-- Enhancements Column -->
           <div>
@@ -461,7 +461,7 @@
       </div>
 
       <!-- FOURTH BLOCK: People, Funds, Resources (3 columns) -->
-      <div class="border border-gray-300 rounded-md p-3">
+      <div class="border border-gray-300 rounded-md p-3 bg-white dark:bg-gray-800">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <!-- Column 1: People -->
           <div>
@@ -674,7 +674,7 @@
           <div>
             <div class="flex justify-between items-center mb-2">
               <h4 class="text-sm font-semibold text-green-700">
-                Resource Points <span class="text-xs text-gray-500 font-normal">({{ resourcePointCostComputed.toLocaleString() }} ea)</span>
+                Resource Points <span class="text-xs text-gray-500 font-normal">({{ resourcePointCostComputed.toLocaleString() }}$ each)</span>
               </h4>
               <button
                 type="button"
@@ -723,16 +723,18 @@
       </div>
 
       <!-- Description (optional, at bottom) -->
-      <div class="border border-gray-300 rounded-md p-3">
+      <div class="border border-gray-300 rounded-md p-3 bg-white dark:bg-gray-800">
         <label for="description" class="block text-xs font-medium text-gray-700 mb-1">
           Description
         </label>
         <textarea
           id="description"
+          ref="descriptionRef"
           v-model="realmForm.details.description"
           rows="2"
           placeholder="Enter realm description..."
-          class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+          class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500 resize-none overflow-hidden"
+          @input="resizeDescription"
         />
       </div>
 
@@ -746,7 +748,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useRealms } from '~/composables/useRealms'
 import type { Realm } from '~/types/realm'
 import {
@@ -779,6 +781,14 @@ const saved = ref(false)
 const loadedRealmId = ref<string | null>(null)
 const isDirty = ref(false)
 const autoSaveTimer = ref<number | null>(null)
+
+const descriptionRef = ref<HTMLTextAreaElement | null>(null)
+
+const resizeDescription = () => {
+  if (!descriptionRef.value) return
+  descriptionRef.value.style.height = 'auto'
+  descriptionRef.value.style.height = `${descriptionRef.value.scrollHeight}px`
+}
 
 
 
@@ -1001,7 +1011,15 @@ watch(
   { deep: true }
 )
 
+watch(
+  () => realmForm.value.details.description,
+  () => {
+    void nextTick(resizeDescription)
+  }
+)
+
 onMounted(() => {
+  void nextTick(resizeDescription)
   autoSaveTimer.value = window.setInterval(() => {
     if (saving.value || !isDirty.value) return
     if (!realmForm.value.name.trim()) return

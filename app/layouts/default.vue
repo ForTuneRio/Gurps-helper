@@ -1,8 +1,8 @@
 <template>
   <div class="min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-    <header class="bg-gray-800 text-white p-4 shadow-lg dark:bg-gray-950">
+    <header class="bg-white text-gray-900 dark:bg-gray-950 dark:text-white p-4 shadow-lg">
       <nav class="container mx-auto flex justify-between items-center">
-        <NuxtLink to="/" class="text-xl font-bold hover:text-blue-300 transition">
+        <NuxtLink to="/" class="text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 transition">
           GURPS Helper
         </NuxtLink>
         
@@ -10,19 +10,19 @@
           <button
             type="button"
             @click="toggleTheme"
-            class="bg-gray-700/60 hover:bg-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 p-2 rounded-full transition"
+            class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700 p-2 rounded-full transition"
             title="Toggle theme"
           >
             <ClientOnly>
               <SunIcon v-if="isDark" class="w-5 h-5 text-yellow-300" />
-              <MoonIcon v-else class="w-5 h-5 text-gray-200" />
+              <MoonIcon v-else class="w-5 h-5 text-gray-600" />
               <template #fallback>
                 <span class="block w-5 h-5" aria-hidden="true"></span>
               </template>
             </ClientOnly>
           </button>
           <template v-if="isAuthenticated">
-            <span class="text-gray-400 dark:text-gray-300 text-sm">
+            <span class="text-gray-600 dark:text-gray-300 text-sm">
               {{ user?.email }}
             </span>
             <button 
@@ -30,7 +30,7 @@
               class="bg-red-600 hover:bg-red-700 p-2 rounded-full transition"
               title="Log Out"
             >
-              <ArrowRightOnRectangleIcon class="w-5 h-5" />
+              <ArrowRightOnRectangleIcon class="w-5 h-5 text-white" />
             </button>
           </template>
           <template v-else>
@@ -39,7 +39,7 @@
               class="bg-green-600 hover:bg-green-700 p-2 rounded-full transition"
               title="Account"
             >
-              <UserIcon class="w-5 h-5" />
+              <UserIcon class="w-5 h-5 text-white" />
             </NuxtLink>
           </template>
         </div>

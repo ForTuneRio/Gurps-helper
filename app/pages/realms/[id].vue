@@ -17,13 +17,13 @@
       </button>
     </div>
 
-    <div v-if="isNew" class="p-4 bg-white dark:bg-gray-800 border border-green-200 dark:border-green-900 rounded-lg">
+    <div v-if="isNew" class="p-4">
       <RealmBuilder @dirty="realmBuilderDirty = $event" />
     </div>
     <div v-else>
       <div v-if="loading && !realm" class="py-8 text-gray-600 dark:text-gray-300">Loading realm...</div>
       <div v-else-if="!realm" class="py-8 text-red-600 dark:text-red-400">Realm not found.</div>
-      <div v-else class="p-4 bg-white dark:bg-gray-800 border border-green-200 dark:border-green-900 rounded-lg">
+      <div v-else class="p-4">
         <RealmBuilder :realm-id="realmId" @dirty="realmBuilderDirty = $event" />
       </div>
     </div>
