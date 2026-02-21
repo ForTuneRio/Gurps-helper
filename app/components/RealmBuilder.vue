@@ -543,6 +543,32 @@
           <!-- Column 2: Funds (2 sub-columns) -->
           <div>
             <h4 class="text-sm font-semibold text-green-700 mb-2">Funds</h4>
+            <!-- Military (full width) -->
+            <div class="mb-2 border border-gray-200 rounded p-2 bg-gray-50">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
+                <label class="flex items-center gap-2 text-xs font-medium text-gray-700">
+                  <input
+                    id="wartime"
+                    v-model="realmForm.military.wartime"
+                    type="checkbox"
+                    class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                  />
+                  <span>Wartime</span>
+                </label>
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">Mil. Budget Factor</label>
+                  <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
+                    {{ (militaryBudgetFactorComputed * 100).toFixed(1) }}%
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">Military Resources</label>
+                  <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
+                    {{ militaryResourcesComputed.toLocaleString() }}
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="grid grid-cols-2 gap-2">
               <!-- Sub-column 1: Taxation & Military -->
               <div class="space-y-2">
@@ -573,35 +599,9 @@
                   </div>
                 </div>
 
-                <!-- Military Box -->
-                <div class="border border-gray-200 rounded p-2 bg-gray-50">
-                  <div class="flex items-center gap-2 mb-2">
-                    <input
-                      id="wartime"
-                      v-model="realmForm.military.wartime"
-                      type="checkbox"
-                      class="rounded border-gray-300 text-green-600 focus:ring-green-500"
-                    />
-                    <label for="wartime" class="text-xs font-medium text-gray-700">
-                      Wartime
-                    </label>
-                  </div>
-                  <div>
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Mil. Budget Factor</label>
-                    <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
-                      {{ (militaryBudgetFactorComputed * 100).toFixed(1) }}%
-                    </div>
-                  </div>
-                  <div class="mt-2">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Military Resources</label>
-                    <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
-                      {{ militaryResourcesComputed.toLocaleString() }}
-                    </div>
-                  </div>
-                </div>
               </div>
 
-              <!-- Sub-column 2: Bank & Income Modifiers -->
+              <!-- Sub-column 2: Bank -->
               <div class="space-y-2">
                 <!-- Bank Box -->
                 <div class="border border-gray-200 rounded p-2 bg-gray-50">
@@ -629,41 +629,169 @@
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <!-- Income Modifiers Box (always visible) -->
-                <div class="border border-gray-200 rounded p-2 bg-gray-50">
-                  <div class="flex items-center gap-2 mb-1">
-                    <input
-                      id="corrupt"
-                      v-model="realmForm.fundsAndPeople.corrupt"
-                      type="checkbox"
-                      class="rounded border-gray-300 text-green-600 focus:ring-green-500"
-                    />
-                    <label for="corrupt" class="text-xs font-medium text-gray-700">
-                      Corrupt
-                    </label>
+            <!-- Income Modifiers (full width) -->
+            <div class="mt-2 border border-gray-200 rounded p-2 bg-gray-50 space-y-2">
+              <div class="flex items-center gap-2">
+                <input
+                  id="corrupt"
+                  v-model="realmForm.fundsAndPeople.corrupt"
+                  type="checkbox"
+                  class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                />
+                <label for="corrupt" class="text-xs font-medium text-gray-700">
+                  Corrupt
+                </label>
+              </div>
+
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <h5 class="text-xs font-semibold text-green-700">Income</h5>
+                  <button
+                    type="button"
+                    @click="addIndependentIncome"
+                    class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded"
+                  >
+                    + Add
+                  </button>
+                </div>
+                <div v-if="realmForm.fundsAndPeople.independentIncomes.length === 0" class="text-gray-400 text-xs italic">
+                  No income
+                </div>
+                <div v-else class="space-y-2">
+                  <div
+                    v-for="(income, idx) in realmForm.fundsAndPeople.independentIncomes"
+                    :key="income.id"
+                    class="border border-gray-200 rounded bg-white p-2"
+                  >
+                    <div class="space-y-2">
+                      <div class="flex items-center gap-2">
+                        <label class="flex items-center gap-2 text-xs text-gray-600 shrink-0">
+                          <input
+                            v-model="income.active"
+                            type="checkbox"
+                            class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                          />
+                        </label>
+                        <input
+                          v-model="income.name"
+                          type="text"
+                          placeholder="Income name"
+                          class="flex-1 px-2 py-1 border rounded text-xs"
+                        />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <input
+                          v-model.number="income.value"
+                          type="number"
+                          min="0"
+                          class="w-24 px-2 py-1 border rounded text-xs"
+                        />
+                        <label class="flex items-center gap-1 text-xs text-gray-600">
+                          <input
+                            v-model="income.valueType"
+                            type="radio"
+                            value="percent"
+                            class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                          />
+                          <span>%</span>
+                        </label>
+                        <label class="flex items-center gap-1 text-xs text-gray-600">
+                          <input
+                            v-model="income.valueType"
+                            type="radio"
+                            value="flat"
+                            class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                          />
+                          <span>$</span>
+                        </label>
+                        <button
+                          type="button"
+                          @click="removeIndependentIncome(idx)"
+                          class="ml-auto text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-xs shrink-0"
+                          title="Remove"
+                        >
+                          <TrashIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <input
-                      id="independentIncome"
-                      v-model="realmForm.fundsAndPeople.independentIncome"
-                      type="checkbox"
-                      class="rounded border-gray-300 text-green-600 focus:ring-green-500"
-                    />
-                    <label for="independentIncome" class="text-xs font-medium text-gray-700">
-                      Indep. Income
-                    </label>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <input
-                      id="debt"
-                      v-model="realmForm.fundsAndPeople.debt"
-                      type="checkbox"
-                      class="rounded border-gray-300 text-green-600 focus:ring-green-500"
-                    />
-                    <label for="debt" class="text-xs font-medium text-gray-700">
-                      Debt
-                    </label>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <h5 class="text-xs font-semibold text-red-700">Debt</h5>
+                  <button
+                    type="button"
+                    @click="addDebt"
+                    class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded"
+                  >
+                    + Add
+                  </button>
+                </div>
+                <div v-if="realmForm.fundsAndPeople.debts.length === 0" class="text-gray-400 text-xs italic">
+                  No debt
+                </div>
+                <div v-else class="space-y-2">
+                  <div
+                    v-for="(debt, idx) in realmForm.fundsAndPeople.debts"
+                    :key="debt.id"
+                    class="border border-gray-200 rounded bg-white p-2"
+                  >
+                    <div class="space-y-2">
+                      <div class="flex items-center gap-2">
+                        <label class="flex items-center gap-2 text-xs text-gray-600 shrink-0">
+                          <input
+                            v-model="debt.active"
+                            type="checkbox"
+                            class="rounded border-gray-300 text-red-600 focus:ring-red-500"
+                          />
+                        </label>
+                        <input
+                          v-model="debt.name"
+                          type="text"
+                          placeholder="Debt name"
+                          class="flex-1 px-2 py-1 border rounded text-xs"
+                        />
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <input
+                          v-model.number="debt.value"
+                          type="number"
+                          min="0"
+                          class="w-24 px-2 py-1 border rounded text-xs"
+                        />
+                        <label class="flex items-center gap-1 text-xs text-gray-600">
+                          <input
+                            v-model="debt.valueType"
+                            type="radio"
+                            value="percent"
+                            class="rounded border-gray-300 text-red-600 focus:ring-red-500"
+                          />
+                          <span>%</span>
+                        </label>
+                        <label class="flex items-center gap-1 text-xs text-gray-600">
+                          <input
+                            v-model="debt.valueType"
+                            type="radio"
+                            value="flat"
+                            class="rounded border-gray-300 text-red-600 focus:ring-red-500"
+                          />
+                          <span>$</span>
+                        </label>
+                        <button
+                          type="button"
+                          @click="removeDebt(idx)"
+                          class="ml-auto text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-xs shrink-0"
+                          title="Remove"
+                        >
+                          <TrashIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -893,28 +1021,38 @@ const revenueComputed = computed(() =>
 )
 
 // Income modifiers
-const debtLevel = computed(() => {
-  const debtLimitation = realmForm.value.limitations.find(l => 
-    l.name.toLowerCase().includes('debt')
-  )
-  return debtLimitation ? Math.abs(debtLimitation.totalCost) : 0
-})
+const independentIncomePercentComputed = computed(() =>
+  realmForm.value.fundsAndPeople.independentIncomes
+    .filter(i => i.active && i.valueType === 'percent')
+    .reduce((sum, i) => sum + i.value, 0)
+)
 
-const independentIncomeLevel = computed(() => {
-  const indIncomeEnhancement = realmForm.value.enhancements.find(e => 
-    e.name.toLowerCase().includes('independent income')
-  )
-  return indIncomeEnhancement ? indIncomeEnhancement.totalCost : 0
-})
+const independentIncomeFlatComputed = computed(() =>
+  realmForm.value.fundsAndPeople.independentIncomes
+    .filter(i => i.active && i.valueType === 'flat')
+    .reduce((sum, i) => sum + i.value, 0)
+)
+
+const debtPercentComputed = computed(() =>
+  realmForm.value.fundsAndPeople.debts
+    .filter(d => d.active && d.valueType === 'percent')
+    .reduce((sum, d) => sum + d.value, 0)
+)
+
+const debtFlatComputed = computed(() =>
+  realmForm.value.fundsAndPeople.debts
+    .filter(d => d.active && d.valueType === 'flat')
+    .reduce((sum, d) => sum + d.value, 0)
+)
 
 const earningsAtTurnComputed = computed(() => 
   calculateEarningsAtTurn(
     revenueComputed.value,
     realmForm.value.fundsAndPeople.corrupt,
-    realmForm.value.fundsAndPeople.debt,
-    realmForm.value.fundsAndPeople.independentIncome,
-    debtLevel.value,
-    independentIncomeLevel.value
+    debtPercentComputed.value,
+    debtFlatComputed.value,
+    independentIncomePercentComputed.value,
+    independentIncomeFlatComputed.value
   )
 )
 
@@ -974,6 +1112,36 @@ const removeLimitation = (index: number) => {
 
 const toggleLimitationEdit = (index: number) => {
   editingLimitation.value[index] = !editingLimitation.value[index]
+}
+
+// Independent income management
+const addIndependentIncome = () => {
+  realmForm.value.fundsAndPeople.independentIncomes.push({
+    id: Math.random().toString(36).substr(2, 9),
+    name: '',
+    value: 0,
+    valueType: 'percent',
+    active: true
+  })
+}
+
+const removeIndependentIncome = (index: number) => {
+  realmForm.value.fundsAndPeople.independentIncomes.splice(index, 1)
+}
+
+// Debt management
+const addDebt = () => {
+  realmForm.value.fundsAndPeople.debts.push({
+    id: Math.random().toString(36).substr(2, 9),
+    name: '',
+    value: 0,
+    valueType: 'percent',
+    active: true
+  })
+}
+
+const removeDebt = (index: number) => {
+  realmForm.value.fundsAndPeople.debts.splice(index, 1)
 }
 
 // Resource Point management

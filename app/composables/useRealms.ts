@@ -78,7 +78,12 @@ export const useRealms = () => {
           resourcePoints: realm.resources.resourcePoints || []
         },
         enhancements: realm.enhancements || [],
-        limitations: realm.limitations || []
+        limitations: realm.limitations || [],
+        fundsAndPeople: {
+          ...realm.fundsAndPeople,
+          independentIncomes: realm.fundsAndPeople.independentIncomes || [],
+          debts: realm.fundsAndPeople.debts || []
+        }
       }
 
       // Check if realm exists
@@ -219,8 +224,8 @@ export const useRealms = () => {
       revenueFactor: 0,
       revenue: 0,
       corrupt: false,
-      independentIncome: false,
-      debt: false,
+      independentIncomes: [],
+      debts: [],
       earningsAtTurn: 0,
       bank: 0,
       bankPlusEarnings: 0
@@ -245,6 +250,32 @@ export const useRealms = () => {
     copy.enhancements = [...(copy.enhancements || [])]
     copy.limitations = [...(copy.limitations || [])]
     copy.resources.resourcePoints = [...(copy.resources.resourcePoints || [])]
+    copy.fundsAndPeople.independentIncomes = (copy.fundsAndPeople.independentIncomes || []).map(item => {
+      const legacy = item as unknown as { pointCost?: number; level?: number }
+      const legacyValue = typeof legacy.pointCost === 'number' && typeof legacy.level === 'number'
+        ? legacy.pointCost * legacy.level
+        : undefined
+      return {
+        id: item.id || Math.random().toString(36).substr(2, 9),
+        name: item.name || '',
+        value: typeof item.value === 'number' ? item.value : (legacyValue ?? 0),
+        valueType: item.valueType === 'flat' || item.valueType === 'percent' ? item.valueType : 'percent',
+        active: typeof item.active === 'boolean' ? item.active : true
+      }
+    })
+    copy.fundsAndPeople.debts = (copy.fundsAndPeople.debts || []).map(item => {
+      const legacy = item as unknown as { pointCost?: number; level?: number }
+      const legacyValue = typeof legacy.pointCost === 'number' && typeof legacy.level === 'number'
+        ? legacy.pointCost * legacy.level
+        : undefined
+      return {
+        id: item.id || Math.random().toString(36).substr(2, 9),
+        name: item.name || '',
+        value: typeof item.value === 'number' ? item.value : (legacyValue ?? 0),
+        valueType: item.valueType === 'flat' || item.valueType === 'percent' ? item.valueType : 'percent',
+        active: typeof item.active === 'boolean' ? item.active : true
+      }
+    })
     return copy
   }
 

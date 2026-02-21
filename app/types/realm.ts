@@ -45,6 +45,14 @@ export interface LimitationItem {
   totalCost: number // Computed: pointCost * level (will be negative)
 }
 
+export interface IncomeModifierItem {
+  id: string
+  name: string
+  value: number
+  valueType: 'percent' | 'flat'
+  active: boolean
+}
+
 export interface FundsAndPeople {
   densityPerMile: number
   maxPopulation: number // Computed: densityPerMile * totalArea
@@ -56,8 +64,8 @@ export interface FundsAndPeople {
   revenueFactor: number // Computed from taxationCR
   revenue: number // Computed: population * averageIncome * workDependMod * revenueFactor
   corrupt: boolean
-  independentIncome: boolean
-  debt: boolean
+  independentIncomes: IncomeModifierItem[]
+  debts: IncomeModifierItem[]
   earningsAtTurn: number // Computed with modifiers
   bank: number
   bankPlusEarnings: number // Computed: bank + earningsAtTurn

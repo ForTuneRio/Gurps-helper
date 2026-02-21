@@ -225,15 +225,15 @@ export function calculateRevenue(
 
 /**
  * Calculates earnings at turn with income modifiers
- * Formula: Revenue - (corrupt ? 20% of Revenue) - (debt ? debt level from Revenue) + (independent income ? level from Revenue)
+ * Formula: Revenue - (corrupt ? 20% of Revenue) - debt% of Revenue - debt$ + independent income% of Revenue + independent income$
  */
 export function calculateEarningsAtTurn(
   revenue: number,
   corrupt: boolean,
-  debt: boolean,
-  independentIncome: boolean,
-  debtLevel: number = 0,
-  independentIncomeLevel: number = 0
+  debtPercent: number = 0,
+  debtFlat: number = 0,
+  independentIncomePercent: number = 0,
+  independentIncomeFlat: number = 0
 ): number {
   let earnings = revenue
 
@@ -242,14 +242,22 @@ export function calculateEarningsAtTurn(
     earnings -= revenue * 0.2
   }
 
-  // Subtract debt level percentage
-  if (debt && debtLevel > 0) {
-    earnings -= revenue * (debtLevel / 100)
+  // Subtract debt percentage
+  if (debtPercent > 0) {
+    earnings -= revenue * (debtPercent / 100)
   }
 
-  // Add independent income level percentage
-  if (independentIncome && independentIncomeLevel > 0) {
-    earnings += revenue * (independentIncomeLevel / 100)
+  if (debtFlat > 0) {
+    earnings -= debtFlat
+  }
+
+  // Add independent income percentage
+  if (independentIncomePercent > 0) {
+    earnings += revenue * (independentIncomePercent / 100)
+  }
+
+  if (independentIncomeFlat > 0) {
+    earnings += independentIncomeFlat
   }
 
   return Math.round(earnings)
