@@ -1,6 +1,10 @@
 # GURPS Helper App
 
+**Live at:** [https://www.gurps-helper.com/](https://www.gurps-helper.com/)
+
 GURPS Helper is a Nuxt 4 web app for managing GURPS realms and spaceships and for calculating Ritual Path Magic. It uses Vue 3, TypeScript, Tailwind CSS, and Supabase for authentication and data persistence.
+
+**Status:** Still in development, but usable.
 
 ## Current Status
 
@@ -9,19 +13,16 @@ GURPS Helper is a Nuxt 4 web app for managing GURPS realms and spaceships and fo
 - **Auth pages**
 - **Realm management** with Supabase-backed CRUD:
 	- list, create, edit, delete (requires login).
-	- detailed Realm Builder form with calculations and summaries.
+	- Realm Builder form with calculations and summaries.
 - **Ritual Path Magic**
 	- Spell Crafter
 	- Spell Roller
 
-### Partial / Placeholder
-
-- **Spaceships** page and sheet UI are placeholders (no full editor or list yet).
-
 ## What To Do Next
 
-- Build the Spaceship CRUD UI and connect it to Supabase data.
-- Add collaborative or sharing features.
+- Complete **Spaceship CRUD UI**
+- Add **Military / Mass Combat**
+- Add collaborative or sharing features
 
 ## Tech Stack
 
