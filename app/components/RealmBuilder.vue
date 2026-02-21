@@ -836,12 +836,12 @@
                     ✕
                   </button>
                 </div>
-                <div>
+                <div class="flex items-center gap-2">
                   <label class="text-xs text-gray-500">Value</label>
                   <input
                     v-model.number="rp.value"
                     type="number"
-                    class="w-full px-1 py-1 border rounded text-xs"
+                    class="w-24 px-1 py-1 border rounded text-xs"
                   />
                 </div>
               </div>
