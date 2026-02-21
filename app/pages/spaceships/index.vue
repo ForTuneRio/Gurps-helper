@@ -12,6 +12,16 @@
 <script setup lang="ts">
 const user = useSupabaseUser()
 
+useHead({
+  title: 'Spaceships - GURPS Helper',
+  meta: [
+    {
+      name: 'description',
+      content: 'Create and manage spaceship sheets for your GURPS campaigns with detailed specifications and characteristics.',
+    },
+  ],
+})
+
 if (!user.value) {
   await navigateTo('/auth/login')
 }

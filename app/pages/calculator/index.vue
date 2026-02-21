@@ -31,6 +31,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+useHead({
+  title: 'Magic Calculator - GURPS Helper',
+  meta: [
+    {
+      name: 'description',
+      content: 'Free Ritual Path Magic calculator for GURPS. Craft spells and calculate energy costs with the Spell Crafter and Spell Roller tools.',
+    },
+  ],
+})
+
 const activeTab = ref<'crafter' | 'roller'>('crafter')
 
 const tabClass = (tab: 'crafter' | 'roller') => [

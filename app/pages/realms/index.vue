@@ -55,6 +55,16 @@ import { ref } from 'vue'
 import { TrashIcon } from '@heroicons/vue/24/solid'
 import { useRealms } from '~/composables/useRealms'
 
+useHead({
+  title: 'Realms Management - GURPS Helper',
+  meta: [
+    {
+      name: 'description',
+      content: 'GURPS realms management system. Create and manage detailed realms with realm builder tools, calculations, and characteristics.',
+    },
+  ],
+})
+
 const router = useRouter()
 
 const user = useSupabaseUser()

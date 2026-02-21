@@ -15,3 +15,23 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+useHead({
+  title: 'GURPS Helper - Free Tools for Realms, Spaceships & Magic',
+  meta: [
+    {
+      name: 'description',
+      content: 'Free GURPS helper for managing realms, spaceships, and calculating Ritual Path Magic spells. Open source portfolio project by ForTuneRio.',
+    },
+    {
+      name: 'og:title',
+      content: 'GURPS Helper - Free GURPS Tools',
+    },
+    {
+      name: 'og:description',
+      content: 'Create and manage GURPS realms, spaceships, and perform Ritual Path Magic calculations.',
+    },
+  ],
+})
+</script>
