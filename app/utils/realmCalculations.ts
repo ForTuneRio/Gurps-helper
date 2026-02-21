@@ -98,8 +98,8 @@ const REVENUE_FACTOR_TABLE: Record<number, number> = {
  */
 export function getHabitabilityLabel(value: number): string {
   for (let i = HABITABILITY_TABLE.length - 1; i >= 0; i--) {
-    if (value >= HABITABILITY_TABLE[i].min) {
-      const entry = HABITABILITY_TABLE[i]
+    const entry = HABITABILITY_TABLE[i]
+    if (entry && value >= entry.min) {
       return entry.modifier ? `${entry.label} ${entry.modifier}` : entry.label
     }
   }
@@ -112,8 +112,9 @@ export function getHabitabilityLabel(value: number): string {
  */
 export function getCitizenLoyaltyLabel(value: number): string {
   for (let i = CITIZEN_LOYALTY_TABLE.length - 1; i >= 0; i--) {
-    if (value >= CITIZEN_LOYALTY_TABLE[i].min) {
-      return CITIZEN_LOYALTY_TABLE[i].label
+    const entry = CITIZEN_LOYALTY_TABLE[i]
+    if (entry && value >= entry.min) {
+      return entry.label
     }
   }
   return 'Disastrous'
