@@ -1,20 +1,59 @@
 import { ref, readonly } from 'vue'
 import type { Realm, ResourcePoint, EnhancementItem, LimitationItem } from '~/types/realm'
-import type { DbRealm } from '~/types/database'
+import { useRateLimit } from './useRateLimit'
+
+interface DbRealm {
+  id: string
+  user_id: string
+  name: string
+  data: Realm
+  created_at?: string
+  updated_at?: string
+}
 
 // Global state - shared across all composable instances
 const realms = ref<Realm[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
 const WRITE_COOLDOWN_MS = 1200
-let lastRealmWriteAt = 0
+const BACKOFF_BASE_MS = 2000
+const BACKOFF_MAX_MS = 60000
 
-const enforceRealmWriteCooldown = () => {
+const lastRealmWriteAt = new Map<string, number>()
+const backoffUntilByRealm = new Map<string, number>()
+const backoffMsByRealm = new Map<string, number>()
+
+const isRetryableError = (e: any): boolean => {
+  const status = e?.status
+  const message = String(e?.message || '')
+  return status === 429 || status === 503 || /network|fetch/i.test(message)
+}
+
+const applyBackoff = (realmId: string) => {
+  const prev = backoffMsByRealm.get(realmId) ?? 0
+  const next = Math.min(prev ? prev * 2 : BACKOFF_BASE_MS, BACKOFF_MAX_MS)
+  backoffMsByRealm.set(realmId, next)
+  backoffUntilByRealm.set(realmId, Date.now() + next)
+}
+
+const clearBackoff = (realmId: string) => {
+  backoffMsByRealm.delete(realmId)
+  backoffUntilByRealm.delete(realmId)
+}
+
+const enforceRealmWriteCooldown = (realmId: string) => {
   const now = Date.now()
-  if (now - lastRealmWriteAt < WRITE_COOLDOWN_MS) {
+  const backoffUntil = backoffUntilByRealm.get(realmId)
+  if (backoffUntil && now < backoffUntil) {
+    const seconds = Math.ceil((backoffUntil - now) / 1000)
+    throw new Error(`Please wait ${seconds}s before saving again.`)
+  }
+
+  const lastWriteAt = lastRealmWriteAt.get(realmId) ?? 0
+  if (now - lastWriteAt < WRITE_COOLDOWN_MS) {
     throw new Error('Please wait a moment before saving again.')
   }
-  lastRealmWriteAt = now
+  lastRealmWriteAt.set(realmId, now)
 }
 
 export const useRealms = () => {
@@ -74,7 +113,16 @@ export const useRealms = () => {
    * Save a realm to Supabase (create or update)
    */
   const saveRealm = async (realm: Realm): Promise<Realm> => {
-    enforceRealmWriteCooldown()
+    enforceRealmWriteCooldown(realm.id)
+    
+    // Check rate limit before allowing save
+    const { checkLimit, formatResetTime } = useRateLimit()
+    const isAllowed = await checkLimit('realm-save')
+    if (!isAllowed) {
+      const { status } = useRateLimit().getStatus()
+      throw new Error(`Rate limit exceeded. Please wait ${formatResetTime(status.value.resetIn)} before saving again.`)
+    }
+    
     const userId = await getUserId()
 
     loading.value = true
@@ -135,10 +183,15 @@ export const useRealms = () => {
         console.log('Created new realm:', realmToSave.name)
       }
 
+      clearBackoff(realm.id)
+
       return realmToSave
     } catch (e: any) {
       error.value = e.message
       console.error('Failed to save realm:', e)
+      if (isRetryableError(e)) {
+        applyBackoff(realm.id)
+      }
       throw e
     } finally {
       loading.value = false
@@ -149,7 +202,16 @@ export const useRealms = () => {
    * Delete a realm from Supabase
    */
   const deleteRealm = async (id: string) => {
-    enforceRealmWriteCooldown()
+    enforceRealmWriteCooldown(id)
+    
+    // Check rate limit before allowing delete
+    const { checkLimit, formatResetTime } = useRateLimit()
+    const isAllowed = await checkLimit('realm-delete')
+    if (!isAllowed) {
+      const { status } = useRateLimit().getStatus()
+      throw new Error(`Rate limit exceeded. Please wait ${formatResetTime(status.value.resetIn)} before deleting again.`)
+    }
+    
     const userId = await getUserId()
 
     loading.value = true
@@ -166,9 +228,13 @@ export const useRealms = () => {
 
       realms.value = realms.value.filter(r => r.id !== id)
       console.log('Deleted realm:', id)
+      clearBackoff(id)
     } catch (e: any) {
       error.value = e.message
       console.error('Failed to delete realm:', e)
+      if (isRetryableError(e)) {
+        applyBackoff(id)
+      }
       throw e
     } finally {
       loading.value = false

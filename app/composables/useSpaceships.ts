@@ -1,6 +1,7 @@
 import { ref, readonly } from 'vue'
 import type { Spaceship } from '~/types/spaceship'
 import type { DbSpaceship } from '~/types/database'
+import { useRateLimit } from './useRateLimit'
 
 // Global state - shared across all composable instances
 const spaceships = ref<Spaceship[]>([])
@@ -54,6 +55,15 @@ export const useSpaceships = () => {
 
   const saveSpaceship = async (spaceship: Spaceship) => {
     enforceSpaceshipWriteCooldown()
+    
+    // Check rate limit before allowing save
+    const { checkLimit, formatResetTime } = useRateLimit()
+    const isAllowed = await checkLimit('spaceship-save')
+    if (!isAllowed) {
+      const { status } = useRateLimit().getStatus()
+      throw new Error(`Rate limit exceeded. Please wait ${formatResetTime(status.value.resetIn)} before saving again.`)
+    }
+    
     if (!user.value) {
       throw new Error('You must be logged in to save spaceships')
     }
@@ -101,6 +111,15 @@ export const useSpaceships = () => {
 
   const deleteSpaceship = async (id: string) => {
     enforceSpaceshipWriteCooldown()
+    
+    // Check rate limit before allowing delete
+    const { checkLimit, formatResetTime } = useRateLimit()
+    const isAllowed = await checkLimit('spaceship-delete')
+    if (!isAllowed) {
+      const { status } = useRateLimit().getStatus()
+      throw new Error(`Rate limit exceeded. Please wait ${formatResetTime(status.value.resetIn)} before deleting again.`)
+    }
+    
     if (!user.value) {
       throw new Error('You must be logged in to delete spaceships')
     }

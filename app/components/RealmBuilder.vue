@@ -1021,6 +1021,8 @@ const saved = ref(false)
 const loadedRealmId = ref<string | null>(null)
 const isDirty = ref(false)
 const autoSaveTimer = ref<number | null>(null)
+const autoSaveDebounce = ref<number | null>(null)
+const ignoreNextChange = ref(false)
 
 const descriptionRef = ref<HTMLTextAreaElement | null>(null)
 
@@ -1321,6 +1323,7 @@ const loadRealmFromStore = () => {
 
   const realm = realms.value.find(r => r.id === props.realmId)
   if (realm) {
+    ignoreNextChange.value = true
     realmForm.value = loadRealmForEdit(realm as Realm)
     loadedRealmId.value = props.realmId
     isDirty.value = false
@@ -1333,7 +1336,21 @@ watch([() => props.realmId, realms], loadRealmFromStore)
 watch(
   realmForm,
   () => {
+    if (ignoreNextChange.value) {
+      ignoreNextChange.value = false
+      return
+    }
     isDirty.value = true
+
+    if (autoSaveDebounce.value !== null) {
+      window.clearTimeout(autoSaveDebounce.value)
+    }
+
+    autoSaveDebounce.value = window.setTimeout(() => {
+      if (saving.value || !isDirty.value) return
+      if (!realmForm.value.name.trim()) return
+      void saveRealmFn({ showSaved: false, closeAfter: false })
+    }, 10 * 1000)
   },
   { deep: true }
 )
@@ -1365,6 +1382,9 @@ onMounted(() => {
   onUnmounted(() => {
     if (autoSaveTimer.value !== null) {
       window.clearInterval(autoSaveTimer.value)
+    }
+    if (autoSaveDebounce.value !== null) {
+      window.clearTimeout(autoSaveDebounce.value)
     }
     window.removeEventListener('beforeunload', handleBeforeUnload)
   })
