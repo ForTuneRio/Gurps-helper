@@ -55,7 +55,9 @@
                 v-model.number="realmForm.government.reactionTimeModifier"
                 type="number"
                 maxlength="30"
-                @input="clampNumberLength"
+                data-min="0"
+                data-max="100"
+                @input="clampNumberInput"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -72,7 +74,9 @@
                 v-model.number="realmForm.surroundings.totalArea"
                 type="number"
                 maxlength="30"
-                @input="clampNumberLength"
+                data-min="0"
+                data-max="1000000000000000000"
+                @input="clampNumberInput"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -85,7 +89,9 @@
                 v-model.number="realmForm.surroundings.realmSizeValue"
                 type="number"
                 maxlength="30"
-                @input="clampNumberLength"
+                data-min="0"
+                data-max="100"
+                @input="clampNumberInput"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -138,7 +144,9 @@
                   v-model.number="realmForm.surroundings.habitabilityValue"
                   type="number"
                   maxlength="30"
-                  @input="clampNumberLength"
+                  data-min="-100"
+                  data-max="100"
+                  @input="clampNumberInput"
                   class="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
                 <div class="flex-1 px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-700 text-xs">
@@ -159,7 +167,9 @@
                 v-model.number="realmForm.government.controlRating"
                 type="number"
                 maxlength="30"
-                @input="clampNumberLength"
+                data-min="0"
+                data-max="6"
+                @input="clampNumberInput"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -172,7 +182,9 @@
                 v-model.number="realmForm.details.conformityRating"
                 type="number"
                 maxlength="30"
-                @input="clampNumberLength"
+                data-min="0"
+                data-max="6"
+                @input="clampNumberInput"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -185,7 +197,9 @@
                 v-model.number="realmForm.details.openessRating"
                 type="number"
                 maxlength="30"
-                @input="clampNumberLength"
+                data-min="0"
+                data-max="6"
+                @input="clampNumberInput"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -198,7 +212,9 @@
                 v-model.number="realmForm.details.educationRating"
                 type="number"
                 maxlength="30"
-                @input="clampNumberLength"
+                data-min="0"
+                data-max="6"
+                @input="clampNumberInput"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -212,7 +228,9 @@
                   v-model.number="realmForm.details.citizenLoyaltyValue"
                   type="number"
                   maxlength="30"
-                  @input="clampNumberLength"
+                  data-min="-100"
+                  data-max="100"
+                  @input="clampNumberInput"
                   class="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
                 <div class="flex-1 px-2 py-1 border border-gray-300 rounded bg-gray-100 text-gray-700 text-xs">
@@ -229,7 +247,9 @@
                 v-model.number="realmForm.details.infrastructureRating"
                 type="number"
                 maxlength="30"
-                @input="clampNumberLength"
+                data-min="0"
+                data-max="6"
+                @input="clampNumberInput"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -344,7 +364,9 @@
                         type="number"
                         min="0"
                         maxlength="30"
-                        @input="clampNumberLength"
+                        data-min="0"
+                        data-max="1000"
+                        @input="clampNumberInput"
                         class="w-full px-1 py-1 border rounded text-xs"
                       />
                     </div>
@@ -353,9 +375,11 @@
                       <input
                         v-model.number="enhancement.level"
                         type="number"
-                        min="1"
+                        min="0"
                         maxlength="30"
-                        @input="clampNumberLength"
+                        data-min="0"
+                        data-max="100"
+                        @input="clampNumberInput"
                         class="w-full px-1 py-1 border rounded text-xs"
                       />
                     </div>
@@ -459,9 +483,12 @@
                       <input
                         v-model.number="limitation.pointCost"
                         type="number"
+                        min="-1000"
                         max="0"
                         maxlength="30"
-                        @input="clampNumberLength"
+                        data-min="-1000"
+                        data-max="0"
+                        @input="clampNumberInput"
                         class="w-full px-1 py-1 border rounded text-xs"
                       />
                     </div>
@@ -470,9 +497,11 @@
                       <input
                         v-model.number="limitation.level"
                         type="number"
-                        min="1"
+                        min="0"
                         maxlength="30"
-                        @input="clampNumberLength"
+                        data-min="0"
+                        data-max="100"
+                        @input="clampNumberInput"
                         class="w-full px-1 py-1 border rounded text-xs"
                       />
                     </div>
@@ -514,7 +543,9 @@
                   v-model.number="realmForm.fundsAndPeople.densityPerMile"
                   type="number"
                   maxlength="30"
-                  @input="clampNumberLength"
+                  data-min="0"
+                  data-max="1000000000000000000"
+                  @input="clampNumberInput"
                   class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
@@ -533,7 +564,9 @@
                   v-model.number="realmForm.fundsAndPeople.population"
                   type="number"
                   maxlength="30"
-                  @input="clampNumberLength"
+                  data-min="0"
+                  data-max="1000000000000000000"
+                  @input="clampNumberInput"
                   class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
@@ -546,7 +579,9 @@
                   v-model.number="realmForm.details.techLevel"
                   type="number"
                   maxlength="30"
-                  @input="clampNumberLength"
+                  data-min="0"
+                  data-max="12"
+                  @input="clampNumberInput"
                   class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
@@ -568,7 +603,9 @@
                   min="0"
                   max="1"
                   maxlength="30"
-                  @input="clampNumberLength"
+                  data-min="0"
+                  data-max="1"
+                  @input="clampNumberInput"
                   class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
@@ -581,7 +618,9 @@
                   v-model.number="realmForm.fundsAndPeople.managementSkill"
                   type="number"
                   maxlength="30"
-                  @input="clampNumberLength"
+                  data-min="0"
+                  data-max="100"
+                  @input="clampNumberInput"
                   class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                 />
               </div>
@@ -631,7 +670,9 @@
                       v-model.number="realmForm.fundsAndPeople.taxationCR"
                       type="number"
                       maxlength="30"
-                      @input="clampNumberLength"
+                      data-min="0"
+                      data-max="6"
+                      @input="clampNumberInput"
                       class="w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                     />
                   </div>
@@ -664,7 +705,9 @@
                       v-model.number="realmForm.fundsAndPeople.bank"
                       type="number"
                       maxlength="30"
-                      @input="clampNumberLength"
+                      data-min="-1000000000000000000"
+                      data-max="1000000000000000000"
+                      @input="clampNumberInput"
                       class="w-full px-2 py-1 border rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
                     />
                   </div>
@@ -741,7 +784,9 @@
                           type="number"
                           min="0"
                           maxlength="30"
-                          @input="clampNumberLength"
+                          data-min="0"
+                          data-max="1000000000000000000"
+                          @input="clampNumberInput"
                           class="w-24 px-2 py-1 border rounded text-xs"
                         />
                         <label class="flex items-center gap-1 text-xs text-gray-600">
@@ -819,7 +864,9 @@
                           type="number"
                           min="0"
                           maxlength="30"
-                          @input="clampNumberLength"
+                          data-min="0"
+                          data-max="1000000000000000000"
+                          @input="clampNumberInput"
                           class="w-24 px-2 py-1 border rounded text-xs"
                         />
                         <label class="flex items-center gap-1 text-xs text-gray-600">
@@ -901,7 +948,9 @@
                     v-model.number="rp.value"
                     type="number"
                     maxlength="30"
-                    @input="clampNumberLength"
+                    data-min="0"
+                    data-max="1000000"
+                    @input="clampNumberInput"
                     class="w-24 px-1 py-1 border rounded text-xs"
                   />
                 </div>
@@ -977,12 +1026,49 @@ const descriptionRef = ref<HTMLTextAreaElement | null>(null)
 
 const MAX_NUMBER_LENGTH = 30
 
-const clampNumberLength = (event: Event) => {
+const clampNumberInput = (event: Event) => {
   const target = event.target as HTMLInputElement | null
   if (!target) return
-  if (target.value.length > MAX_NUMBER_LENGTH) {
-    target.value = target.value.slice(0, MAX_NUMBER_LENGTH)
+
+  let value = target.value
+  if (value.length > MAX_NUMBER_LENGTH) {
+    value = value.slice(0, MAX_NUMBER_LENGTH)
   }
+
+  if (value === '' || value === '-' || value === '.' || value === '-.') {
+    target.value = value
+    return
+  }
+
+  const numeric = Number(value)
+  if (!Number.isFinite(numeric)) {
+    target.value = value
+    return
+  }
+
+  const maxAttr = target.getAttribute('data-max')
+  const minAttr = target.getAttribute('data-min')
+  let clamped = numeric
+
+  if (maxAttr !== null) {
+    const maxValue = Number(maxAttr)
+    if (Number.isFinite(maxValue)) {
+      clamped = Math.min(clamped, maxValue)
+    }
+  }
+
+  if (minAttr !== null) {
+    const minValue = Number(minAttr)
+    if (Number.isFinite(minValue)) {
+      clamped = Math.max(clamped, minValue)
+    }
+  }
+
+  if (clamped !== numeric) {
+    value = String(clamped)
+  }
+
+  target.value = value
 }
 
 const resizeDescription = () => {

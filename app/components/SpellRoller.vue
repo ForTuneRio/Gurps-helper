@@ -28,8 +28,10 @@
                 type="number"
                 min="1"
                 required
+                max="100000"
                 maxlength="30"
-                @input="clampNumberLength"
+                data-max="100000"
+                @input="clampNumberInput"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             </div>
@@ -46,7 +48,8 @@
                 max="50"
                 required
                 maxlength="30"
-                @input="clampNumberLength"
+                data-max="100"
+                @input="clampNumberInput"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             </div>
@@ -63,7 +66,8 @@
                 max="50"
                 required
                 maxlength="30"
-                @input="clampNumberLength"
+                data-max="100"
+                @input="clampNumberInput"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             </div>
@@ -146,12 +150,49 @@ const castForm = ref({
 
 const MAX_NUMBER_LENGTH = 30
 
-const clampNumberLength = (event: Event) => {
+const clampNumberInput = (event: Event) => {
     const target = event.target as HTMLInputElement | null
     if (!target) return
-    if (target.value.length > MAX_NUMBER_LENGTH) {
-        target.value = target.value.slice(0, MAX_NUMBER_LENGTH)
+
+    let value = target.value
+    if (value.length > MAX_NUMBER_LENGTH) {
+        value = value.slice(0, MAX_NUMBER_LENGTH)
     }
+
+    if (value === '' || value === '-' || value === '.' || value === '-.') {
+        target.value = value
+        return
+    }
+
+    const numeric = Number(value)
+    if (!Number.isFinite(numeric)) {
+        target.value = value
+        return
+    }
+
+    const maxAttr = target.getAttribute('data-max')
+    const minAttr = target.getAttribute('data-min')
+    let clamped = numeric
+
+    if (maxAttr !== null) {
+        const maxValue = Number(maxAttr)
+        if (Number.isFinite(maxValue)) {
+            clamped = Math.min(clamped, maxValue)
+        }
+    }
+
+    if (minAttr !== null) {
+        const minValue = Number(minAttr)
+        if (Number.isFinite(minValue)) {
+            clamped = Math.max(clamped, minValue)
+        }
+    }
+
+    if (clamped !== numeric) {
+        value = String(clamped)
+    }
+
+    target.value = value
 }
 
 const error = ref('')

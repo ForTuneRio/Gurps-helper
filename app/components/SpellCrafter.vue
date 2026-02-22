@@ -38,6 +38,7 @@
             <button
               type="button"
               @click="addEffect"
+              :disabled="selectedEffects.length >= MAX_EFFECTS"
               class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded"
             >
                 Add Effect
@@ -82,8 +83,10 @@
                         type="number"
                         v-model.number="modifier.value"
                         min="0"
+                      max="1000"
                       maxlength="30"
-                      @input="clampNumberLength"
+                      data-max="1000"
+                      @input="clampNumberInput"
                         class="w-16 rounded border border-gray-300 px-2 py-1 text-sm"
                     />
                     </label>
@@ -124,13 +127,51 @@ const effectDraft = ref<EffectDraft>({
 })
 
 const MAX_NUMBER_LENGTH = 30
+const MAX_EFFECTS = 30
 
-const clampNumberLength = (event: Event) => {
+const clampNumberInput = (event: Event) => {
   const target = event.target as HTMLInputElement | null
   if (!target) return
-  if (target.value.length > MAX_NUMBER_LENGTH) {
-    target.value = target.value.slice(0, MAX_NUMBER_LENGTH)
+
+  let value = target.value
+  if (value.length > MAX_NUMBER_LENGTH) {
+    value = value.slice(0, MAX_NUMBER_LENGTH)
   }
+
+  if (value === '' || value === '-' || value === '.' || value === '-.') {
+    target.value = value
+    return
+  }
+
+  const numeric = Number(value)
+  if (!Number.isFinite(numeric)) {
+    target.value = value
+    return
+  }
+
+  const maxAttr = target.getAttribute('data-max')
+  const minAttr = target.getAttribute('data-min')
+  let clamped = numeric
+
+  if (maxAttr !== null) {
+    const maxValue = Number(maxAttr)
+    if (Number.isFinite(maxValue)) {
+      clamped = Math.min(clamped, maxValue)
+    }
+  }
+
+  if (minAttr !== null) {
+    const minValue = Number(minAttr)
+    if (Number.isFinite(minValue)) {
+      clamped = Math.max(clamped, minValue)
+    }
+  }
+
+  if (clamped !== numeric) {
+    value = String(clamped)
+  }
+
+  target.value = value
 }
 
 const selectedEffects = ref<SpellEffect[]>([])
@@ -151,6 +192,11 @@ const ACTION_COST: Record<EffectAction, number> = {
 const addEffect = () => {
   const { path, action, strength } = effectDraft.value
   if (!path) return
+
+  if (selectedEffects.value.length >= MAX_EFFECTS) {
+    error.value = `You can select up to ${MAX_EFFECTS} effects.`
+    return
+  }
 
   const greater = strength === 'Greater'
   const baseCost = ACTION_COST[action]
