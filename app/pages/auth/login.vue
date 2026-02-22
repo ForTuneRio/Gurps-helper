@@ -21,7 +21,7 @@
               v-model.trim="email"
               type="email"
               required
-              maxlength="254"
+              maxlength="100"
               inputmode="email"
               autocomplete="email"
               spellcheck="false"
@@ -39,7 +39,7 @@
               v-model="password"
               type="password"
               required
-              maxlength="128"
+              maxlength="100"
               autocomplete="current-password"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your password"
@@ -83,8 +83,8 @@ const password = ref('')
 const error = ref('')
 const loading = ref(false)
 
-const MAX_EMAIL_LENGTH = 254
-const MAX_PASSWORD_LENGTH = 128
+const MAX_EMAIL_LENGTH = 100
+const MAX_PASSWORD_LENGTH = 100
 
 const handleLogin = async () => {
   if (loading.value) return

@@ -13,6 +13,7 @@
                 v-model="craftForm.name"
                 type="text"
                 required
+              maxlength="100"
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter spell name"
             />
@@ -81,6 +82,8 @@
                         type="number"
                         v-model.number="modifier.value"
                         min="0"
+                      maxlength="30"
+                      @input="clampNumberLength"
                         class="w-16 rounded border border-gray-300 px-2 py-1 text-sm"
                     />
                     </label>
@@ -119,6 +122,16 @@ const effectDraft = ref<EffectDraft>({
   action: 'Sense',
   strength: 'Lesser'
 })
+
+const MAX_NUMBER_LENGTH = 30
+
+const clampNumberLength = (event: Event) => {
+  const target = event.target as HTMLInputElement | null
+  if (!target) return
+  if (target.value.length > MAX_NUMBER_LENGTH) {
+    target.value = target.value.slice(0, MAX_NUMBER_LENGTH)
+  }
+}
 
 const selectedEffects = ref<SpellEffect[]>([])
 const paths = ref<MagicPath[]>([...MAGIC_PATHS])

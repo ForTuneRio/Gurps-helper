@@ -25,7 +25,7 @@
               v-model.trim="email"
               type="email"
               required
-              maxlength="254"
+              maxlength="100"
               inputmode="email"
               autocomplete="email"
               spellcheck="false"
@@ -44,7 +44,7 @@
               type="password"
               required
               minlength="6"
-              maxlength="128"
+              maxlength="100"
               autocomplete="new-password"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="At least 6 characters"
@@ -61,7 +61,7 @@
               v-model="confirmPassword"
               type="password"
               required
-              maxlength="128"
+              maxlength="100"
               autocomplete="new-password"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="Confirm your password"
@@ -107,8 +107,8 @@ const error = ref('')
 const success = ref(false)
 const loading = ref(false)
 
-const MAX_EMAIL_LENGTH = 254
-const MAX_PASSWORD_LENGTH = 128
+const MAX_EMAIL_LENGTH = 100
+const MAX_PASSWORD_LENGTH = 100
 
 const handleRegister = async () => {
   if (loading.value) return
