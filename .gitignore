@@ -26,3 +26,9 @@ logs
 # Local AI instructions (not shared)
 .github/copilot-instructions.md
 
+# Supabase local
+.supabase/
+
+# Environment variables
+.env.local
+.env.*.local
