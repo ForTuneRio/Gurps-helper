@@ -6,6 +6,16 @@ import type { DbRealm } from '~/types/database'
 const realms = ref<Realm[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
+const WRITE_COOLDOWN_MS = 1200
+let lastRealmWriteAt = 0
+
+const enforceRealmWriteCooldown = () => {
+  const now = Date.now()
+  if (now - lastRealmWriteAt < WRITE_COOLDOWN_MS) {
+    throw new Error('Please wait a moment before saving again.')
+  }
+  lastRealmWriteAt = now
+}
 
 export const useRealms = () => {
   const supabase = useSupabaseClient()
@@ -64,6 +74,7 @@ export const useRealms = () => {
    * Save a realm to Supabase (create or update)
    */
   const saveRealm = async (realm: Realm): Promise<Realm> => {
+    enforceRealmWriteCooldown()
     const userId = await getUserId()
 
     loading.value = true
@@ -138,6 +149,7 @@ export const useRealms = () => {
    * Delete a realm from Supabase
    */
   const deleteRealm = async (id: string) => {
+    enforceRealmWriteCooldown()
     const userId = await getUserId()
 
     loading.value = true

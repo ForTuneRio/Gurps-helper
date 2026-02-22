@@ -11,9 +11,10 @@
       <button
         type="submit"
         form="realm-form"
-        class="inline-flex items-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700"
+        :disabled="loading"
+        class="inline-flex items-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        Save
+        {{ loading ? 'Saving...' : 'Save' }}
       </button>
     </div>
 

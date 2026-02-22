@@ -1,10 +1,22 @@
 import type { User } from '@supabase/supabase-js'
 
+const AUTH_COOLDOWN_MS = 1500
+let lastAuthRequestAt = 0
+
+const enforceAuthCooldown = () => {
+  const now = Date.now()
+  if (now - lastAuthRequestAt < AUTH_COOLDOWN_MS) {
+    throw new Error('Please wait a moment before trying again.')
+  }
+  lastAuthRequestAt = now
+}
+
 export const useAuth = () => {
   const supabase = useSupabaseClient()
   const user = useSupabaseUser()
   
   const signUp = async (email: string, password: string) => {
+    enforceAuthCooldown()
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -15,6 +27,7 @@ export const useAuth = () => {
   }
   
   const signIn = async (email: string, password: string) => {
+    enforceAuthCooldown()
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,

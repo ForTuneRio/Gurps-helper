@@ -22,9 +22,13 @@
             </label>
             <input
               id="email"
-              v-model="email"
+              v-model.trim="email"
               type="email"
               required
+              maxlength="254"
+              inputmode="email"
+              autocomplete="email"
+              spellcheck="false"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="you@example.com"
             />
@@ -40,6 +44,8 @@
               type="password"
               required
               minlength="6"
+              maxlength="128"
+              autocomplete="new-password"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="At least 6 characters"
             />
@@ -55,6 +61,8 @@
               v-model="confirmPassword"
               type="password"
               required
+              maxlength="128"
+              autocomplete="new-password"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               placeholder="Confirm your password"
             />
@@ -99,10 +107,33 @@ const error = ref('')
 const success = ref(false)
 const loading = ref(false)
 
+const MAX_EMAIL_LENGTH = 254
+const MAX_PASSWORD_LENGTH = 128
+
 const handleRegister = async () => {
+  if (loading.value) return
   error.value = ''
   success.value = false
   loading.value = true
+
+  const trimmedEmail = email.value.trim()
+  if (trimmedEmail.length === 0) {
+    error.value = 'Email is required'
+    loading.value = false
+    return
+  }
+
+  if (trimmedEmail.length > MAX_EMAIL_LENGTH) {
+    error.value = `Email must be at most ${MAX_EMAIL_LENGTH} characters`
+    loading.value = false
+    return
+  }
+
+  if (password.value.length > MAX_PASSWORD_LENGTH) {
+    error.value = `Password must be at most ${MAX_PASSWORD_LENGTH} characters`
+    loading.value = false
+    return
+  }
 
   // Validate passwords match
   if (password.value !== confirmPassword.value) {
@@ -119,7 +150,7 @@ const handleRegister = async () => {
   }
 
   try {
-    await signUp(email.value, password.value)
+    await signUp(trimmedEmail, password.value)
     success.value = true
     
     // Clear form

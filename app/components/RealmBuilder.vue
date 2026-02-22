@@ -15,6 +15,7 @@
                 v-model="realmForm.name"
                 type="text"
                 required
+                maxlength="80"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
                 placeholder="Enter domain name"
               />
@@ -28,6 +29,7 @@
                 v-model="realmForm.government.type"
                 type="text"
                 placeholder="e.g., Dictator"
+                maxlength="60"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
             </div>
@@ -40,6 +42,7 @@
                 v-model="realmForm.government.economyType"
                 type="text"
                 placeholder="e.g., Trad."
+                maxlength="60"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
               />
             </div>
@@ -89,6 +92,7 @@
                 v-model="realmForm.surroundings.areaKnowledgeClass"
                 type="text"
                 placeholder="e.g., Small county"
+                maxlength="60"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -101,6 +105,7 @@
                 v-model="realmForm.surroundings.defenseBonus"
                 type="text"
                 placeholder="e.g., +2"
+                maxlength="20"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -113,6 +118,7 @@
                 v-model="realmForm.surroundings.terrain"
                 type="text"
                 placeholder="e.g., Plains"
+                maxlength="60"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
               />
             </div>
@@ -289,6 +295,7 @@
                         v-model="enhancement.name"
                         type="text"
                         placeholder="Name"
+                        maxlength="60"
                         class="w-full px-1 py-1 border rounded text-xs"
                       />
                     </div>
@@ -306,6 +313,7 @@
                     v-model="enhancement.details"
                     type="text"
                     placeholder="Details"
+                    maxlength="160"
                     class="w-full px-1 py-1 border rounded text-xs mb-1"
                   />
                   <div class="grid grid-cols-3 gap-1 mb-2">
@@ -400,6 +408,7 @@
                         v-model="limitation.name"
                         type="text"
                         placeholder="Name"
+                        maxlength="60"
                         class="w-full px-1 py-1 border rounded text-xs"
                       />
                     </div>
@@ -417,6 +426,7 @@
                     v-model="limitation.details"
                     type="text"
                     placeholder="Details"
+                    maxlength="160"
                     class="w-full px-1 py-1 border rounded text-xs mb-1"
                   />
                   <div class="grid grid-cols-3 gap-1 mb-2">
@@ -679,6 +689,7 @@
                           v-model="income.name"
                           type="text"
                           placeholder="Income name"
+                          maxlength="60"
                           class="flex-1 px-2 py-1 border rounded text-xs"
                         />
                       </div>
@@ -754,6 +765,7 @@
                           v-model="debt.name"
                           type="text"
                           placeholder="Debt name"
+                          maxlength="60"
                           class="flex-1 px-2 py-1 border rounded text-xs"
                         />
                       </div>
@@ -826,6 +838,7 @@
                     v-model="rp.name"
                     type="text"
                     placeholder="Name"
+                    maxlength="60"
                     class="flex-1 px-1 py-1 border rounded text-xs"
                   />
                   <button
@@ -861,6 +874,7 @@
           v-model="realmForm.details.description"
           rows="2"
           placeholder="Enter realm description..."
+          maxlength="1000"
           class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500 resize-none overflow-hidden"
           @input="resizeDescription"
         />
@@ -1215,6 +1229,7 @@ onMounted(() => {
 const saveRealmFn = async (options?: { showSaved?: boolean; closeAfter?: boolean }) => {
   const showSaved = options?.showSaved ?? true
   const closeAfter = options?.closeAfter ?? true
+  if (saving.value) return
   saving.value = true
   try {
     // Sync all computed values before saving

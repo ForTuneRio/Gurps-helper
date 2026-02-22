@@ -6,6 +6,16 @@ import type { DbSpaceship } from '~/types/database'
 const spaceships = ref<Spaceship[]>([])
 const loading = ref(false)
 const error = ref<string | null>(null)
+const WRITE_COOLDOWN_MS = 1200
+let lastSpaceshipWriteAt = 0
+
+const enforceSpaceshipWriteCooldown = () => {
+  const now = Date.now()
+  if (now - lastSpaceshipWriteAt < WRITE_COOLDOWN_MS) {
+    throw new Error('Please wait a moment before saving again.')
+  }
+  lastSpaceshipWriteAt = now
+}
 
 export const useSpaceships = () => {
   const supabase = useSupabaseClient()
@@ -43,6 +53,7 @@ export const useSpaceships = () => {
   }
 
   const saveSpaceship = async (spaceship: Spaceship) => {
+    enforceSpaceshipWriteCooldown()
     if (!user.value) {
       throw new Error('You must be logged in to save spaceships')
     }
@@ -89,6 +100,7 @@ export const useSpaceships = () => {
   }
 
   const deleteSpaceship = async (id: string) => {
+    enforceSpaceshipWriteCooldown()
     if (!user.value) {
       throw new Error('You must be logged in to delete spaceships')
     }

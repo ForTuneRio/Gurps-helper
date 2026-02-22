@@ -18,9 +18,13 @@
             </label>
             <input
               id="email"
-              v-model="email"
+              v-model.trim="email"
               type="email"
               required
+              maxlength="254"
+              inputmode="email"
+              autocomplete="email"
+              spellcheck="false"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="you@example.com"
             />
@@ -35,6 +39,8 @@
               v-model="password"
               type="password"
               required
+              maxlength="128"
+              autocomplete="current-password"
               class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your password"
             />
@@ -77,12 +83,32 @@ const password = ref('')
 const error = ref('')
 const loading = ref(false)
 
+const MAX_EMAIL_LENGTH = 254
+const MAX_PASSWORD_LENGTH = 128
+
 const handleLogin = async () => {
+  if (loading.value) return
   error.value = ''
   loading.value = true
 
   try {
-    await signIn(email.value, password.value)
+    const trimmedEmail = email.value.trim()
+    if (trimmedEmail.length === 0) {
+      error.value = 'Email is required'
+      return
+    }
+
+    if (trimmedEmail.length > MAX_EMAIL_LENGTH) {
+      error.value = `Email must be at most ${MAX_EMAIL_LENGTH} characters`
+      return
+    }
+
+    if (password.value.length > MAX_PASSWORD_LENGTH) {
+      error.value = `Password must be at most ${MAX_PASSWORD_LENGTH} characters`
+      return
+    }
+
+    await signIn(trimmedEmail, password.value)
     await router.push('/realms')
   } catch (e: any) {
     error.value = e.message || 'Failed to sign in. Please check your credentials.'

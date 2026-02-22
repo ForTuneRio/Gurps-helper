@@ -28,8 +28,8 @@
             @click="openRealm(realm.id)"
             class="flex-1 p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
           >
-            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100">{{ realm.name }}</h3>
-            <p v-if="realm.details.description" class="text-gray-600 dark:text-gray-300 mt-2">{{ realm.details.description }}</p>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 break-words">{{ realm.name }}</h3>
+            <p v-if="realm.details.description" class="text-gray-600 dark:text-gray-300 mt-2 break-words">{{ realm.details.description }}</p>
             <p v-else class="text-gray-400 dark:text-gray-500 italic mt-2">No description</p>
           </div>
           <div class="flex gap-2 flex-shrink-0 p-4 border-l border-gray-200 dark:border-gray-700">
