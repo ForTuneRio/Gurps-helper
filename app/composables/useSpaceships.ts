@@ -1,6 +1,6 @@
 import { ref, readonly } from 'vue'
 import type { Spaceship } from '~/types/spaceship'
-import type { DbSpaceship } from '~/types/database'
+import type { DbSpaceship } from '~/types/database.types'
 import { useRateLimit } from './useRateLimit'
 
 // Global state - shared across all composable instances
@@ -57,10 +57,9 @@ export const useSpaceships = () => {
     enforceSpaceshipWriteCooldown()
     
     // Check rate limit before allowing save
-    const { checkLimit, formatResetTime } = useRateLimit()
+    const { checkLimit, formatResetTime, status } = useRateLimit()
     const isAllowed = await checkLimit('spaceship-save')
     if (!isAllowed) {
-      const { status } = useRateLimit().getStatus()
       throw new Error(`Rate limit exceeded. Please wait ${formatResetTime(status.value.resetIn)} before saving again.`)
     }
     
@@ -113,10 +112,9 @@ export const useSpaceships = () => {
     enforceSpaceshipWriteCooldown()
     
     // Check rate limit before allowing delete
-    const { checkLimit, formatResetTime } = useRateLimit()
+    const { checkLimit, formatResetTime, status } = useRateLimit()
     const isAllowed = await checkLimit('spaceship-delete')
     if (!isAllowed) {
-      const { status } = useRateLimit().getStatus()
       throw new Error(`Rate limit exceeded. Please wait ${formatResetTime(status.value.resetIn)} before deleting again.`)
     }
     

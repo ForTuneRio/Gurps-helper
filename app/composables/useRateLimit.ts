@@ -6,6 +6,13 @@ interface RateLimitStatus {
   isLimited: boolean
 }
 
+interface RateLimitResponse {
+  allowed: boolean
+  remaining: number
+  resetIn: number
+  retryAfter?: number
+}
+
 const rateLimitStatus = ref<RateLimitStatus>({
   remaining: 30,
   resetIn: 60,
@@ -33,7 +40,7 @@ export const useRateLimit = () => {
         return true // Allow if not authenticated
       }
 
-      const response = await $fetch('/api/rate-limit', {
+      const response = await $fetch<RateLimitResponse>('/api/rate-limit', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

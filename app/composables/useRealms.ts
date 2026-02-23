@@ -116,10 +116,9 @@ export const useRealms = () => {
     enforceRealmWriteCooldown(realm.id)
     
     // Check rate limit before allowing save
-    const { checkLimit, formatResetTime } = useRateLimit()
+    const { checkLimit, formatResetTime, status } = useRateLimit()
     const isAllowed = await checkLimit('realm-save')
     if (!isAllowed) {
-      const { status } = useRateLimit().getStatus()
       throw new Error(`Rate limit exceeded. Please wait ${formatResetTime(status.value.resetIn)} before saving again.`)
     }
     
@@ -205,10 +204,9 @@ export const useRealms = () => {
     enforceRealmWriteCooldown(id)
     
     // Check rate limit before allowing delete
-    const { checkLimit, formatResetTime } = useRateLimit()
+    const { checkLimit, formatResetTime, status } = useRateLimit()
     const isAllowed = await checkLimit('realm-delete')
     if (!isAllowed) {
-      const { status } = useRateLimit().getStatus()
       throw new Error(`Rate limit exceeded. Please wait ${formatResetTime(status.value.resetIn)} before deleting again.`)
     }
     
