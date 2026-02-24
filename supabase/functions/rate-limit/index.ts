@@ -1,5 +1,4 @@
-/// <reference lib="deno.window" />
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.95.3'
 
 const RATE_LIMIT_PER_MINUTE = 30
 const WINDOW_MS = 60 * 1000 // 1 minute
