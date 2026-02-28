@@ -20,6 +20,8 @@ GURPS Helper is a Nuxt 4 web app for managing GURPS realms and spaceships and fo
 
 ## What To Do Next
 
+- Add **InfoBox component** for attribute tooltips/help text
+- Add infoboxes for attributes in **Realm management** and **Rituals**
 - Complete **Spaceship CRUD UI**
 - Add **Military / Mass Combat**
 - Add collaborative or sharing features
