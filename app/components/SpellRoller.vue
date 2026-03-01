@@ -4,9 +4,8 @@
     <form @submit.prevent="castSpellfn" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-            <label for="castSpellName" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+            <label for="castSpellName" class="block text-sm font-medium text-gray-700 mb-1">
                 Spell Name
-                <InfoBox description="The name of the spell you are casting." />
             </label>
             <input
                 id="castSpellName"
@@ -20,9 +19,8 @@
             </div>
 
             <div>
-            <label for="requiredEnergy" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
+            <label for="requiredEnergy" class="block text-sm font-medium text-gray-700 mb-1">
                 Required Energy
-                <InfoBox description="The amount of energy needed to successfully cast this spell." />
             </label>
             <input
                 id="requiredEnergy"

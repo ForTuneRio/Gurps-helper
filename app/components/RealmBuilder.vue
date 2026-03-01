@@ -7,9 +7,8 @@
           <!-- Column 1: Government Info -->
           <div class="space-y-2">
             <div>
-              <label for="realmName" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
+              <label for="realmName" class="block text-xs font-medium text-gray-700 mb-1">
                 Domain Name
-                <InfoBox description="The name of your realm or domain." />
               </label>
               <input
                 id="realmName"
@@ -22,9 +21,8 @@
               />
             </div>
             <div>
-              <label for="govType" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
+              <label for="govType" class="block text-xs font-medium text-gray-700 mb-1">
                 Government Type
-                <InfoBox description="The type of government ruling the domain." />
               </label>
               <input
                 id="govType"
@@ -36,9 +34,8 @@
               />
             </div>
             <div>
-              <label for="economyType" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
+              <label for="economyType" class="block text-xs font-medium text-gray-700 mb-1">
                 Economy Type
-                <InfoBox description="The economic system of the domain." />
               </label>
               <input
                 id="economyType"
@@ -70,9 +67,8 @@
           <!-- Column 2: Surroundings -->
           <div class="space-y-2">
             <div>
-              <label for="totalArea" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
+              <label for="totalArea" class="block text-xs font-medium text-gray-700 mb-1">
                 Total Area (mile²)
-                <InfoBox description="The total area of the realm in square miles." />
               </label>
               <input
                 id="totalArea"
@@ -116,9 +112,8 @@
               />
             </div>
             <div>
-              <label for="defenseBonus" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
+              <label for="defenseBonus" class="block text-xs font-medium text-gray-700 mb-1">
                 Defense Bonus
-                <InfoBox description="Defensive bonuses for the realm." />
               </label>
               <input
                 id="defenseBonus"
@@ -587,8 +582,9 @@
                 />
               </div>
               <div>
-                <label for="techLevel" class="block text-xs font-medium text-gray-700 mb-1">
+                <label for="techLevel" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                   Tech Level (TL)
+                  <InfoBox title="Tech Level (TL)" description="Tech Level (TL) description placeholder." />
                 </label>
                 <input
                   id="techLevel"
@@ -608,8 +604,9 @@
                 </div>
               </div>
               <div>
-                <label for="workDependMod" class="block text-xs font-medium text-gray-700 mb-1">
+                <label for="workDependMod" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                   Work/Depend Mod
+                  <InfoBox title="Work/Depend Mod" description="Work/Depend Mod description placeholder." />
                 </label>
                 <input
                   id="workDependMod"
@@ -678,8 +675,9 @@
                 <!-- Taxation Box -->
                 <div class="border border-gray-200 rounded p-2 bg-gray-50">
                   <div>
-                    <label for="taxCR" class="block text-xs font-medium text-gray-700 mb-1">
+                    <label for="taxCR" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                       Taxation CR
+                      <InfoBox title="Taxation CR" description="Taxation CR description placeholder." />
                     </label>
                     <input
                       id="taxCR"
@@ -754,6 +752,7 @@
                 />
                 <label for="corrupt" class="text-xs font-medium text-gray-700">
                   Corrupt
+                  <InfoBox title="Corrupt" description="Corrupt description placeholder." />
                 </label>
               </div>
 
