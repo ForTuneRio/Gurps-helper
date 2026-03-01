@@ -14,7 +14,8 @@
           class="bg-gray-900 dark:bg-gray-800 text-white dark:text-gray-100 text-sm rounded-md px-3 py-2 max-w-xs whitespace-normal shadow-lg border border-gray-700"
         >
           <p v-if="title" class="font-semibold mb-1">{{ title }}</p>
-          <p>{{ description }}</p>
+          <p v-if="description">{{ description }}</p>
+          <slot />
           <div
             class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-900 dark:border-t-gray-800"
           ></div>
@@ -29,7 +30,7 @@ import { ref } from 'vue'
 
 defineProps<{
   title?: string
-  description: string
+  description?: string
 }>()
 
 const showTooltip = ref(false)

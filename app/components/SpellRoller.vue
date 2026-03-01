@@ -4,8 +4,9 @@
     <form @submit.prevent="castSpellfn" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-            <label for="castSpellName" class="block text-sm font-medium text-gray-700 mb-1">
+            <label for="castSpellName" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
                 Spell Name
+                <InfoBox description="The name of the spell you are casting." />
             </label>
             <input
                 id="castSpellName"
@@ -19,8 +20,9 @@
             </div>
 
             <div>
-            <label for="requiredEnergy" class="block text-sm font-medium text-gray-700 mb-1">
+            <label for="requiredEnergy" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
                 Required Energy
+                <InfoBox description="The amount of energy needed to successfully cast this spell." />
             </label>
             <input
                 id="requiredEnergy"
@@ -37,8 +39,9 @@
             </div>
 
             <div>
-            <label for="cap" class="block text-sm font-medium text-gray-700 mb-1">
+            <label for="cap" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
                 Effective Cap
+                <InfoBox description="The maximum effective skill level for gathering energy per roll." />
             </label>
             <input
                 id="cap"
@@ -55,8 +58,9 @@
             </div>
 
             <div>
-            <label for="skill" class="block text-sm font-medium text-gray-700 mb-1">
+            <label for="skill" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
                 Path Skill
+                <InfoBox description="Your skill level in the relevant magical path." />
             </label>
             <input
                 id="skill"
@@ -136,6 +140,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { CastingResult } from '~/types/magic'
+import InfoBox from '~/components/InfoBox.vue'
 const { castSpell } = useMagicCalculator()
 
 const result = ref<CastingResult | null>(null)

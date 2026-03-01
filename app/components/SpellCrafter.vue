@@ -5,8 +5,9 @@
         <form @submit.prevent="craftSpell" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-            <label for="spellName" class="block text-sm font-medium text-gray-700 mb-1">
+            <label for="spellName" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
                 Spell Name
+                <InfoBox description="Enter a unique name for your spell." />
             </label>
             <input
                 id="spellName"
@@ -20,8 +21,9 @@
             </div>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label class="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Spell Effects
+          <InfoBox description="Select magical paths, actions, and strengths to add effects to your spell." />
           </label>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
             <select v-model="effectDraft.path" class="input">
@@ -62,8 +64,9 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label class="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Modifiers
+          <InfoBox description="Enable and configure modifier values to adjust your spell's properties." />
           </label>
             <div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
@@ -117,6 +120,7 @@
 
 <script setup lang="ts">
 import { type SpellCraft, type MagicPath, type EffectDraft, type SpellEffect, type EffectAction, type ModifierState, MAGIC_PATHS, EFFECT_ACTIONS, MODIFIERS, type ModifierName } from '~/types/magic'
+import InfoBox from '~/components/InfoBox.vue'
 
 const { craftSpellFn } = useMagicCalculator()
 
