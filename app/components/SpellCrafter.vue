@@ -118,7 +118,107 @@
                     />
                     <span class="min-w-[120px]">{{ modifier.name }}</span>
                     <InfoBox :title="modifier.name">
-                      <p>{{ modifier.name }} description placeholder.</p>
+                      <template v-if="modifier.name === 'Duration'">
+                        <table class="w-full text-left mb-2 text-xs">
+                          <thead>
+                            <tr class="border-b border-gray-600">
+                              <th class="px-1 py-1">Duration</th>
+                              <th class="px-1 py-1">Energy</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr><td class="px-1 py-1">Momentary</td><td class="px-1 py-1">0</td></tr>
+                            <tr><td class="px-1 py-1">10 minutes</td><td class="px-1 py-1">1</td></tr>
+                            <tr><td class="px-1 py-1">30 minutes</td><td class="px-1 py-1">2</td></tr>
+                            <tr><td class="px-1 py-1">1 hour</td><td class="px-1 py-1">3</td></tr>
+                            <tr><td class="px-1 py-1">3 hours</td><td class="px-1 py-1">4</td></tr>
+                            <tr><td class="px-1 py-1">6 hours</td><td class="px-1 py-1">5</td></tr>
+                            <tr><td class="px-1 py-1">12 hours</td><td class="px-1 py-1">6</td></tr>
+                            <tr><td class="px-1 py-1">1 day</td><td class="px-1 py-1">7</td></tr>
+                            <tr><td class="px-1 py-1">3 days</td><td class="px-1 py-1">8</td></tr>
+                            <tr><td class="px-1 py-1">1 week</td><td class="px-1 py-1">9</td></tr>
+                            <tr><td class="px-1 py-1">2 weeks</td><td class="px-1 py-1">10</td></tr>
+                            <tr><td class="px-1 py-1">1 month</td><td class="px-1 py-1">11</td></tr>
+                            <tr><td class="px-1 py-1">+1 month</td><td class="px-1 py-1">+1</td></tr>
+                          </tbody>
+                        </table>
+                        <p class="text-xs mt-2">For durations over a year, the added energy becomes (number of years) + 21.</p>
+                      </template>
+                      <template v-else-if="modifier.name === 'Subject Weight'">
+                        <table class="w-full text-left text-xs">
+                          <thead>
+                            <tr class="border-b border-gray-600">
+                              <th class="px-1 py-1">Weight</th>
+                              <th class="px-1 py-1">Energy</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr><td class="px-1 py-1">10 lbs.</td><td class="px-1 py-1">0</td></tr>
+                            <tr><td class="px-1 py-1">30 lbs.</td><td class="px-1 py-1">1</td></tr>
+                            <tr><td class="px-1 py-1">100 lbs.</td><td class="px-1 py-1">2</td></tr>
+                            <tr><td class="px-1 py-1">300 lbs.</td><td class="px-1 py-1">3</td></tr>
+                            <tr><td class="px-1 py-1">1,000 lbs.</td><td class="px-1 py-1">4</td></tr>
+                            <tr><td class="px-1 py-1">3,000 lbs.</td><td class="px-1 py-1">5</td></tr>
+                            <tr><td class="px-1 py-1">5 tons</td><td class="px-1 py-1">6</td></tr>
+                            <tr><td class="px-1 py-1">15 tons</td><td class="px-1 py-1">7</td></tr>
+                            <tr><td class="px-1 py-1">50 tons</td><td class="px-1 py-1">8</td></tr>
+                            <tr><td class="px-1 py-1">150 tons</td><td class="px-1 py-1">9</td></tr>
+                            <tr><td class="px-1 py-1">450 tons</td><td class="px-1 py-1">10</td></tr>
+                            <tr><td class="px-1 py-1">1,350 tons</td><td class="px-1 py-1">11</td></tr>
+                            <tr><td class="px-1 py-1">×3</td><td class="px-1 py-1">+1</td></tr>
+                          </tbody>
+                        </table>
+                      </template>
+                      <template v-else-if="modifier.name === 'Damage'">
+                        <table class="w-full text-left text-xs">
+                          <thead>
+                            <tr class="border-b border-gray-600">
+                              <th class="px-1 py-1">Damage</th>
+                              <th class="px-1 py-1">Energy</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr><td class="px-1 py-1">1d</td><td class="px-1 py-1">0</td></tr>
+                            <tr><td class="px-1 py-1">1d+1</td><td class="px-1 py-1">1</td></tr>
+                            <tr><td class="px-1 py-1">1d+2</td><td class="px-1 py-1">2</td></tr>
+                            <tr><td class="px-1 py-1">2d-1</td><td class="px-1 py-1">3</td></tr>
+                            <tr><td class="px-1 py-1">2d</td><td class="px-1 py-1">4</td></tr>
+                            <tr><td class="px-1 py-1">2d+1</td><td class="px-1 py-1">5</td></tr>
+                            <tr><td class="px-1 py-1">2d+2</td><td class="px-1 py-1">6</td></tr>
+                            <tr><td class="px-1 py-1">3d-1</td><td class="px-1 py-1">7</td></tr>
+                            <tr><td class="px-1 py-1">3d</td><td class="px-1 py-1">8</td></tr>
+                            <tr><td class="px-1 py-1">3d+1</td><td class="px-1 py-1">9</td></tr>
+                            <tr><td class="px-1 py-1">3d+2</td><td class="px-1 py-1">10</td></tr>
+                            <tr><td class="px-1 py-1">4d-1</td><td class="px-1 py-1">11</td></tr>
+                            <tr><td class="px-1 py-1">etc.</td><td class="px-1 py-1">+1</td></tr>
+                          </tbody>
+                        </table>
+                        <p class="text-xs mt-2">Damage Type Energy Multiplier: ×0.5 for small piercing, ×1.5 for cutting or large piercing, ×2 for corrosion, fatigue, huge piercing, or impaling. Always round up.</p>
+                      </template>
+                      <template v-else-if="modifier.name === 'Range'">
+                        <p>Extends the distance from which the spell can be cast.</p>
+                      </template>
+                      <template v-else-if="modifier.name === 'Speed'">
+                        <p>Increases the speed or quickness of the spell effect.</p>
+                      </template>
+                      <template v-else-if="modifier.name === 'Area of Effect'">
+                        <p>Expands the spell to affect multiple targets or a larger area.</p>
+                      </template>
+                      <template v-else-if="modifier.name === 'Bonus or Penalty'">
+                        <p>Applies a modifier to rolls affected by the spell.</p>
+                      </template>
+                      <template v-else-if="modifier.name === 'Meta-Magic'">
+                        <p>Adds special magical effects or modifies spell casting rules.</p>
+                      </template>
+                      <template v-else-if="modifier.name === 'Altered Traits'">
+                        <p>Allows creation of beings or objects with unusual characteristics.</p>
+                      </template>
+                      <template v-else-if="modifier.name === 'Extra Energy'">
+                        <p>Adds additional energy cost for specialized effects.</p>
+                      </template>
+                      <template v-else>
+                        <p>{{ modifier.name }} description not available.</p>
+                      </template>
                     </InfoBox>
                     <input
                         v-if="modifier.enabled"
