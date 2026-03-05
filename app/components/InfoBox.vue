@@ -10,11 +10,11 @@
     <Transition name="slide-panel">
       <div
         v-if="isOpen()"
-        class="fixed right-0 top-1/2 transform -translate-y-1/2 bg-gray-900 dark:bg-gray-800 text-white dark:text-gray-100 text-sm rounded-md px-6 py-4 w-[480px] max-h-[80vh] overflow-y-auto shadow-lg border border-gray-700 z-50"
+        class="fixed right-0 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm rounded-md px-6 py-4 w-[480px] max-h-[80vh] overflow-y-auto shadow-lg border border-gray-300 dark:border-gray-700 z-50"
       >
         <button
           @click="close"
-          class="absolute top-4 right-4 text-gray-400 hover:text-white transition"
+          class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7m0 0l-7 7m7-7H5"></path>

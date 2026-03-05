@@ -26,7 +26,7 @@
             <p class='font-semibold mb-2'>Effect Costs:</p>
             <table class='w-full text-left mb-3'>
               <thead>
-                <tr class='border-b border-gray-600'>
+                <tr class='border-b border-gray-300 dark:border-gray-600'>
                   <th class='px-2 py-1'>Effect</th>
                   <th class='px-2 py-1'>Cost</th>
                 </tr>
@@ -46,7 +46,7 @@
             <p class='font-semibold mb-2'>Greater Effects Multiplier:</p>
             <table class='w-full text-left'>
               <thead>
-                <tr class='border-b border-gray-600'>
+                <tr class='border-b border-gray-300 dark:border-gray-600'>
                   <th class='px-2 py-1'>Greater Effects</th>
                   <th class='px-2 py-1'>Multiplier</th>
                 </tr>
@@ -121,7 +121,7 @@
                       <template v-if="modifier.name === 'Duration'">
                         <table class="w-full text-left mb-2 text-xs">
                           <thead>
-                            <tr class="border-b border-gray-600">
+                            <tr class="border-b border-gray-300 dark:border-gray-600">
                               <th class="px-1 py-1">Duration</th>
                               <th class="px-1 py-1">Energy</th>
                             </tr>
@@ -142,12 +142,12 @@
                             <tr><td class="px-1 py-1">+1 month</td><td class="px-1 py-1">+1</td></tr>
                           </tbody>
                         </table>
-                        <p class="text-xs mt-2">For durations over a year, the added energy becomes (number of years) + 21.</p>
+                        <p class="mt-2">For durations over a year, the added energy becomes (number of years) + 21.</p>
                       </template>
                       <template v-else-if="modifier.name === 'Subject Weight'">
                         <table class="w-full text-left text-xs">
                           <thead>
-                            <tr class="border-b border-gray-600">
+                            <tr class="border-b border-gray-300 dark:border-gray-600">
                               <th class="px-1 py-1">Weight</th>
                               <th class="px-1 py-1">Energy</th>
                             </tr>
@@ -172,7 +172,7 @@
                       <template v-else-if="modifier.name === 'Damage'">
                         <table class="w-full text-left text-xs">
                           <thead>
-                            <tr class="border-b border-gray-600">
+                            <tr class="border-b border-gray-300 dark:border-gray-600">
                               <th class="px-1 py-1">Damage</th>
                               <th class="px-1 py-1">Energy</th>
                             </tr>
@@ -193,10 +193,63 @@
                             <tr><td class="px-1 py-1">etc.</td><td class="px-1 py-1">+1</td></tr>
                           </tbody>
                         </table>
-                        <p class="text-xs mt-2">Damage Type Energy Multiplier: ×0.5 for small piercing, ×1.5 for cutting or large piercing, ×2 for corrosion, fatigue, huge piercing, or impaling. Always round up.</p>
+                        <p class="mt-2">Damage Type Energy Multiplier: ×0.5 for small piercing, ×1.5 for cutting or large piercing, ×2 for corrosion, fatigue, huge piercing, or impaling. Always round up.</p>
                       </template>
                       <template v-else-if="modifier.name === 'Range'">
-                        <p>Extends the distance from which the spell can be cast.</p>
+                        <p class="mb-2">Extends the distance from which the spell can be cast.</p>
+                        <p class="font-semibold mb-2">Most Spells:</p>
+                        <p class="mb-2">Find the range in yards on the Size and Speed/Range Table and add the "Size" value for that line (minimum +0) to the energy cost.</p>
+                        <p class="mb-2">If the caster guesses and doesn't add enough range to reach the subject, the spell will have no effect.</p>
+                        <p class="font-semibold mb-2">Size and Speed/Range Table:</p>
+                        <table class="w-full text-left text-xs mb-3">
+                          <thead>
+                            <tr class="border-b border-gray-300 dark:border-gray-600">
+                              <th class="px-2 py-1">Size</th>
+                              <th class="px-2 py-1">Linear Measurement</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr><td class="px-2 py-1">0</td><td class="px-2 py-1">2 yd</td></tr>
+                            <tr><td class="px-2 py-1">+1</td><td class="px-2 py-1">3 yd</td></tr>
+                            <tr><td class="px-2 py-1">+2</td><td class="px-2 py-1">5 yd</td></tr>
+                            <tr><td class="px-2 py-1">+3</td><td class="px-2 py-1">7 yd</td></tr>
+                            <tr><td class="px-2 py-1">+4</td><td class="px-2 py-1">10 yd</td></tr>
+                            <tr><td class="px-2 py-1">+5</td><td class="px-2 py-1">15 yd</td></tr>
+                            <tr><td class="px-2 py-1">+6</td><td class="px-2 py-1">20 yd</td></tr>
+                            <tr><td class="px-2 py-1">+7</td><td class="px-2 py-1">30 yd</td></tr>
+                            <tr><td class="px-2 py-1">+8</td><td class="px-2 py-1">50 yd</td></tr>
+                            <tr><td class="px-2 py-1">+9</td><td class="px-2 py-1">70 yd</td></tr>
+                            <tr><td class="px-2 py-1">+10</td><td class="px-2 py-1">100 yd</td></tr>
+                            <tr><td class="px-2 py-1">+11</td><td class="px-2 py-1">150 yd</td></tr>
+                            <tr><td class="px-2 py-1">etc.</td><td class="px-2 py-1">etc.</td></tr>
+                          </tbody>
+                        </table>
+                        <p class="mb-8">Continue this progression indefinitely, with each 10× increase in linear measurement giving +6 to SM or modifier.</p>
+                        <p class="font-semibold mb-2">Information Spells:</p>
+                        <p class="mb-2">Use Long-Distance Modifiers (penalty inverted) as additional energy cost.</p>
+                        <table class="w-full text-left text-xs mb-3">
+                          <thead>
+                            <tr class="border-b border-gray-300 dark:border-gray-600">
+                              <th class="px-2 py-1">Distance</th>
+                              <th class="px-2 py-1">Energy Cost</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr><td class="px-2 py-1">Up to 200 yards</td><td class="px-2 py-1">0</td></tr>
+                            <tr><td class="px-2 py-1">1/2 mile</td><td class="px-2 py-1">+1</td></tr>
+                            <tr><td class="px-2 py-1">1 mile</td><td class="px-2 py-1">+2</td></tr>
+                            <tr><td class="px-2 py-1">3 miles</td><td class="px-2 py-1">+3</td></tr>
+                            <tr><td class="px-2 py-1">10 miles</td><td class="px-2 py-1">+4</td></tr>
+                            <tr><td class="px-2 py-1">30 miles</td><td class="px-2 py-1">+5</td></tr>
+                            <tr><td class="px-2 py-1">100 miles</td><td class="px-2 py-1">+6</td></tr>
+                            <tr><td class="px-2 py-1">300 miles</td><td class="px-2 py-1">+7</td></tr>
+                            <tr><td class="px-2 py-1">1,000 miles</td><td class="px-2 py-1">+8</td></tr>
+                          </tbody>
+                        </table>
+                        <p class="font-semibold mb-2">Cross-Time Spells:</p>
+                        <p class="mb-2 ">Use the Long-Distance Modifiers table above, but read "miles" as "days."</p>
+                        <p class="font-semibold mb-2">Dimensional Barriers:</p>
+                        <p class="">Crossing dimensional barriers adds a flat +10 energy per dimension.</p>
                       </template>
                       <template v-else-if="modifier.name === 'Speed'">
                         <p class="font-semibold mb-2">Movement Spells:</p>
@@ -206,7 +259,7 @@
                         <p class="font-semibold mb-2">Size and Speed/Range Table:</p>
                         <table class="w-full text-left text-xs mb-2">
                           <thead>
-                            <tr class="border-b border-gray-600">
+                            <tr class="border-b border-gray-300 dark:border-gray-600">
                               <th class="px-2 py-1">Size</th>
                               <th class="px-2 py-1">Linear Measurement</th>
                             </tr>
