@@ -49,7 +49,9 @@
             <div>
               <label for="rtm" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Reaction-Time Modifier (RTM)
-                <InfoBox description="Modifier affecting reaction time for the realm." />
+                <InfoBox title="Reaction-Time Modifier">
+                  <p>Modifier affecting reaction time for the realm.</p>
+                </InfoBox>
               </label>
               <input
                 id="rtm"
@@ -84,7 +86,9 @@
             <div>
               <label for="sizeValue" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Realm Size Value
-                <InfoBox description="The calculated size value of the realm." />
+                <InfoBox title="Realm Size Value">
+                  <p>The calculated size value of the realm.</p>
+                </InfoBox>
               </label>
               <input
                 id="sizeValue"
@@ -100,7 +104,9 @@
             <div>
               <label for="areaKnowledge" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Area Knowledge Class
-                <InfoBox description="The knowledge classification level for the area." />
+                <InfoBox title="Area Knowledge Class">
+                  <p>The knowledge classification level for the area.</p>
+                </InfoBox>
               </label>
               <input
                 id="areaKnowledge"
@@ -127,7 +133,9 @@
             <div>
               <label for="terrain" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Terrain
-                <InfoBox description="The type of terrain in the realm." />
+                <InfoBox title="Terrain">
+                  <p>The type of terrain in the realm.</p>
+                </InfoBox>
               </label>
               <input
                 id="terrain"
@@ -141,7 +149,9 @@
             <div>
               <label for="habitabilityValue" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Habitability
-                <InfoBox description="How habitable the realm is for its population." />
+                <InfoBox title="Habitability">
+                  <p>How habitable the realm is for its population.</p>
+                </InfoBox>
               </label>
               <div class="flex gap-1">
                 <input
@@ -166,7 +176,9 @@
             <div>
               <label for="cr" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Control Rating (CR)
-                <InfoBox description="How well the government controls the realm." />
+                <InfoBox title="Control Rating">
+                  <p>How well the government controls the realm.</p>
+                </InfoBox>
               </label>
               <input
                 id="cr"
@@ -182,7 +194,9 @@
             <div>
               <label for="conr" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Conformity Rating (ConR)
-                <InfoBox description="How well people conform to societal norms." />
+                <InfoBox title="Conformity Rating">
+                  <p>How well people conform to societal norms.</p>
+                </InfoBox>
               </label>
               <input
                 id="conr"
@@ -198,7 +212,9 @@
             <div>
               <label for="or" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Openness Rating (OR)
-                <InfoBox description="How open the society is to new ideas." />
+                <InfoBox title="Openness Rating">
+                  <p>How open the society is to new ideas.</p>
+                </InfoBox>
               </label>
               <input
                 id="or"
@@ -214,7 +230,9 @@
             <div>
               <label for="er" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Education Rating (ER)
-                <InfoBox description="The general education level of the population." />
+                <InfoBox title="Education Rating">
+                  <p>The general education level of the population.</p>
+                </InfoBox>
               </label>
               <input
                 id="er"
@@ -230,7 +248,9 @@
             <div>
               <label for="citizenLoyaltyVal" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Citizen Loyalty
-                <InfoBox description="How loyal citizens are to the government." />
+                <InfoBox title="Citizen Loyalty">
+                  <p>How loyal citizens are to the government.</p>
+                </InfoBox>
               </label>
               <div class="flex gap-1">
                 <input
@@ -251,7 +271,9 @@
             <div>
               <label for="ir" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Infrastructure Rating (IR)
-                <InfoBox description="The quality of the realm's infrastructure." />
+                <InfoBox title="Infrastructure Rating">
+                  <p>The quality of the realm's infrastructure.</p>
+                </InfoBox>
               </label>
               <input
                 id="ir"
@@ -584,7 +606,9 @@
               <div>
                 <label for="techLevel" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                   Tech Level (TL)
-                  <InfoBox title="Tech Level (TL)" description="Tech Level (TL) description placeholder." />
+                  <InfoBox title="Tech Level (TL)">
+                    <p>Tech Level (TL) description placeholder.</p>
+                  </InfoBox>
                 </label>
                 <input
                   id="techLevel"
@@ -606,7 +630,9 @@
               <div>
                 <label for="workDependMod" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                   Work/Depend Mod
-                  <InfoBox title="Work/Depend Mod" description="Work/Depend Mod description placeholder." />
+                  <InfoBox title="Work/Depend Mod">
+                    <p>Work/Depend Mod description placeholder.</p>
+                  </InfoBox>
                 </label>
                 <input
                   id="workDependMod"
@@ -677,7 +703,9 @@
                   <div>
                     <label for="taxCR" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                       Taxation CR
-                      <InfoBox title="Taxation CR" description="Taxation CR description placeholder." />
+                      <InfoBox title="Taxation CR">
+                        <p>Taxation CR description placeholder.</p>
+                      </InfoBox>
                     </label>
                     <input
                       id="taxCR"
@@ -752,7 +780,9 @@
                 />
                 <label for="corrupt" class="text-xs font-medium text-gray-700">
                   Corrupt
-                  <InfoBox title="Corrupt" description="Corrupt description placeholder." />
+                  <InfoBox title="Corrupt">
+                    <p>Corrupt description placeholder.</p>
+                  </InfoBox>
                 </label>
               </div>
 

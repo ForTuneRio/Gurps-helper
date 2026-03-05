@@ -39,7 +39,9 @@
             <div>
             <label for="cap" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
                 Effective Cap
-                <InfoBox description="The maximum effective skill level for gathering energy per roll." />
+                <InfoBox title="Effective Cap">
+                  <p>The maximum effective skill level for gathering energy per roll.</p>
+                </InfoBox>
             </label>
             <input
                 id="cap"
@@ -58,7 +60,9 @@
             <div>
             <label for="skill" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
                 Path Skill
-                <InfoBox description="Your skill level in the relevant magical path." />
+                <InfoBox title="Path Skill">
+                  <p>Your skill level in the relevant magical path.</p>
+                </InfoBox>
             </label>
             <input
                 id="skill"
