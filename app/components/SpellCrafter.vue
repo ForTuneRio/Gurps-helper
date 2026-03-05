@@ -199,7 +199,35 @@
                         <p>Extends the distance from which the spell can be cast.</p>
                       </template>
                       <template v-else-if="modifier.name === 'Speed'">
-                        <p>Increases the speed or quickness of the spell effect.</p>
+                        <p class="font-semibold mb-2">Movement Spells:</p>
+                        <p class="mb-2">For movement spells, look up the speed in yards/second on the Size and Speed/Range Table and add the "Size" value for that line (minimum +0) to the energy cost.</p>
+                        <p class="mb-2">This includes Crossroads-based shortcuts – a gate to your home 12 miles away is allowing you to travel at an effective speed of 12 miles/second (+25 energy).</p>
+                        <p class="mb-2">Gates to other times or dimensions don't need a speed component.</p>
+                        <p class="font-semibold mb-2">Size and Speed/Range Table:</p>
+                        <table class="w-full text-left text-xs mb-2">
+                          <thead>
+                            <tr class="border-b border-gray-600">
+                              <th class="px-2 py-1">Size</th>
+                              <th class="px-2 py-1">Linear Measurement</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr><td class="px-2 py-1">0</td><td class="px-2 py-1">2 yd</td></tr>
+                            <tr><td class="px-2 py-1">+1</td><td class="px-2 py-1">3 yd</td></tr>
+                            <tr><td class="px-2 py-1">+2</td><td class="px-2 py-1">5 yd</td></tr>
+                            <tr><td class="px-2 py-1">+3</td><td class="px-2 py-1">7 yd</td></tr>
+                            <tr><td class="px-2 py-1">+4</td><td class="px-2 py-1">10 yd</td></tr>
+                            <tr><td class="px-2 py-1">+5</td><td class="px-2 py-1">15 yd</td></tr>
+                            <tr><td class="px-2 py-1">+6</td><td class="px-2 py-1">20 yd</td></tr>
+                            <tr><td class="px-2 py-1">+7</td><td class="px-2 py-1">30 yd</td></tr>
+                            <tr><td class="px-2 py-1">+8</td><td class="px-2 py-1">50 yd</td></tr>
+                            <tr><td class="px-2 py-1">+9</td><td class="px-2 py-1">70 yd</td></tr>
+                            <tr><td class="px-2 py-1">+10</td><td class="px-2 py-1">100 yd</td></tr>
+                            <tr><td class="px-2 py-1">+11</td><td class="px-2 py-1">150 yd</td></tr>
+                            <tr><td class="px-2 py-1">etc.</td><td class="px-2 py-1">etc.</td></tr>
+                          </tbody>
+                        </table>
+                        <p>Continue this progression indefinitely, with each 10× increase in linear measurement giving +6 to SM or modifier.</p>
                       </template>
                       <template v-else-if="modifier.name === 'Area of Effect'">
                         <p>Expands the spell to affect multiple targets or a larger area.</p>
