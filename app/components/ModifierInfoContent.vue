@@ -1,6 +1,7 @@
 <template>
   <div>
     <template v-if="name === 'Duration'">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 18</p>
       <table class="w-full text-left mb-2 text-xs">
         <thead>
           <tr class="border-b border-gray-300 dark:border-gray-600">
@@ -24,10 +25,11 @@
           <tr><td class="px-1 py-1">+1 month</td><td class="px-1 py-1">+1</td></tr>
         </tbody>
       </table>
-      <p class="mt-2">For durations over a year, the added energy becomes (number of years) + 21.</p>
+      <p class="mt-2"><strong>Over 1 year:</strong> Energy = (number of years) + 21.</p>
     </template>
     
     <template v-else-if="name === 'Subject Weight'">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 18</p>
       <table class="w-full text-left text-xs">
         <thead>
           <tr class="border-b border-gray-300 dark:border-gray-600">
@@ -54,7 +56,11 @@
     </template>
     
     <template v-else-if="name === 'Damage / Healing' || name === 'Damage'">
-      <table class="w-full text-left text-xs">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 17</p>
+      <p class="mb-2"><strong>Internal Damage:</strong> Direct magical damage. Target's DR does not protect. Target may resist. Invisible to mundane senses.</p>
+      <p class="mb-2"><strong>External Damage (Missile):</strong> Creates physical missile (hand-held or ranged). Requires attack roll (Innate Attack). Triple damage listed (or 2× if explosive). Target's DR protects. Visible and can be dodged/blocked. Missile stats: Acc 3, Range 10/100, RoF 1, Rcl 1.</p>
+      <p class="mb-2"><strong>Duration restriction:</strong> Damage cannot be combined with Duration (except via enhancements like Cyclic).</p>
+      <table class="w-full text-left text-xs mb-2">
         <thead>
           <tr class="border-b border-gray-300 dark:border-gray-600">
             <th class="px-1 py-1">Damage / Healing</th>
@@ -77,17 +83,23 @@
           <tr><td class="px-1 py-1">etc.</td><td class="px-1 py-1">+1</td></tr>
         </tbody>
       </table>
-      <p class="mt-2">Damage Type Energy Multiplier: ×0.5 for small piercing, ×1.5 for cutting or large piercing, ×2 for corrosion, fatigue, huge piercing, or impaling. Always round up.</p>
+      <p class="mt-2"><strong>Damage Type Energy Multiplier:</strong> ×0.5 for small piercing, ×1.5 for cutting or large piercing, ×2 for corrosion, fatigue, huge piercing, or impaling. Always round up.</p>
       <p class="mt-2"><strong>Healing:</strong> Use this same damage column to determine HP or FP restored.</p>
-      <p class="mt-2">Restoring damaged attributes and similar effects uses Altered Traits.</p>
-      <p class="mt-2">Healing cannot be combined with Duration; this effect is already permanent.</p>
+      <p class="mt-2"><strong>Restoring attributes:</strong> Uses Altered Traits modifier.</p>
+      <p class="mt-2"><strong>Duration restriction:</strong> Healing cannot be combined with Duration; effect is already permanent.</p>
+      <p class="mt-3 font-semibold">Enhancements:</p>
+      <p class="mt-2">Calculate total energy for damage modifier only (including type multiplier).</p>
+      <p class="mt-2"><strong>20 or less energy:</strong> +1 energy per +5% enhancement (or fraction).</p>
+      <p class="mt-2"><strong>21+ energy:</strong> Apply enhancement % to damage cost only (round up).</p>
+      <p class="mt-2"><strong>Limitations:</strong> Can reduce enhancement cost (net min +0%; always min +1 energy). <strong>Cannot replicate</strong> existing modifiers (Area Effect, Range, etc.). <strong>Exception:</strong> Duration enhancements (Cyclic, Persistent) allowed.</p>
     </template>
     
     <template v-else-if="name === 'Range'">
-      <p class="mb-2">Extends the distance from which the spell can be cast.</p>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 18</p>
+      <p class="mb-2">Extends casting distance from caster to subject.</p>
       <p class="font-semibold mb-2">Most Spells:</p>
-      <p class="mb-2">Find the range in yards on the Size and Speed/Range Table and add the "Size" value for that line (minimum +0) to the energy cost.</p>
-      <p class="mb-2">If the caster guesses and doesn't add enough range to reach the subject, the spell will have no effect.</p>
+      <p class="mb-2">Find range in yards on Size and Speed/Range Table, add "Size" value (minimum +0) to energy cost.</p>
+      <p class="mb-2"><strong>Important:</strong> If caster guesses too low, spell has no effect.</p>
       <p class="font-semibold mb-2">Size and Speed/Range Table:</p>
       <table class="w-full text-left text-xs mb-3">
         <thead>
@@ -112,9 +124,9 @@
           <tr><td class="px-2 py-1">etc.</td><td class="px-2 py-1">etc.</td></tr>
         </tbody>
       </table>
-      <p class="mb-8">Continue this progression indefinitely, with each 10× increase in linear measurement giving +6 to SM or modifier.</p>
+      <p class="mb-8"><strong>Progression:</strong> Each 10× increase in linear measurement gives +6 to Size/modifier.</p>
       <p class="font-semibold mb-2">Information Spells:</p>
-      <p class="mb-2">Use Long-Distance Modifiers (penalty inverted) as additional energy cost.</p>
+      <p class="mb-2">Use Long-Distance Modifiers (inverted penalties) as energy cost.</p>
       <table class="w-full text-left text-xs mb-3">
         <thead>
           <tr class="border-b border-gray-300 dark:border-gray-600">
@@ -135,16 +147,17 @@
         </tbody>
       </table>
       <p class="font-semibold mb-2">Cross-Time Spells:</p>
-      <p class="mb-2">Use the Long-Distance Modifiers table above, but read "miles" as "days."</p>
+      <p class="mb-2">Use Long-Distance Modifiers table, but read "miles" as "days."</p>
       <p class="font-semibold mb-2">Dimensional Barriers:</p>
-      <p>Crossing dimensional barriers adds a flat +10 energy per dimension.</p>
+      <p><strong>+10 energy</strong> per dimension crossed.</p>
     </template>
     
     <template v-else-if="name === 'Speed'">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 18</p>
       <p class="font-semibold mb-2">Movement Spells:</p>
-      <p class="mb-2">For movement spells, look up the speed in yards/second on the Size and Speed/Range Table and add the "Size" value for that line (minimum +0) to the energy cost.</p>
-      <p class="mb-2">This includes Crossroads-based shortcuts – a gate to your home 12 miles away is allowing you to travel at an effective speed of 12 miles/second (+25 energy).</p>
-      <p class="mb-2">Gates to other times or dimensions don't need a speed component.</p>
+      <p class="mb-2">Look up speed in yards/second on Size and Speed/Range Table, add "Size" value (minimum +0) to energy cost.</p>
+      <p class="mb-2"><strong>Crossroads shortcuts:</strong> A gate 12 miles away = 12 miles/second speed (+25 energy).</p>
+      <p class="mb-2"><strong>Note:</strong> Gates to other times/dimensions don't need speed component.</p>
       <p class="font-semibold mb-2">Size and Speed/Range Table:</p>
       <table class="w-full text-left text-xs mb-2">
         <thead>
@@ -169,13 +182,14 @@
           <tr><td class="px-2 py-1">etc.</td><td class="px-2 py-1">etc.</td></tr>
         </tbody>
       </table>
-      <p>Continue this progression indefinitely, with each 10× increase in linear measurement giving +6 to SM or modifier.</p>
+      <p><strong>Progression:</strong> Each 10× increase in linear measurement gives +6 to Size/modifier.</p>
     </template>
     
     <template v-else-if="name === 'Area of Effect'">
-      <p class="mb-2">Find radius (not diameter!) in yards on the table, multiply Size value × 2 for energy cost (minimum +2).</p>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 17</p>
+      <p class="mb-2">Find <strong>radius</strong> (not diameter!) in yards, multiply Size value × 2 for energy cost (minimum +2).</p>
       <p class="mb-2"><em>Example: 10 yd radius = Size +4 → +4 × 2 = +8 energy</em></p>
-      <p class="mb-2">If caster not in area, calculate range to nearest edge.</p>
+      <p class="mb-2"><strong>Caster outside area:</strong> Calculate range to nearest edge.</p>
       <p class="font-semibold mb-2">Size and Speed/Range Table:</p>
       <table class="w-full text-left text-xs mb-2">
         <thead>
@@ -200,12 +214,13 @@
           <tr><td class="px-2 py-1">etc.</td><td class="px-2 py-1">etc.</td></tr>
         </tbody>
       </table>
-      <p class="mb-2">Each 10× increase gives +6 to Size modifier.</p>
+      <p class="mb-2"><strong>Progression:</strong> Each 10× increase gives +6 to Size modifier.</p>
       <p class="font-semibold mb-2">Excluding Targets:</p>
-      <p>+1 energy per 2 specific subjects excluded. Must designate each explicitly.</p>
+      <p><strong>+1 energy per 2 subjects</strong> excluded. Must designate each explicitly.</p>
     </template>
     
     <template v-else-if="name === 'Bonus or Penalty'">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 17</p>
       <p class="mb-2">Bestows a bonus or inflicts a penalty on target rolls.</p>
       <p class="mb-2">Choose scope based on how many rolls are affected:</p>
       <p class="mb-2"><strong>Broad</strong>: large categories (e.g., active defense rolls, Sense rolls, or a wildcard skill).</p>
@@ -229,20 +244,40 @@
           <tr><td class="px-2 py-1">Each additional +/-1</td><td class="px-2 py-1">x2</td><td class="px-2 py-1">x2</td><td class="px-2 py-1">x2</td></tr>
         </tbody>
       </table>
-      <p>You may apply penalties to magic use, but not bonuses.</p>
+      <p><strong>Restriction:</strong> May apply penalties to magic use, but not bonuses.</p>
+    </template>
+    
+    <template v-else-if="name === 'Affliction'">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 16</p>
+      <p class="mb-2">Applies negative conditions to target (stunning, nausea, paralysis, etc.).</p>
+      <p class="mb-2"><strong>Stunning (mental or physical):</strong> No additional energy - spell effect is sufficient.</p>
+      <p class="mb-2"><strong>Other afflictions:</strong> +1 energy per +5% (based on Affliction enhancement value).</p>
+      <p class="mb-2"><em>Example: Nausea spell = +6 energy</em></p>
+      <p><strong>Note:</strong> Generally requires separate spell effect for each affliction (GM may allow exceptions for closely related conditions).</p>
     </template>
     
     <template v-else-if="name === 'Meta-Magic'">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 18</p>
       <p class="mb-2">Used to dispel or alter existing magic.</p>
       <p>Additional energy cost equals the full energy cost of the original spell being affected.</p>
     </template>
     
     <template v-else-if="name === 'Altered Traits'">
-      <p>Allows creation of beings or objects with unusual characteristics.</p>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 16</p>
+      <p class="mb-2">Modifies character traits: advantages, disadvantages, attributes, etc.</p>
+      <p class="mb-2"><strong>Improving character:</strong> +1 per 1 CP</p>
+      <p class="mb-2"><strong>Worsening character:</strong> +1 per 5 CP</p>
+      <p class="mb-2"><strong>Self-Control Rolls:</strong> Disadvantages with self-control rolls let the target resist. If you remove the self-control roll option, multiply the disadvantage value by 2.5.</p>
+      <p class="mb-2"><strong>Multiple Traits:</strong> One spell can alter multiple traits if they make sense together (GM discretion).</p>
+      <p class="mb-2"><strong>Healing Reduced Traits:</strong> If a trait was artificially reduced (e.g., by another spell), a spell adding it back permanently heals the loss.</p>
+      <p><strong>Restrictions:</strong> Cannot add Magery or Ritual Adept. HP/FP added this way cannot be sacrificed for magical energy.</p>
     </template>
     
     <template v-else-if="name === 'Extra Energy'">
-      <p>Adds additional energy cost for specialized effects.</p>
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 18</p>
+      <p class="mb-2">Caster can add extra energy for no additional effect.</p>
+      <p class="mb-2"><strong>Common uses:</strong> Make spell harder to dispel (Meta-Magic), overcome existing spell effects (Stacking Spells), or when caster gathers more energy than expected without needing extra range/duration/effect.</p>
+      <p><strong>Other uses:</strong> Enhancements, limitations adjustments, GM-specific requirements, or unique spell effects.</p>
     </template>
     
     <template v-else>

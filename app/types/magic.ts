@@ -97,6 +97,7 @@ export const MODIFIERS = [
   'Speed',
   'Area of Effect',
   'Bonus or Penalty',
+  'Affliction',
   'Meta-Magic',
   'Altered Traits',
   'Extra Energy'
