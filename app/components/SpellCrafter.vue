@@ -283,7 +283,36 @@
                         <p>Continue this progression indefinitely, with each 10× increase in linear measurement giving +6 to SM or modifier.</p>
                       </template>
                       <template v-else-if="modifier.name === 'Area of Effect'">
-                        <p>Expands the spell to affect multiple targets or a larger area.</p>
+                        <p class="mb-2">Find radius (not diameter!) in yards on the table, multiply Size value × 2 for energy cost (minimum +2).</p>
+                        <p class="mb-2"><em>Example: 10 yd radius = Size +4 → +4 × 2 = +8 energy</em></p>
+                        <p class="mb-2">If caster not in area, calculate range to nearest edge.</p>
+                        <p class="font-semibold mb-2">Size and Speed/Range Table:</p>
+                        <table class="w-full text-left text-xs mb-2">
+                          <thead>
+                            <tr class="border-b border-gray-300 dark:border-gray-600">
+                              <th class="px-2 py-1">Size</th>
+                              <th class="px-2 py-1">Radius (yards)</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr><td class="px-2 py-1">0</td><td class="px-2 py-1">2 yd</td></tr>
+                            <tr><td class="px-2 py-1">+1</td><td class="px-2 py-1">3 yd</td></tr>
+                            <tr><td class="px-2 py-1">+2</td><td class="px-2 py-1">5 yd</td></tr>
+                            <tr><td class="px-2 py-1">+3</td><td class="px-2 py-1">7 yd</td></tr>
+                            <tr><td class="px-2 py-1">+4</td><td class="px-2 py-1">10 yd</td></tr>
+                            <tr><td class="px-2 py-1">+5</td><td class="px-2 py-1">15 yd</td></tr>
+                            <tr><td class="px-2 py-1">+6</td><td class="px-2 py-1">20 yd</td></tr>
+                            <tr><td class="px-2 py-1">+7</td><td class="px-2 py-1">30 yd</td></tr>
+                            <tr><td class="px-2 py-1">+8</td><td class="px-2 py-1">50 yd</td></tr>
+                            <tr><td class="px-2 py-1">+9</td><td class="px-2 py-1">70 yd</td></tr>
+                            <tr><td class="px-2 py-1">+10</td><td class="px-2 py-1">100 yd</td></tr>
+                            <tr><td class="px-2 py-1">+11</td><td class="px-2 py-1">150 yd</td></tr>
+                            <tr><td class="px-2 py-1">etc.</td><td class="px-2 py-1">etc.</td></tr>
+                          </tbody>
+                        </table>
+                        <p class="mb-2">Each 10× increase gives +6 to Size modifier.</p>
+                        <p class="font-semibold mb-2">Excluding Targets:</p>
+                        <p>+1 energy per 2 specific subjects excluded. Must designate each explicitly.</p>
                       </template>
                       <template v-else-if="modifier.name === 'Bonus or Penalty'">
                         <p>Applies a modifier to rolls affected by the spell.</p>
