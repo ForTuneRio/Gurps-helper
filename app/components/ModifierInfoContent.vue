@@ -53,11 +53,11 @@
       </table>
     </template>
     
-    <template v-else-if="name === 'Damage'">
+    <template v-else-if="name === 'Damage / Healing' || name === 'Damage'">
       <table class="w-full text-left text-xs">
         <thead>
           <tr class="border-b border-gray-300 dark:border-gray-600">
-            <th class="px-1 py-1">Damage</th>
+            <th class="px-1 py-1">Damage / Healing</th>
             <th class="px-1 py-1">Energy</th>
           </tr>
         </thead>
@@ -78,6 +78,9 @@
         </tbody>
       </table>
       <p class="mt-2">Damage Type Energy Multiplier: ×0.5 for small piercing, ×1.5 for cutting or large piercing, ×2 for corrosion, fatigue, huge piercing, or impaling. Always round up.</p>
+      <p class="mt-2"><strong>Healing:</strong> Use this same damage column to determine HP or FP restored.</p>
+      <p class="mt-2">Restoring damaged attributes and similar effects uses Altered Traits.</p>
+      <p class="mt-2">Healing cannot be combined with Duration; this effect is already permanent.</p>
     </template>
     
     <template v-else-if="name === 'Range'">
@@ -203,11 +206,35 @@
     </template>
     
     <template v-else-if="name === 'Bonus or Penalty'">
-      <p>Applies a modifier to rolls affected by the spell.</p>
+      <p class="mb-2">Bestows a bonus or inflicts a penalty on target rolls.</p>
+      <p class="mb-2">Choose scope based on how many rolls are affected:</p>
+      <p class="mb-2"><strong>Broad</strong>: large categories (e.g., active defense rolls, Sense rolls, or a wildcard skill).</p>
+      <p class="mb-2"><strong>Moderate</strong>: related subsets (e.g., rolls to hide or Vision rolls).</p>
+      <p class="mb-2"><strong>Narrow</strong>: specific situations (e.g., Climbing rolls or social rolls affecting a specific person).</p>
+      <table class="w-full text-left text-xs mb-2">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-2 py-1">Modifier</th>
+            <th class="px-2 py-1">Broad</th>
+            <th class="px-2 py-1">Moderate</th>
+            <th class="px-2 py-1">Narrow</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-2 py-1">+/-1</td><td class="px-2 py-1">5</td><td class="px-2 py-1">2</td><td class="px-2 py-1">1</td></tr>
+          <tr><td class="px-2 py-1">+/-2</td><td class="px-2 py-1">10</td><td class="px-2 py-1">4</td><td class="px-2 py-1">2</td></tr>
+          <tr><td class="px-2 py-1">+/-3</td><td class="px-2 py-1">20</td><td class="px-2 py-1">8</td><td class="px-2 py-1">4</td></tr>
+          <tr><td class="px-2 py-1">+/-4</td><td class="px-2 py-1">40</td><td class="px-2 py-1">16</td><td class="px-2 py-1">8</td></tr>
+          <tr><td class="px-2 py-1">+/-5</td><td class="px-2 py-1">80</td><td class="px-2 py-1">32</td><td class="px-2 py-1">16</td></tr>
+          <tr><td class="px-2 py-1">Each additional +/-1</td><td class="px-2 py-1">x2</td><td class="px-2 py-1">x2</td><td class="px-2 py-1">x2</td></tr>
+        </tbody>
+      </table>
+      <p>You may apply penalties to magic use, but not bonuses.</p>
     </template>
     
     <template v-else-if="name === 'Meta-Magic'">
-      <p>Adds special magical effects or modifies spell casting rules.</p>
+      <p class="mb-2">Used to dispel or alter existing magic.</p>
+      <p>Additional energy cost equals the full energy cost of the original spell being affected.</p>
     </template>
     
     <template v-else-if="name === 'Altered Traits'">

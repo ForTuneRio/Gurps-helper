@@ -92,7 +92,7 @@ export type EffectAction = typeof EFFECT_ACTIONS[number]
 export const MODIFIERS = [
   'Subject Weight',
   'Duration',
-  'Damage',
+  'Damage / Healing',
   'Range',
   'Speed',
   'Area of Effect',
