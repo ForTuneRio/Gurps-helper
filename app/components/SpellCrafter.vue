@@ -5,7 +5,7 @@
         <form @submit.prevent="craftSpell" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-            <label for="spellName" class="block text-sm font-medium text-gray-700 mb-1">
+          <label for="spellName" class="block text-sm font-medium text-gray-700 mb-1">
                 Spell Name
             </label>
             <input
@@ -20,18 +20,57 @@
             </div>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          Spell Effects
-          </label>
+          <div class="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label>Spell Effects</label>
+          <InfoBox title="Spell Effects">
+            <p class='font-semibold mb-2'>Effect Costs:</p>
+            <table class='w-full text-left mb-3'>
+              <thead>
+                <tr class='border-b border-gray-600'>
+                  <th class='px-2 py-1'>Effect</th>
+                  <th class='px-2 py-1'>Cost</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class='px-2 py-1'>Sense</td><td class='px-2 py-1'>2</td></tr>
+                <tr><td class='px-2 py-1'>Strengthen</td><td class='px-2 py-1'>3</td></tr>
+                <tr><td class='px-2 py-1'>Restore</td><td class='px-2 py-1'>4</td></tr>
+                <tr><td class='px-2 py-1'>Control</td><td class='px-2 py-1'>5</td></tr>
+                <tr><td class='px-2 py-1'>Destroy</td><td class='px-2 py-1'>5</td></tr>
+                <tr><td class='px-2 py-1'>Create</td><td class='px-2 py-1'>6</td></tr>
+                <tr><td class='px-2 py-1'>Transform</td><td class='px-2 py-1'>8</td></tr>
+              </tbody>
+            </table>
+            <p class='font-semibold mb-2 mt-3'>Path Skill Selection:</p>
+            <p class='mb-2'>Use the lowest Path skill for all rolls, with a -1 penalty for every Path beyond the first two.</p>
+            <p class='font-semibold mb-2'>Greater Effects Multiplier:</p>
+            <table class='w-full text-left'>
+              <thead>
+                <tr class='border-b border-gray-600'>
+                  <th class='px-2 py-1'>Greater Effects</th>
+                  <th class='px-2 py-1'>Multiplier</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class='px-2 py-1'>0</td><td class='px-2 py-1'>×1</td></tr>
+                <tr><td class='px-2 py-1'>1</td><td class='px-2 py-1'>×3</td></tr>
+                <tr><td class='px-2 py-1'>2</td><td class='px-2 py-1'>×5</td></tr>
+                <tr><td class='px-2 py-1'>3</td><td class='px-2 py-1'>×7</td></tr>
+                <tr><td class='px-2 py-1'>4</td><td class='px-2 py-1'>×9</td></tr>
+                <tr><td class='px-2 py-1'>+1</td><td class='px-2 py-1'>+2</td></tr>
+              </tbody>
+            </table>
+          </InfoBox>
+          </div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
-            <select v-model="effectDraft.path" class="input">
+            <select v-model="effectDraft.path" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option disabled value="">Path</option>
                 <option v-for="p in paths" :key="p" :value="p">{{ p }}</option>
             </select>
-            <select v-model="effectDraft.action" class="input">
+            <select v-model="effectDraft.action" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option v-for="a in actions" :key="a" :value="a">{{ a }}</option>
             </select>
-            <select v-model="effectDraft.strength" class="input">
+            <select v-model="effectDraft.strength" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="Lesser">Lesser</option>
                 <option value="Greater">Greater</option>
             </select>
@@ -67,7 +106,7 @@
           </label>
             <div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                    <label
+                <div
                     v-for="modifier in craftForm.modifiers"
                     :key="modifier.name"
                     class="flex items-center gap-2 text-sm"
@@ -78,6 +117,9 @@
                         class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
                     <span class="min-w-[120px]">{{ modifier.name }}</span>
+                    <InfoBox :title="modifier.name">
+                      <p>{{ modifier.name }} description placeholder.</p>
+                    </InfoBox>
                     <input
                         v-if="modifier.enabled"
                         type="number"
@@ -89,7 +131,7 @@
                       @input="clampNumberInput"
                         class="w-16 rounded border border-gray-300 px-2 py-1 text-sm"
                     />
-                    </label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -117,6 +159,7 @@
 
 <script setup lang="ts">
 import { type SpellCraft, type MagicPath, type EffectDraft, type SpellEffect, type EffectAction, type ModifierState, MAGIC_PATHS, EFFECT_ACTIONS, MODIFIERS, type ModifierName } from '~/types/magic'
+import InfoBox from '~/components/InfoBox.vue'
 
 const { craftSpellFn } = useMagicCalculator()
 

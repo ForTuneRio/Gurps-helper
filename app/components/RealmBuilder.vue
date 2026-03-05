@@ -47,8 +47,11 @@
               />
             </div>
             <div>
-              <label for="rtm" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="rtm" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Reaction-Time Modifier (RTM)
+                <InfoBox title="Reaction-Time Modifier">
+                  <p>Modifier affecting reaction time for the realm.</p>
+                </InfoBox>
               </label>
               <input
                 id="rtm"
@@ -81,8 +84,11 @@
               />
             </div>
             <div>
-              <label for="sizeValue" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="sizeValue" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Realm Size Value
+                <InfoBox title="Realm Size Value">
+                  <p>The calculated size value of the realm.</p>
+                </InfoBox>
               </label>
               <input
                 id="sizeValue"
@@ -96,8 +102,11 @@
               />
             </div>
             <div>
-              <label for="areaKnowledge" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="areaKnowledge" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Area Knowledge Class
+                <InfoBox title="Area Knowledge Class">
+                  <p>The knowledge classification level for the area.</p>
+                </InfoBox>
               </label>
               <input
                 id="areaKnowledge"
@@ -122,8 +131,11 @@
               />
             </div>
             <div>
-              <label for="terrain" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="terrain" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Terrain
+                <InfoBox title="Terrain">
+                  <p>The type of terrain in the realm.</p>
+                </InfoBox>
               </label>
               <input
                 id="terrain"
@@ -135,8 +147,11 @@
               />
             </div>
             <div>
-              <label for="habitabilityValue" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="habitabilityValue" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Habitability
+                <InfoBox title="Habitability">
+                  <p>How habitable the realm is for its population.</p>
+                </InfoBox>
               </label>
               <div class="flex gap-1">
                 <input
@@ -159,8 +174,11 @@
           <!-- Column 3: Details & Ratings -->
           <div class="space-y-2">
             <div>
-              <label for="cr" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="cr" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Control Rating (CR)
+                <InfoBox title="Control Rating">
+                  <p>How well the government controls the realm.</p>
+                </InfoBox>
               </label>
               <input
                 id="cr"
@@ -174,8 +192,11 @@
               />
             </div>
             <div>
-              <label for="conr" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="conr" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Conformity Rating (ConR)
+                <InfoBox title="Conformity Rating">
+                  <p>How well people conform to societal norms.</p>
+                </InfoBox>
               </label>
               <input
                 id="conr"
@@ -189,8 +210,11 @@
               />
             </div>
             <div>
-              <label for="or" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="or" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Openness Rating (OR)
+                <InfoBox title="Openness Rating">
+                  <p>How open the society is to new ideas.</p>
+                </InfoBox>
               </label>
               <input
                 id="or"
@@ -204,8 +228,11 @@
               />
             </div>
             <div>
-              <label for="er" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="er" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Education Rating (ER)
+                <InfoBox title="Education Rating">
+                  <p>The general education level of the population.</p>
+                </InfoBox>
               </label>
               <input
                 id="er"
@@ -219,8 +246,11 @@
               />
             </div>
             <div>
-              <label for="citizenLoyaltyVal" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="citizenLoyaltyVal" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Citizen Loyalty
+                <InfoBox title="Citizen Loyalty">
+                  <p>How loyal citizens are to the government.</p>
+                </InfoBox>
               </label>
               <div class="flex gap-1">
                 <input
@@ -239,8 +269,11 @@
               </div>
             </div>
             <div>
-              <label for="ir" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="ir" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Infrastructure Rating (IR)
+                <InfoBox title="Infrastructure Rating">
+                  <p>The quality of the realm's infrastructure.</p>
+                </InfoBox>
               </label>
               <input
                 id="ir"
@@ -571,8 +604,11 @@
                 />
               </div>
               <div>
-                <label for="techLevel" class="block text-xs font-medium text-gray-700 mb-1">
+                <label for="techLevel" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                   Tech Level (TL)
+                  <InfoBox title="Tech Level (TL)">
+                    <p>Tech Level (TL) description placeholder.</p>
+                  </InfoBox>
                 </label>
                 <input
                   id="techLevel"
@@ -592,8 +628,11 @@
                 </div>
               </div>
               <div>
-                <label for="workDependMod" class="block text-xs font-medium text-gray-700 mb-1">
+                <label for="workDependMod" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                   Work/Depend Mod
+                  <InfoBox title="Work/Depend Mod">
+                    <p>Work/Depend Mod description placeholder.</p>
+                  </InfoBox>
                 </label>
                 <input
                   id="workDependMod"
@@ -662,8 +701,11 @@
                 <!-- Taxation Box -->
                 <div class="border border-gray-200 rounded p-2 bg-gray-50">
                   <div>
-                    <label for="taxCR" class="block text-xs font-medium text-gray-700 mb-1">
+                    <label for="taxCR" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                       Taxation CR
+                      <InfoBox title="Taxation CR">
+                        <p>Taxation CR description placeholder.</p>
+                      </InfoBox>
                     </label>
                     <input
                       id="taxCR"
@@ -738,6 +780,9 @@
                 />
                 <label for="corrupt" class="text-xs font-medium text-gray-700">
                   Corrupt
+                  <InfoBox title="Corrupt">
+                    <p>Corrupt description placeholder.</p>
+                  </InfoBox>
                 </label>
               </div>
 
@@ -990,6 +1035,7 @@
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useRealms } from '~/composables/useRealms'
 import { Cog6ToothIcon, TrashIcon } from '@heroicons/vue/24/solid'
+import InfoBox from '~/components/InfoBox.vue'
 import type { Realm } from '~/types/realm'
 import {
   getHabitabilityLabel,
