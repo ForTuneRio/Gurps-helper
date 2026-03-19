@@ -115,8 +115,11 @@
               />
             </div>
             <div>
-              <label for="defenseBonus" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="defenseBonus" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Defense Bonus
+                <InfoBox title="Defense Bonus and Terrain">
+                  <ModifierInfoContent name="Defense Bonus and Terrain" />
+                </InfoBox>
               </label>
               <input
                 id="defenseBonus"
@@ -128,11 +131,8 @@
               />
             </div>
             <div>
-              <label for="terrain" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
+              <label for="terrain" class="block text-xs font-medium text-gray-700 mb-1">
                 Terrain
-                <InfoBox title="Terrain">
-                  <p>The type of terrain in the realm.</p>
-                </InfoBox>
               </label>
               <input
                 id="terrain"

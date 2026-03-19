@@ -139,6 +139,14 @@
       <p>[3] Typical width (diameter) for a roughly circular realm: 800 miles for a large nation; 80 miles for a small nation; 8 miles for a city-state; 0.8 miles for a village and surrounds.</p>
     </template>
 
+    <template v-else-if="name === 'Defense Bonus and Terrain'">
+      <p class="mb-2">If other direct action against the realm does not lay it to waste first, it can be besieged or attacked; see GURPS Mass Combat, pp. 39-40.</p>
+      <p class="mb-2">Terrain plays a major role in Mass Combat, as more dense or difficult terrain allows military forces to surprise their foes.</p>
+      <p class="mb-2">The realm's typical terrain has no cost - and can be chosen freely - if it helps or hinders attackers and defenders alike.</p>
+      <p class="mb-2">Terrain that helps only defenders requires the Defensible Terrain enhancement (p. 25), however, while terrain that helps only attackers imposes the Indefensible Terrain limitation (p. 27).</p>
+      <p>These modifiers adjust the Defense Bonus (DB) of the realm's settlements, fortresses, etc. in mass combat.</p>
+    </template>
+
     <template v-else-if="name === 'Duration'">
       <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 18</p>
       <table class="w-full text-left mb-2 text-xs">
