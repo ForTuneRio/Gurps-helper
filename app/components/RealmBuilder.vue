@@ -147,7 +147,7 @@
               <label for="habitabilityValue" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Habitability
                 <InfoBox title="Habitability">
-                  <p>How habitable the realm is for its population.</p>
+                  <ModifierInfoContent name="Habitability" />
                 </InfoBox>
               </label>
               <div class="flex gap-1">

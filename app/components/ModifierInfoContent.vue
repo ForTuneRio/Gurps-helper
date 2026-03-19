@@ -147,6 +147,38 @@
       <p>These modifiers adjust the Defense Bonus (DB) of the realm's settlements, fortresses, etc. in mass combat.</p>
     </template>
 
+    <template v-else-if="name === 'Habitability'">
+      <p class="mb-2">A realm can by definition sustain a population of people - otherwise, it is just land. A realm's Habitability rates a combination of its arable land, nonarable-but-still-useful land (such as pasture), and living space, and how forgiving that land is.</p>
+      <p class="mb-2">The higher a realm's Habitability, the easier it is to grow food, raise livestock, gather wild edibles, and so on, and thus the more population the realm can support.</p>
+      <p class="mb-2">Habitability gives a modifier that affects Animal Handling (Livestock), Farming, Fishing, Gardening, Survival, and Tracking (for hunting game only). This also applies to HT rolls to resist climate extremes, reflecting natural shelter (or lack thereof), local weather patterns, and so on.</p>
+
+      <p class="font-semibold mb-2">Habitability Levels</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">Level (Value)</th>
+            <th class="px-1 py-1">Modifier</th>
+            <th class="px-1 py-1">Summary</th>
+            <th class="px-1 py-1">Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1">Disastrous (0)</td><td class="px-1 py-1">-3 or worse</td><td class="px-1 py-1">Worst terrain/climate/location. Roll 3d every 1d turns; famine on 6 or less.</td><td class="px-1 py-1">Arctic, marginal stations, desert island</td></tr>
+          <tr><td class="px-1 py-1">Very Bad (1-3)</td><td class="px-1 py-1">-2</td><td class="px-1 py-1">Two major problems. Famine checks as above, but on 4 or less.</td><td class="px-1 py-1">Siberia</td></tr>
+          <tr><td class="px-1 py-1">Bad (4-6)</td><td class="px-1 py-1">-1</td><td class="px-1 py-1">Lacks one of good terrain, climate, or location; otherwise as Very Bad.</td><td class="px-1 py-1">Tibet</td></tr>
+          <tr><td class="px-1 py-1">Poor (7-9)</td><td class="px-1 py-1">-1 (GM discretion)</td><td class="px-1 py-1">Livable but marginal.</td><td class="px-1 py-1">Northern Sweden</td></tr>
+          <tr><td class="px-1 py-1">Neutral (10-12)</td><td class="px-1 py-1">0</td><td class="px-1 py-1">Neither especially good nor bad.</td><td class="px-1 py-1">Most of Europe</td></tr>
+          <tr><td class="px-1 py-1">Good (13-15)</td><td class="px-1 py-1">+1</td><td class="px-1 py-1">One of terrain/weather/location is ideal.</td><td class="px-1 py-1">Nile or Indus valleys</td></tr>
+          <tr><td class="px-1 py-1">Very Good (16-18)</td><td class="px-1 py-1">+2</td><td class="px-1 py-1">Two are ideal. Ignore weather/famine/drought-like disruptions on 4 or less (3d).</td><td class="px-1 py-1">Ideal terraformed world</td></tr>
+          <tr><td class="px-1 py-1">Excellent (19)</td><td class="px-1 py-1">+3</td><td class="px-1 py-1">All ideal. As Very Good, but ignore such disruptions on 6 or less (3d).</td><td class="px-1 py-1">Biblical Eden</td></tr>
+        </tbody>
+      </table>
+
+      <p class="mb-2">Record Habitability level, numeric value, and skill modifier on the same line; e.g., "Good (14; +1)."</p>
+      <p class="mb-2">Habitability starts at "Neutral." Having a higher or lower rating is an enhancement or a limitation, respectively; see Habitable/Uninhabitable Land, p. 25.</p>
+      <p>Optionally, the GM can find baseline Habitability for a realm by rolling 3d for its numeric value.</p>
+    </template>
+
     <template v-else-if="name === 'Duration'">
       <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 18</p>
       <table class="w-full text-left mb-2 text-xs">
