@@ -23,43 +23,7 @@
           <div class="flex items-center gap-1 text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           <label>Spell Effects</label>
           <InfoBox title="Spell Effects">
-            <p class='font-semibold mb-2'>Effect Costs:</p>
-            <table class='w-full text-left mb-3'>
-              <thead>
-                <tr class='border-b border-gray-300 dark:border-gray-600'>
-                  <th class='px-2 py-1'>Effect</th>
-                  <th class='px-2 py-1'>Cost</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td class='px-2 py-1'>Sense</td><td class='px-2 py-1'>2</td></tr>
-                <tr><td class='px-2 py-1'>Strengthen</td><td class='px-2 py-1'>3</td></tr>
-                <tr><td class='px-2 py-1'>Restore</td><td class='px-2 py-1'>4</td></tr>
-                <tr><td class='px-2 py-1'>Control</td><td class='px-2 py-1'>5</td></tr>
-                <tr><td class='px-2 py-1'>Destroy</td><td class='px-2 py-1'>5</td></tr>
-                <tr><td class='px-2 py-1'>Create</td><td class='px-2 py-1'>6</td></tr>
-                <tr><td class='px-2 py-1'>Transform</td><td class='px-2 py-1'>8</td></tr>
-              </tbody>
-            </table>
-            <p class='font-semibold mb-2 mt-3'>Path Skill Selection:</p>
-            <p class='mb-2'>Use the lowest Path skill for all rolls, with a -1 penalty for every Path beyond the first two.</p>
-            <p class='font-semibold mb-2'>Greater Effects Multiplier:</p>
-            <table class='w-full text-left'>
-              <thead>
-                <tr class='border-b border-gray-300 dark:border-gray-600'>
-                  <th class='px-2 py-1'>Greater Effects</th>
-                  <th class='px-2 py-1'>Multiplier</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td class='px-2 py-1'>0</td><td class='px-2 py-1'>×1</td></tr>
-                <tr><td class='px-2 py-1'>1</td><td class='px-2 py-1'>×3</td></tr>
-                <tr><td class='px-2 py-1'>2</td><td class='px-2 py-1'>×5</td></tr>
-                <tr><td class='px-2 py-1'>3</td><td class='px-2 py-1'>×7</td></tr>
-                <tr><td class='px-2 py-1'>4</td><td class='px-2 py-1'>×9</td></tr>
-                <tr><td class='px-2 py-1'>+1</td><td class='px-2 py-1'>+2</td></tr>
-              </tbody>
-            </table>
+            <ModifierInfoContent name="Spell Effects" />
           </InfoBox>
           </div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">

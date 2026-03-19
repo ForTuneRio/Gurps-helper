@@ -1,6 +1,44 @@
 <template>
   <div>
-    <template v-if="name === 'Duration'">
+    <template v-if="name === 'Spell Effects'">
+      <p class="font-semibold mb-2">Effect Costs:</p>
+      <table class="w-full text-left mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-2 py-1">Effect</th>
+            <th class="px-2 py-1">Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-2 py-1">Sense</td><td class="px-2 py-1">2</td></tr>
+          <tr><td class="px-2 py-1">Strengthen</td><td class="px-2 py-1">3</td></tr>
+          <tr><td class="px-2 py-1">Restore</td><td class="px-2 py-1">4</td></tr>
+          <tr><td class="px-2 py-1">Control</td><td class="px-2 py-1">5</td></tr>
+          <tr><td class="px-2 py-1">Destroy</td><td class="px-2 py-1">5</td></tr>
+          <tr><td class="px-2 py-1">Create</td><td class="px-2 py-1">6</td></tr>
+          <tr><td class="px-2 py-1">Transform</td><td class="px-2 py-1">8</td></tr>
+        </tbody>
+      </table>
+      <p class="font-semibold mb-2">Greater Effects Multiplier:</p>
+      <table class="w-full text-left">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-2 py-1">Greater Effects</th>
+            <th class="px-2 py-1">Multiplier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-2 py-1">0</td><td class="px-2 py-1">×1</td></tr>
+          <tr><td class="px-2 py-1">1</td><td class="px-2 py-1">×3</td></tr>
+          <tr><td class="px-2 py-1">2</td><td class="px-2 py-1">×5</td></tr>
+          <tr><td class="px-2 py-1">3</td><td class="px-2 py-1">×7</td></tr>
+          <tr><td class="px-2 py-1">4</td><td class="px-2 py-1">×9</td></tr>
+          <tr><td class="px-2 py-1">+1</td><td class="px-2 py-1">+2</td></tr>
+        </tbody>
+      </table>
+    </template>
+
+    <template v-else-if="name === 'Duration'">
       <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 18</p>
       <table class="w-full text-left mb-2 text-xs">
         <thead>
@@ -278,6 +316,16 @@
       <p class="mb-2">Caster can add extra energy for no additional effect.</p>
       <p class="mb-2"><strong>Common uses:</strong> Make spell harder to dispel (Meta-Magic), overcome existing spell effects (Stacking Spells), or when caster gathers more energy than expected without needing extra range/duration/effect.</p>
       <p><strong>Other uses:</strong> Enhancements, limitations adjustments, GM-specific requirements, or unique spell effects.</p>
+    </template>
+
+    <template v-else-if="name === 'Effective Cap'">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 7</p>
+      <p>A caster's Path skill can never exceed the lower of his Thaumatology skill or (12 + Magery level); bonuses from Higher Purpose (p. 5), Ritual Mastery (p. 6), grimoires (pp. 30-32), etc., can raise effective skill above this cap, however.</p>
+    </template>
+
+    <template v-else-if="name === 'Path Skill'">
+      <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 7</p>
+      <p>Use the lowest Path skill for all rolls, with a -1 penalty for every Path beyond the first two.</p>
     </template>
     
     <template v-else>

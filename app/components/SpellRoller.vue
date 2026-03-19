@@ -40,7 +40,7 @@
             <label for="cap" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
                 Effective Cap
                 <InfoBox title="Effective Cap">
-                  <p>The maximum effective skill level for gathering energy per roll.</p>
+                                    <ModifierInfoContent name="Effective Cap" />
                 </InfoBox>
             </label>
             <input
@@ -61,7 +61,7 @@
             <label for="skill" class="flex items-center gap-1 text-sm font-medium text-gray-700 mb-1">
                 Path Skill
                 <InfoBox title="Path Skill">
-                  <p>Your skill level in the relevant magical path.</p>
+                <ModifierInfoContent name="Path Skill" />
                 </InfoBox>
             </label>
             <input
@@ -143,6 +143,7 @@
 import { ref } from 'vue'
 import type { CastingResult } from '~/types/magic'
 import InfoBox from '~/components/InfoBox.vue'
+import ModifierInfoContent from '~/components/ModifierInfoContent.vue'
 const { castSpell } = useMagicCalculator()
 
 const result = ref<CastingResult | null>(null)
