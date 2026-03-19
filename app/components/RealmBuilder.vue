@@ -50,7 +50,7 @@
               <label for="rtm" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Reaction-Time Modifier (RTM)
                 <InfoBox title="Reaction-Time Modifier">
-                  <p>Modifier affecting reaction time for the realm.</p>
+                  <ModifierInfoContent name="Reaction-Time Modifier" />
                 </InfoBox>
               </label>
               <input
@@ -58,7 +58,7 @@
                 v-model.number="realmForm.government.reactionTimeModifier"
                 type="number"
                 maxlength="30"
-                data-min="0"
+                data-min="-100"
                 data-max="100"
                 @input="clampNumberInput"
                 class="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
@@ -87,7 +87,7 @@
               <label for="sizeValue" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Realm Size Value
                 <InfoBox title="Realm Size Value">
-                  <p>The calculated size value of the realm.</p>
+                  <ModifierInfoContent name="Realm Size Value" />
                 </InfoBox>
               </label>
               <input
@@ -1036,6 +1036,7 @@ import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useRealms } from '~/composables/useRealms'
 import { Cog6ToothIcon, TrashIcon } from '@heroicons/vue/24/solid'
 import InfoBox from '~/components/InfoBox.vue'
+import ModifierInfoContent from '~/components/ModifierInfoContent.vue'
 import type { Realm } from '~/types/realm'
 import {
   getHabitabilityLabel,

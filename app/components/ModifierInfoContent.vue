@@ -38,6 +38,107 @@
       </table>
     </template>
 
+    <template v-else-if="name === 'Reaction-Time Modifier'">
+      <p class="mb-2">Reaction-Time Modifier (RTM) is a broad indicator of how quickly the realm can respond to events. It reflects how well organized the realm is - both in administrative processes and availability of physical resources - as well as the technological ease of communicating and coordinating activities.</p>
+      <p class="mb-2">Think of it as "Basic Speed for realms," with these differences: lower is faster (e.g., -1 is better than +1), and slower realms act first and faster ones can interrupt those actions, as explained in Chapter 2.</p>
+      <p class="mb-2">Use the Reaction-Time Modifier Table to determine RTM. This normally applies to all responses. However, certain realms work particularly quickly or slowly for specialized tasks, so the GM may specify different RTMs in some circumstances.</p>
+      <p class="font-semibold mb-2">Base Reaction-Time Modifier Table</p>
+      <table class="w-full text-left text-xs mb-2">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">Trait</th>
+            <th class="px-1 py-1">Modifier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1">TL0-4</td><td class="px-1 py-1">+2</td></tr>
+          <tr><td class="px-1 py-1">TL5-6</td><td class="px-1 py-1">+1</td></tr>
+          <tr><td class="px-1 py-1">TL7-8</td><td class="px-1 py-1">0</td></tr>
+          <tr><td class="px-1 py-1">TL9-10</td><td class="px-1 py-1">-1</td></tr>
+          <tr><td class="px-1 py-1">TL11+</td><td class="px-1 py-1">-2</td></tr>
+          <tr><td class="px-1 py-1">Management Skill 9 or less</td><td class="px-1 py-1">+3</td></tr>
+          <tr><td class="px-1 py-1">Management Skill 10-11</td><td class="px-1 py-1">+2</td></tr>
+          <tr><td class="px-1 py-1">Management Skill 12-14</td><td class="px-1 py-1">+1</td></tr>
+          <tr><td class="px-1 py-1">Management Skill 15-17</td><td class="px-1 py-1">0</td></tr>
+          <tr><td class="px-1 py-1">Management Skill 18-20</td><td class="px-1 py-1">-1</td></tr>
+          <tr><td class="px-1 py-1">Management Skill 21+</td><td class="px-1 py-1">-2</td></tr>
+          <tr><td class="px-1 py-1">Complexity</td><td class="px-1 py-1">+(highest Status the realm supports)/2, rounded down</td></tr>
+        </tbody>
+      </table>
+      <p>RTM can be modified from this base. Raising it is a limitation, and lowering it is an enhancement; see Reflexive/Inactive Realm, p. 26.</p>
+    </template>
+
+    <template v-else-if="name === 'Realm Size Value'">
+      <p class="font-semibold mb-2">Realm Size Table</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">Typical Area</th>
+            <th class="px-1 py-1">Area Knowledge Class</th>
+            <th class="px-1 py-1">Typical Realm Size Value</th>
+            <th class="px-1 py-1">Examples (with adjusted values)</th>
+            <th class="px-1 py-1">Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="px-1 py-1">All inhabited solar systems in a galaxy</td>
+            <td class="px-1 py-1">Galaxy</td>
+            <td class="px-1 py-1">+36</td>
+            <td class="px-1 py-1">Milky Way Galaxy</td>
+            <td class="px-1 py-1">[1]</td>
+          </tr>
+          <tr>
+            <td class="px-1 py-1">100 planets</td>
+            <td class="px-1 py-1">Interplanetary State</td>
+            <td class="px-1 py-1">+30</td>
+            <td class="px-1 py-1">United Federation of Planets</td>
+            <td class="px-1 py-1">[1]</td>
+          </tr>
+          <tr>
+            <td class="px-1 py-1">50 million square miles</td>
+            <td class="px-1 py-1">Planet</td>
+            <td class="px-1 py-1">+24</td>
+            <td class="px-1 py-1">Earth (land area; +24); Mars (+24); Moon (+22); Krypton (+23)</td>
+            <td class="px-1 py-1">[2]</td>
+          </tr>
+          <tr>
+            <td class="px-1 py-1">500,000 square miles</td>
+            <td class="px-1 py-1">Large Nation</td>
+            <td class="px-1 py-1">+18</td>
+            <td class="px-1 py-1">Russia (+21); United States (+21); France (+17); Ghana (+16)</td>
+            <td class="px-1 py-1">[3]</td>
+          </tr>
+          <tr>
+            <td class="px-1 py-1">5,000 square miles</td>
+            <td class="px-1 py-1">Barony, County, Duchy, or Small Nation</td>
+            <td class="px-1 py-1">+12</td>
+            <td class="px-1 py-1">South Korea (+15); Denmark (+14); Jamaica (+12); Luxembourg (+10)</td>
+            <td class="px-1 py-1">[3]</td>
+          </tr>
+          <tr>
+            <td class="px-1 py-1">50 square miles</td>
+            <td class="px-1 py-1">City-State, Micro-State, or Tribal Land</td>
+            <td class="px-1 py-1">+6</td>
+            <td class="px-1 py-1">Hong Kong (+9); Singapore (+8); Liechtenstein (+6)</td>
+            <td class="px-1 py-1">[3]</td>
+          </tr>
+          <tr>
+            <td class="px-1 py-1">0.5 square mile or smaller</td>
+            <td class="px-1 py-1">Village and Surrounding Lands</td>
+            <td class="px-1 py-1">0</td>
+            <td class="px-1 py-1">Monaco (+1); Vatican City (-1); medieval knight's fief</td>
+            <td class="px-1 py-1">[3]</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="font-semibold mb-2">Notes</p>
+      <p class="mb-2">[1] Realm Size Value for the whole galaxy, or the whole of inhabited space, depends on the number of inhabited planets and their total effective land area, and could be much larger than the table suggests. The same applies to a large interstellar state that is not the whole of inhabited space.</p>
+      <p class="mb-2">[2] The Earth's total area is about 200 million square miles, but only the land is densely habitable for humans.</p>
+      <p>[3] Typical width (diameter) for a roughly circular realm: 800 miles for a large nation; 80 miles for a small nation; 8 miles for a city-state; 0.8 miles for a village and surrounds.</p>
+    </template>
+
     <template v-else-if="name === 'Duration'">
       <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">p. 18</p>
       <table class="w-full text-left mb-2 text-xs">
