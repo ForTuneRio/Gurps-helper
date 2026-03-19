@@ -69,8 +69,11 @@
           <!-- Column 2: Surroundings -->
           <div class="space-y-2">
             <div>
-              <label for="totalArea" class="block text-xs font-medium text-gray-700 mb-1">
+              <label for="totalArea" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Total Area (mile²)
+                <InfoBox title="Size">
+                  <ModifierInfoContent name="Realm Size Value" />
+                </InfoBox>
               </label>
               <input
                 id="totalArea"
@@ -84,11 +87,8 @@
               />
             </div>
             <div>
-              <label for="sizeValue" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
+              <label for="sizeValue" class="block text-xs font-medium text-gray-700 mb-1">
                 Realm Size Value
-                <InfoBox title="Realm Size Value">
-                  <ModifierInfoContent name="Realm Size Value" />
-                </InfoBox>
               </label>
               <input
                 id="sizeValue"
@@ -102,11 +102,8 @@
               />
             </div>
             <div>
-              <label for="areaKnowledge" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
+              <label for="areaKnowledge" class="block text-xs font-medium text-gray-700 mb-1">
                 Area Knowledge Class
-                <InfoBox title="Area Knowledge Class">
-                  <p>The knowledge classification level for the area.</p>
-                </InfoBox>
               </label>
               <input
                 id="areaKnowledge"
