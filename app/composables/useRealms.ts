@@ -294,7 +294,7 @@ export const useRealms = () => {
       maxPopulation: 0,
       population: 0,
       averageIncome: 0,
-      workDependMod: 0.5,
+      workDependMod: 0.6,
       managementSkill: 0,
       taxationCR: 0,
       revenueFactor: 0,

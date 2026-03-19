@@ -174,7 +174,7 @@
               <label for="cr" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Control Rating (CR)
                 <InfoBox title="Control Rating">
-                  <p>How well the government controls the realm.</p>
+                  <ModifierInfoContent name="Control Rating" />
                 </InfoBox>
               </label>
               <input
@@ -192,7 +192,7 @@
               <label for="conr" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Conformity Rating (ConR)
                 <InfoBox title="Conformity Rating">
-                  <p>How well people conform to societal norms.</p>
+                  <ModifierInfoContent name="Conformity Rating" />
                 </InfoBox>
               </label>
               <input
@@ -210,7 +210,7 @@
               <label for="or" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Openness Rating (OR)
                 <InfoBox title="Openness Rating">
-                  <p>How open the society is to new ideas.</p>
+                  <ModifierInfoContent name="Openness Rating" />
                 </InfoBox>
               </label>
               <input
@@ -228,7 +228,7 @@
               <label for="er" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Education Rating (ER)
                 <InfoBox title="Education Rating">
-                  <p>The general education level of the population.</p>
+                  <ModifierInfoContent name="Education Rating" />
                 </InfoBox>
               </label>
               <input
@@ -246,7 +246,7 @@
               <label for="citizenLoyaltyVal" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Citizen Loyalty
                 <InfoBox title="Citizen Loyalty">
-                  <p>How loyal citizens are to the government.</p>
+                  <ModifierInfoContent name="Citizen Loyalty" />
                 </InfoBox>
               </label>
               <div class="flex gap-1">
@@ -269,7 +269,7 @@
               <label for="ir" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                 Infrastructure Rating (IR)
                 <InfoBox title="Infrastructure Rating">
-                  <p>The quality of the realm's infrastructure.</p>
+                  <ModifierInfoContent name="Infrastructure Rating" />
                 </InfoBox>
               </label>
               <input
@@ -604,7 +604,7 @@
                 <label for="techLevel" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                   Tech Level (TL)
                   <InfoBox title="Tech Level (TL)">
-                    <p>Tech Level (TL) description placeholder.</p>
+                    <ModifierInfoContent name="Technology Level" />
                   </InfoBox>
                 </label>
                 <input
@@ -628,7 +628,7 @@
                 <label for="workDependMod" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                   Work/Depend Mod
                   <InfoBox title="Work/Depend Mod">
-                    <p>Work/Depend Mod description placeholder.</p>
+                    <ModifierInfoContent name="Work/Depend Mod" />
                   </InfoBox>
                 </label>
                 <input
@@ -679,13 +679,19 @@
                   <span>Wartime</span>
                 </label>
                 <div>
-                  <label class="block text-xs font-medium text-gray-600 mb-1">Mil. Budget Factor</label>
+                  <label class="block text-xs font-medium text-gray-600 mb-1">Mil. Budget Factor 
+                    <InfoBox title="Military Resources">
+                      <ModifierInfoContent name="Military Resources" />
+                    </InfoBox>
+                  </label>
                   <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
                     {{ (militaryBudgetFactorComputed * 100).toFixed(1) }}%
                   </div>
                 </div>
                 <div>
-                  <label class="block text-xs font-medium text-gray-600 mb-1">Military Resources</label>
+                  <label class="flex items-center gap-1 text-xs font-medium text-gray-600 mb-1">
+                    Military Resources
+                  </label>
                   <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
                     {{ militaryResourcesComputed.toLocaleString() }}
                   </div>
@@ -698,11 +704,8 @@
                 <!-- Taxation Box -->
                 <div class="border border-gray-200 rounded p-2 bg-gray-50">
                   <div>
-                    <label for="taxCR" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
+                    <label for="taxCR" class="block text-xs font-medium text-gray-700 mb-1">
                       Taxation CR
-                      <InfoBox title="Taxation CR">
-                        <p>Taxation CR description placeholder.</p>
-                      </InfoBox>
                     </label>
                     <input
                       id="taxCR"
@@ -716,7 +719,12 @@
                     />
                   </div>
                   <div class="mt-2">
-                    <label class="block text-xs font-medium text-gray-600 mb-1">Rev. Factor</label>
+                    <label class="flex items-center gap-1 text-xs font-medium text-gray-600 mb-1">
+                      Rev. Factor
+                      <InfoBox title="Revenue">
+                        <ModifierInfoContent name="Revenue" />
+                      </InfoBox>
+                    </label>
                     <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
                       {{ (revenueFactorComputed * 100).toFixed(1) }}%
                     </div>
@@ -778,7 +786,7 @@
                 <label for="corrupt" class="text-xs font-medium text-gray-700">
                   Corrupt
                   <InfoBox title="Corrupt">
-                    <p>Corrupt description placeholder.</p>
+                    <ModifierInfoContent name="Corrupt" />
                   </InfoBox>
                 </label>
               </div>

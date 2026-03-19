@@ -173,10 +173,292 @@
           <tr><td class="px-1 py-1">Excellent (19)</td><td class="px-1 py-1">+3</td><td class="px-1 py-1">All ideal. As Very Good, but ignore such disruptions on 6 or less (3d).</td><td class="px-1 py-1">Biblical Eden</td></tr>
         </tbody>
       </table>
-
-      <p class="mb-2">Record Habitability level, numeric value, and skill modifier on the same line; e.g., "Good (14; +1)."</p>
       <p class="mb-2">Habitability starts at "Neutral." Having a higher or lower rating is an enhancement or a limitation, respectively; see Habitable/Uninhabitable Land, p. 25.</p>
       <p>Optionally, the GM can find baseline Habitability for a realm by rolling 3d for its numeric value.</p>
+    </template>
+
+    <template v-else-if="name === 'Military Resources'">
+      <p class="mb-2">A realm's Military Resources (MR) represents its total per-turn budget for combat forces and the logistics that support them.</p>
+      <p class="mb-2">GURPS Mass Combat describes combat elements and their upkeep costs. Logistics can be treated as overhead on base cost: 50% (land), 100% (naval), 200% (air/orbital/submersible), or 500% (interplanetary).</p>
+      <p class="mb-2">Distance further modifies logistics cost: short (300 miles or less) -50%, middling (up to 500 miles) x1, long (up to 5,000 miles) x2, extreme (planetary-global) x3. Interstellar realms use x20 for inter-system distance or x100+ for interstellar distance, subject to GM adjustments from available technologies.</p>
+
+      <p class="font-semibold mb-2">Military Resources Formula</p>
+      <p class="mb-2">MR = (Monthly pay of average citizen) x Population x MBF</p>
+
+      <p class="font-semibold mb-2">Control Rating to Military Budget Factor</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">CR</th>
+            <th class="px-1 py-1">MBF</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1">0</td><td class="px-1 py-1">No true military</td></tr>
+          <tr><td class="px-1 py-1">1</td><td class="px-1 py-1">0.5%</td></tr>
+          <tr><td class="px-1 py-1">2</td><td class="px-1 py-1">1%</td></tr>
+          <tr><td class="px-1 py-1">3</td><td class="px-1 py-1">2%</td></tr>
+          <tr><td class="px-1 py-1">4</td><td class="px-1 py-1">5%</td></tr>
+          <tr><td class="px-1 py-1">5</td><td class="px-1 py-1">10%</td></tr>
+          <tr><td class="px-1 py-1">6</td><td class="px-1 py-1">20%</td></tr>
+        </tbody>
+      </table>
+
+      <p class="mb-2">The GM may assign higher/lower effective CR for mobilization. In wartime, MBF usually rises by one table step; treat CR6 in wartime as 50%.</p>
+      <p class="mb-2">Use MR to decide which combat elements the realm can readily field (see Mass Combat for element costs and options).</p>
+      <p class="mb-2">A subjugated realm has CR0 and no military, but may have forces assigned by the occupying government; note these in the realm write-up.</p>
+      <p>Record Military Resources separately from Realm Value, as with Resource Points.</p>
+    </template>
+
+    <template v-else-if="name === 'Control Rating'">
+      <p class="mb-2"><span class="font-semibold">Control Rating (CR)</span> measures how restrictive a government is. Lower CR = more freedom. CR does not depend solely on government type — a monarchy can be free, a democracy can be strict.</p>
+
+      <p class="font-semibold mb-1">CR Levels</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">CR</th>
+            <th class="px-1 py-1">Name</th>
+            <th class="px-1 py-1">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1 align-top">0</td><td class="px-1 py-1 align-top">Anarchy</td><td class="px-1 py-1">No laws, taxes, or controls.</td></tr>
+          <tr><td class="px-1 py-1 align-top">1</td><td class="px-1 py-1 align-top">Very Free</td><td class="px-1 py-1">Nothing illegal except force/intimidation. Light or voluntary taxes. Only LC0 items controlled.</td></tr>
+          <tr><td class="px-1 py-1 align-top">2</td><td class="px-1 py-1 align-top">Free</td><td class="px-1 py-1">Some laws, mostly benefiting individuals. Light taxes. LC0–LC1 items controlled.</td></tr>
+          <tr><td class="px-1 py-1 align-top">3</td><td class="px-1 py-1 align-top">Moderate</td><td class="px-1 py-1">Many laws, mostly benefiting individuals. Moderate and fair taxes. LC0–LC2 items controlled.</td></tr>
+          <tr><td class="px-1 py-1 align-top">4</td><td class="px-1 py-1 align-top">Controlled</td><td class="px-1 py-1">Many laws for state convenience. Broadcasts/printing may be restricted. Heavy, sometimes unfair taxation. LC0–LC3 items controlled.</td></tr>
+          <tr><td class="px-1 py-1 align-top">5</td><td class="px-1 py-1 align-top">Repressive</td><td class="px-1 py-1">Strict laws strictly enforced. Heavy, unfair taxes. All information technology regulated. All goods controlled; ration coupons required.</td></tr>
+          <tr><td class="px-1 py-1 align-top">6</td><td class="px-1 py-1 align-top">Total Control</td><td class="px-1 py-1">Individual exists to serve the state. Many offenses carry death penalty. Crushing taxes. Full censorship. Private info-tech forbidden. Govt may withhold basic necessities.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="font-semibold mb-1">Legality Check</p>
+      <p class="mb-2">Roll 1d. If result &lt; CR &rarr; act is illegal or authorities harass/arrest. If result &gt; CR &rarr; act is legal or overlooked. If result = CR &rarr; situation is ambiguous; play it out or make a reaction roll. Skip the roll when only one logical outcome exists.</p>
+
+      <p class="font-semibold mb-1">Split Control Rating</p>
+      <p>A society can have separate CRs for different domains (basic rights, taxation, weapons, magic, psionics, etc.) if the GM wants more granularity.</p>
+    </template>
+
+    <template v-else-if="name === 'Corrupt'">
+      <p class="mb-2"><span class="font-semibold">Corrupt</span> is an income modifier toggle.</p>
+      <p class="mb-2">When it is turned on, the realm loses <span class="font-semibold">20% of its revenue</span>.</p>
+      <p>This penalty is applied when calculating earnings for the turn, before debt and independent income modifiers are fully resolved.</p>
+    </template>
+
+    <template v-else-if="name === 'Work/Depend Mod'">
+      <p class="mb-2"><span class="font-semibold">Work/Depend Mod</span> is the workforce dependency modifier used in realm value and revenue calculations.</p>
+      <p class="mb-2">The standard value is <span class="font-semibold">0.6</span>, but it can be changed if the realm has unusually strong or weak productive capacity.</p>
+      <p class="mb-2">It is used in formulas such as:</p>
+      <p class="mb-2">Realm Value = Population x Average Income x Work/Depend Mod</p>
+      <p>Revenue = Population x Average Income x Work/Depend Mod x Revenue Factor</p>
+    </template>
+
+    <template v-else-if="name === 'Technology Level'">
+      <p class="mb-2"><span class="font-semibold">Technology Level (TL)</span> starts at the campaign base TL. It may be lowered freely. Raising TL above the campaign TL requires GM permission.</p>
+
+      <p class="mb-2">When realms of different TLs exist, a lower-TL realm may improve TL in play through immigration, trade, espionage, or the Improve maneuver. Progress beyond the campaign maximum also requires GM approval and may take many turns.</p>
+
+      <p class="font-semibold mb-1">Typical Monthly Pay by TL</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">TL</th>
+            <th class="px-1 py-1">Monthly Pay</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1">0</td><td class="px-1 py-1">$625</td></tr>
+          <tr><td class="px-1 py-1">1</td><td class="px-1 py-1">$650</td></tr>
+          <tr><td class="px-1 py-1">2</td><td class="px-1 py-1">$675</td></tr>
+          <tr><td class="px-1 py-1">3</td><td class="px-1 py-1">$700</td></tr>
+          <tr><td class="px-1 py-1">4</td><td class="px-1 py-1">$800</td></tr>
+          <tr><td class="px-1 py-1">5</td><td class="px-1 py-1">$1,100</td></tr>
+          <tr><td class="px-1 py-1">6</td><td class="px-1 py-1">$1,600</td></tr>
+          <tr><td class="px-1 py-1">7</td><td class="px-1 py-1">$2,100</td></tr>
+          <tr><td class="px-1 py-1">8</td><td class="px-1 py-1">$2,600</td></tr>
+          <tr><td class="px-1 py-1">9</td><td class="px-1 py-1">$3,600</td></tr>
+          <tr><td class="px-1 py-1">10</td><td class="px-1 py-1">$5,600</td></tr>
+          <tr><td class="px-1 py-1">11</td><td class="px-1 py-1">$8,100</td></tr>
+          <tr><td class="px-1 py-1">12</td><td class="px-1 py-1">$10,600</td></tr>
+        </tbody>
+      </table>
+
+      <p class="mb-2">Progress can be slow. Moving from TL7 to TL8 may take decades. Earlier TL transitions can take far longer.</p>
+      <p>Use this together with Average Income and any GM rules for technological progression.</p>
+    </template>
+
+    <template v-else-if="name === 'Education Rating'">
+      <p class="mb-2"><span class="font-semibold">Education Rating (ER)</span> is a literacy and education scale from 0 to 6. It modifies rolls for science, medicine, and technology tasks. Apply the inverse modifier to propaganda attempts.</p>
+
+      <p class="font-semibold mb-1">Education Levels</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">ER</th>
+            <th class="px-1 py-1">Modifier</th>
+            <th class="px-1 py-1">Level</th>
+            <th class="px-1 py-1">Summary</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1">0</td><td class="px-1 py-1">-4</td><td class="px-1 py-1">No Education</td><td class="px-1 py-1">Mostly illiterate population. Oral teaching is dominant.</td></tr>
+          <tr><td class="px-1 py-1">1</td><td class="px-1 py-1">-3</td><td class="px-1 py-1">Rare Education</td><td class="px-1 py-1">Basic math is known, literacy is uncommon, trades use apprenticeship.</td></tr>
+          <tr><td class="px-1 py-1">2</td><td class="px-1 py-1">-2</td><td class="px-1 py-1">Infrequent Education</td><td class="px-1 py-1">Higher education exists for elites, but most people remain lightly educated.</td></tr>
+          <tr><td class="px-1 py-1">3</td><td class="px-1 py-1">-1</td><td class="px-1 py-1">Uncommon Education</td><td class="px-1 py-1">About half the population is literate and numerate.</td></tr>
+          <tr><td class="px-1 py-1">4</td><td class="px-1 py-1">0</td><td class="px-1 py-1">Common Education</td><td class="px-1 py-1">Literacy is common and expected in daily life.</td></tr>
+          <tr><td class="px-1 py-1">5</td><td class="px-1 py-1">+1</td><td class="px-1 py-1">Near Universal Education</td><td class="px-1 py-1">Most citizens are literate and higher education is broadly accessible.</td></tr>
+          <tr><td class="px-1 py-1">6</td><td class="px-1 py-1">+2</td><td class="px-1 py-1">Universal Education</td><td class="px-1 py-1">Nearly all citizens are literate, with common higher education or skilled training.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="mb-2">Starting ER is half of realm TL, rounded up.</p>
+      <p>Higher or lower ER is treated as an enhancement or limitation.</p>
+    </template>
+
+    <template v-else-if="name === 'Citizen Loyalty'">
+      <p class="mb-2"><span class="font-semibold">Citizen Loyalty</span> rates inhabitants' attitudes toward leadership and realm as an institution, using the Reaction Table scale. Record a specific numeric value. Also gives a Will modifier when resisting Influence rolls against realm interests, plus half the realm's Control Rating (rounded down). Subtract half the loyalty modifier (rounded up) from black-market, bribery, and corruption rolls.</p>
+
+      <p class="font-semibold mb-1">Citizen Loyalty Levels and Modifiers</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">Level</th>
+            <th class="px-1 py-1">Range</th>
+            <th class="px-1 py-1">Will Mod</th>
+            <th class="px-1 py-1">Effects</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1 align-top">Disastrous</td><td class="px-1 py-1 align-top">0 or less</td><td class="px-1 py-1 align-top">-7</td><td class="px-1 py-1">Realm falling apart. Corruption rife. Citizens sabotage each other or band against government. Skill -5, time x4. Examples: Roman crisis 3rd century; French Revolution.</td></tr>
+          <tr><td class="px-1 py-1 align-top">Very Bad</td><td class="px-1 py-1 align-top">1 to 3</td><td class="px-1 py-1 align-top">-5</td><td class="px-1 py-1">Citizens seek escape; work slowly, inefficiently. Pilfering common. Or unrest with authorities building. Skill -2, time x2. Examples: Conquered nations; Tsarist Russia in WWI.</td></tr>
+          <tr><td class="px-1 py-1 align-top">Bad</td><td class="px-1 py-1 align-top">4 to 6</td><td class="px-1 py-1 align-top">-3</td><td class="px-1 py-1">Passive discontent. Groups mistrust government; poor cooperation. Time x1.5. Examples: East Germany pre-1990; Qin Dynasty China; Charles I realms.</td></tr>
+          <tr><td class="px-1 py-1 align-top">Poor</td><td class="px-1 py-1 align-top">7 to 9</td><td class="px-1 py-1 align-top">-1</td><td class="px-1 py-1">Unenthusiastic; stay from inertia. Won't risk major harm. May rationalize small violations. Example: USSR in later days.</td></tr>
+          <tr><td class="px-1 py-1 align-top">Neutral</td><td class="px-1 py-1 align-top">10 to 12</td><td class="px-1 py-1 align-top">0</td><td class="px-1 py-1">Like their realm but feel no special attachment. Examples: Canada; modern USA or France.</td></tr>
+          <tr><td class="px-1 py-1 align-top">Good</td><td class="px-1 py-1 align-top">13 to 15</td><td class="px-1 py-1 align-top">+1</td><td class="px-1 py-1">Happy or proud. Make extra efforts. Difficult to find traitors. Examples: 20th-century Philippines; Germany in WWI.</td></tr>
+          <tr><td class="px-1 py-1 align-top">Very Good</td><td class="px-1 py-1 align-top">16 to 18</td><td class="px-1 py-1 align-top">+3</td><td class="px-1 py-1">Very happy; realm success is priority. Extend special efforts gladly. Many have Sense of Duty. Examples: 20th-century Australia; Israel 1950; contemporary Scotland.</td></tr>
+          <tr><td class="px-1 py-1 align-top">Excellent</td><td class="px-1 py-1 align-top">19 or more</td><td class="px-1 py-1 align-top">+5</td><td class="px-1 py-1">Near-fanatical devotion to realm. Many may have Fanaticism disadvantage. Examples: Thomas More's Utopia; Plato's ideal state.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="mb-2">Will modifier formula: Loyalty modifier plus half realm Control Rating (rounded down). Subtract half the loyalty modifier (rounded up) from black-market and bribery rolls (or use city Corruption if available). Example: Good (14; +2), which is +1 modifier plus CR/2.</p>
+      <p>Starts at Neutral. Higher or lower is an enhancement or limitation. GM may roll 3d for baseline numeric value.</p>
+    </template>
+
+    <template v-else-if="name === 'Infrastructure Rating'">
+      <p class="mb-2"><span class="font-semibold">Infrastructure Rating (IR)</span> measures physical structures supporting a realm: homes, roads, transportation, water, power grids, communications. Does not cover social infrastructure (hospitals, schools, law enforcement).</p>
+
+      <p class="font-semibold mb-1">IR Modifiers to Management Skill Rolls</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">IR</th>
+            <th class="px-1 py-1">Mod</th>
+            <th class="px-1 py-1">Name</th>
+            <th class="px-1 py-1">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1 align-top">0</td><td class="px-1 py-1 align-top">-5</td><td class="px-1 py-1 align-top">None</td><td class="px-1 py-1">No infrastructure. Travel by foot or animals; no maintained trails. Communication person-to-person. Water from springs or streams. Examples: Stone Age; post-apocalypse; new colony.</td></tr>
+          <tr><td class="px-1 py-1 align-top">1</td><td class="px-1 py-1 align-top">-3</td><td class="px-1 py-1 align-top">Very Loose</td><td class="px-1 py-1">Old or very new infrastructure. Travel dangerous. Outdated communication (Morse code at TL8). Wells supply water. Examples: Post-apocalyptic city-state; early-stage colony.</td></tr>
+          <tr><td class="px-1 py-1 align-top">2</td><td class="px-1 py-1 align-top">-1</td><td class="px-1 py-1 align-top">Loose</td><td class="px-1 py-1">Behind the times or archaic, properly maintained. Roads to major cities; expensive long-distance travel. Running water exists. Communication 1 TL behind. Examples: Recently settled area; British colonies in 1910s.</td></tr>
+          <tr><td class="px-1 py-1 align-top">3</td><td class="px-1 py-1 align-top">0</td><td class="px-1 py-1 align-top">Average</td><td class="px-1 py-1">Up-to-date, properly maintained. Travel by road, ship, or air common. Public transit commonplace; poorest lack running water. Communication at campaign TL. Examples: 1970s United States; 20th-century China.</td></tr>
+          <tr><td class="px-1 py-1 align-top">4</td><td class="px-1 py-1 align-top">+1</td><td class="px-1 py-1 align-top">Advanced</td><td class="px-1 py-1">Modern, well-maintained, occasional cutting-edge. Cheap travel to all but remote areas. Urban public transit common. Examples: 21st-century Iceland; ancient Rome with aqueducts.</td></tr>
+          <tr><td class="px-1 py-1 align-top">5</td><td class="px-1 py-1 align-top">+2</td><td class="px-1 py-1 align-top">Very Advanced</td><td class="px-1 py-1">Heavily invested, bleeding-edge tech. All citizens have communication and travel access. Low or free public transit. Example: TL9 society with infrastructure priority.</td></tr>
+          <tr><td class="px-1 py-1 align-top">6</td><td class="px-1 py-1 align-top">+3+</td><td class="px-1 py-1 align-top">Futuristic</td><td class="px-1 py-1">1 TL higher than campaign (enhancement). Instantaneous or very reliable communication. Safe, cheap travel. Example: MCU Wakanda.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="mb-2">Modifiers apply to Management Skill rolls for moving troops and gathering information.</p>
+      <p>Starting IR is 3. Higher or lower IR is an enhancement or limitation. TL0 societies should buy IR down to 0-1.</p>
+    </template>
+
+    <template v-else-if="name === 'Openness Rating'">
+      <p class="mb-2"><span class="font-semibold">Openness Rating (OR)</span> measures how a realm's citizens react to outsiders. Citizens may have traits like Intolerance (Foreigners) or Paranoia at low OR values. OR can be split to show different attitudes toward specific realms.</p>
+
+      <p class="font-semibold mb-1">Reaction Modifiers and OR Levels</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">OR</th>
+            <th class="px-1 py-1">Reaction Mod</th>
+            <th class="px-1 py-1">Name</th>
+            <th class="px-1 py-1">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1 align-top">0</td><td class="px-1 py-1 align-top">-4</td><td class="px-1 py-1 align-top">Xenophobic</td><td class="px-1 py-1">Citizens actively hostile to strangers. Harsh customs for outsiders. Those displaying foreign habits treated with suspicion. Diplomacy unpopular. Examples: 16th-century Japan; North Sentinel Islanders.</td></tr>
+          <tr><td class="px-1 py-1 align-top">1</td><td class="px-1 py-1 align-top">-2</td><td class="px-1 py-1 align-top">Very Insular</td><td class="px-1 py-1">Unfriendly, prefer isolation. Customs unfair to outsiders. Those leaving are seen as odd. Foreign habits are an Odious Personal Habit. Force over diplomacy preferred. Examples: Albania 1944-1985; North Korea.</td></tr>
+          <tr><td class="px-1 py-1 align-top">2</td><td class="px-1 py-1 align-top">-1</td><td class="px-1 py-1 align-top">Moderately Insular</td><td class="px-1 py-1">Prefer to keep to their own, indifferent to outsiders. Reaction penalties for foreign customs. Noncitizens identified as outsiders suffer penalties. Force over diplomacy. Examples: Imperial China; East Germany.</td></tr>
+          <tr><td class="px-1 py-1 align-top">3</td><td class="px-1 py-1 align-top">0</td><td class="px-1 py-1 align-top">Neutral</td><td class="px-1 py-1">Standoffish but coolly diplomatic. Outsiders expected to adapt to local norms. Full integration accepted. Foreign ideas/goods have no penalty. Examples: Byzantine Empire in decline; modern Singapore; Victorian Britain.</td></tr>
+          <tr><td class="px-1 py-1 align-top">4</td><td class="px-1 py-1 align-top">+1</td><td class="px-1 py-1 align-top">Mildly Open</td><td class="px-1 py-1">Open-minded about outsiders. Mild customs. Welcome would-be citizens. Speaking foreign languages gives +1 to reactions. Example: 1990s European Union.</td></tr>
+          <tr><td class="px-1 py-1 align-top">5</td><td class="px-1 py-1 align-top">+2</td><td class="px-1 py-1 align-top">Moderately Open</td><td class="px-1 py-1">Actively welcome outsiders. Interested in foreign customs and goods. Diplomacy more popular than force. Example: 19th-century Argentina.</td></tr>
+          <tr><td class="px-1 py-1 align-top">6</td><td class="px-1 py-1 align-top">+4</td><td class="px-1 py-1 align-top">Extremely Open</td><td class="px-1 py-1">Like OR5, eager to meet outsiders and hear their tales. May have stricter standards for locals. Diplomacy popular; violence may cause populace resistance. Example: Anarchies.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="mb-2">These modifiers also apply to realm-management rolls (reversed for hostile actions). Starting OR is 2-4 (creator's choice). Deviation from this range is a disadvantage.</p>
+    </template>
+
+    <template v-else-if="name === 'Conformity Rating'">
+      <p class="mb-2"><span class="font-semibold">Conformity Rating (ConR)</span> measures how much citizens identify with the realm versus their own social groups. High ConR doesn't always mean willing conformity &mdash; fear of punishment or social shunning can be just as effective.</p>
+
+      <p class="font-semibold mb-1">ConR Levels</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">ConR</th>
+            <th class="px-1 py-1">Name</th>
+            <th class="px-1 py-1">Effects</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1 align-top">0</td><td class="px-1 py-1 align-top">No Conformity</td><td class="px-1 py-1">Citizens identify with social groups, not the realm. -1 reaction to outsiders, -3 to groups in conflict. Effective CR -1. Examples: Apartheid Africa; conquered lands.</td></tr>
+          <tr><td class="px-1 py-1 align-top">1</td><td class="px-1 py-1 align-top">Some Conformity</td><td class="px-1 py-1">Citizens tolerate others unless seen as outsiders. -2 reaction to conflicting groups (approx. 25% of population). Examples: Early Latin American republics; Second French Empire.</td></tr>
+          <tr><td class="px-1 py-1 align-top">2</td><td class="px-1 py-1 align-top">Mild Conformity</td><td class="px-1 py-1">Citizens identify as part of the realm, but deep conflicts remain. -1 reaction toward approx. 25% of population, or -3 toward approx. 5%. Examples: 20th-century China; Cold War USSR.</td></tr>
+          <tr><td class="px-1 py-1 align-top">3</td><td class="px-1 py-1 align-top">Moderate Conformity</td><td class="px-1 py-1">Citizens share common ideals and realm pride. +2 reaction when citizens from the realm meet abroad. Examples: Modern United States; British Empire.</td></tr>
+          <tr><td class="px-1 py-1 align-top">4</td><td class="px-1 py-1 align-top">Abundant Conformity</td><td class="px-1 py-1">Shared identity and vision for the future. +2 reaction abroad; Sense of Duty common. Behavior outside cultural norms increases effective CR by 1. Examples: Star Trek's Federation; North Korea.</td></tr>
+          <tr><td class="px-1 py-1 align-top">5</td><td class="px-1 py-1 align-top">Near Total Conformity</td><td class="px-1 py-1">Near lockstep; Sense of Duty to realm and citizens common. Nonconforming citizens get -2 reaction Social Stigma. Realm propaganda +2. Effective CR +2 for citizens. Examples: Tokugawa Shogunate; Nazi Germany; Star Wars' First Order.</td></tr>
+          <tr><td class="px-1 py-1 align-top">6</td><td class="px-1 py-1 align-top">Total Conformity</td><td class="px-1 py-1">Citizens and government are one. Propaganda succeeds automatically. Effective CR is 6, but citizens won't obey orders against cultural norms. Examples: Hive mind; programmed loyalty; The Smurfs.</td></tr>
+        </tbody>
+      </table>
+
+      <p class="mb-2">A realm's base ConR is 2 or 3 (creator's choice). Higher ConR is an enhancement (<span class="italic">Conventional Populace</span>); lower is a limitation (<span class="italic">Unconventional Populace</span>).</p>
+    </template>
+
+    <template v-else-if="name === 'Revenue'">
+      <p class="mb-2">Revenue is the total amount of money a realm can access in a given turn. It represents monies after collecting taxes, funding the government and war efforts, and so on.</p>
+
+      <p class="font-semibold mb-2">Revenue Formula</p>
+      <p class="mb-2">Revenue = (Monthly pay of average citizen) x Population x RF x 0.6</p>
+
+      <p class="font-semibold mb-2">Control Rating to Revenue Factor</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">CR</th>
+            <th class="px-1 py-1">RF</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1">0</td><td class="px-1 py-1">No normal taxation; optional 0.5%</td></tr>
+          <tr><td class="px-1 py-1">1</td><td class="px-1 py-1">2%</td></tr>
+          <tr><td class="px-1 py-1">2</td><td class="px-1 py-1">5%</td></tr>
+          <tr><td class="px-1 py-1">3</td><td class="px-1 py-1">10%</td></tr>
+          <tr><td class="px-1 py-1">4</td><td class="px-1 py-1">20%</td></tr>
+          <tr><td class="px-1 py-1">5</td><td class="px-1 py-1">30%</td></tr>
+          <tr><td class="px-1 py-1">6</td><td class="px-1 py-1">50%</td></tr>
+        </tbody>
+      </table>
+
+      <p class="mb-2">The GM may decide that a realm has a higher or lower effective CR for determining Revenue. This taxation CR does not have to be the same as the effective CR used for Military Budget Factor, though using many effective CRs increases bookkeeping complexity.</p>
+      <p class="mb-2">A realm can garner more than this amount for emergencies or special occasions through borrowing, war taxes, or similar measures.</p>
+      <p class="mb-2">Each step by which RF increases on the table gives a cumulative -2 to all Finance and Administration rolls to keep the government solvent. The maximum increase is to five times normal.</p>
+      <p class="mb-2">Example: if RF is normally 10%, it could go to 50%, which is three steps and -6 to skill. Failing to fund the government leads to shutdown and unrest.</p>
+
+      <p class="font-semibold mb-2">Starting Revenue</p>
+      <p class="mb-2">A realm normally begins with Starting Revenue equal to 1% of its Realm Value. This can be spent to purchase military forces, bribe other realms for Resource Points, and so on.</p>
+      <p>A realm may start with less than this if it is in debt.</p>
     </template>
 
     <template v-else-if="name === 'Duration'">
