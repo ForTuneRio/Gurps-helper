@@ -7,8 +7,31 @@ interface DbRealm {
   user_id: string
   name: string
   data: Realm
+  is_shared?: boolean
+  share_token?: string | null
+  version?: number
   created_at?: string
   updated_at?: string
+}
+
+export interface SaveRealmOptions {
+  expectedVersion?: number
+  force?: boolean
+}
+
+export interface RealmSaveConflictError extends Error {
+  code: 'REALM_CONFLICT'
+  serverVersion: number
+}
+
+export interface RealmAccessResult {
+  realm: Realm
+  ownerId: string
+  isOwner: boolean
+  isShared: boolean
+  shareToken: string | null
+  version: number
+  updatedAt: string | null
 }
 
 // Global state - shared across all composable instances
@@ -39,6 +62,20 @@ const applyBackoff = (realmId: string) => {
 const clearBackoff = (realmId: string) => {
   backoffMsByRealm.delete(realmId)
   backoffUntilByRealm.delete(realmId)
+}
+
+const buildConflictError = (serverVersion: number): RealmSaveConflictError => {
+  const error = new Error('This realm was updated by another user. Refresh before saving, or choose override.') as RealmSaveConflictError
+  error.code = 'REALM_CONFLICT'
+  error.serverVersion = serverVersion
+  return error
+}
+
+const generateShareToken = (): string => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID().replace(/-/g, '')
+  }
+  return `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`
 }
 
 const enforceRealmWriteCooldown = (realmId: string) => {
@@ -112,7 +149,7 @@ export const useRealms = () => {
   /**
    * Save a realm to Supabase (create or update)
    */
-  const saveRealm = async (realm: Realm): Promise<Realm> => {
+  const saveRealm = async (realm: Realm, options?: SaveRealmOptions): Promise<{ realm: Realm; version: number; updatedAt: string | null }> => {
     enforceRealmWriteCooldown(realm.id)
     
     // Check rate limit before allowing save
@@ -148,8 +185,22 @@ export const useRealms = () => {
       const existing = realms.value.findIndex(r => r.id === realmToSave.id)
       
       if (existing >= 0) {
+        const { data: currentRows, error: currentError } = await supabase
+          .from('realms')
+          .select('version')
+          .eq('id', realmToSave.id)
+          .eq('user_id', userId)
+          .limit(1)
+
+        if (currentError) throw currentError
+        const currentVersion = Number(currentRows?.[0]?.version ?? 1)
+
+        if (!options?.force && typeof options?.expectedVersion === 'number' && currentVersion !== options.expectedVersion) {
+          throw buildConflictError(currentVersion)
+        }
+
         // Update existing realm
-        const { error: updateError } = await supabase
+        let updateQuery = supabase
           .from('realms')
           .update({
             name: realmToSave.name,
@@ -159,10 +210,27 @@ export const useRealms = () => {
           .eq('id', realmToSave.id)
           .eq('user_id', userId)
 
+        if (!options?.force && typeof options?.expectedVersion === 'number') {
+          updateQuery = updateQuery.eq('version', options.expectedVersion)
+        }
+
+        const { data: updatedRows, error: updateError } = await updateQuery
+          .select('version, updated_at')
+          .limit(1)
+
         if (updateError) throw updateError
+        if (!updatedRows?.length) {
+          throw buildConflictError(currentVersion)
+        }
         
         realms.value[existing] = realmToSave
         console.log('Updated existing realm:', realmToSave.name)
+
+        const savedVersion = Number(updatedRows[0]?.version ?? currentVersion + 1)
+        const updatedAt = typeof updatedRows[0]?.updated_at === 'string' ? updatedRows[0].updated_at : null
+
+        clearBackoff(realm.id)
+        return { realm: realmToSave, version: savedVersion, updatedAt }
       } else {
         // Create new realm
         const { data, error: insertError } = await supabase
@@ -171,20 +239,24 @@ export const useRealms = () => {
             id: realmToSave.id,
             user_id: userId,
             name: realmToSave.name,
-            data: realmToSave
+            data: realmToSave,
+            is_shared: false,
+            version: 1
           })
-          .select()
+          .select('version, updated_at')
           .single()
 
         if (insertError) throw insertError
         
         realms.value.unshift(realmToSave)
         console.log('Created new realm:', realmToSave.name)
+
+        const savedVersion = Number(data?.version ?? 1)
+        const updatedAt = typeof data?.updated_at === 'string' ? data.updated_at : null
+
+        clearBackoff(realm.id)
+        return { realm: realmToSave, version: savedVersion, updatedAt }
       }
-
-      clearBackoff(realm.id)
-
-      return realmToSave
     } catch (e: any) {
       error.value = e.message
       console.error('Failed to save realm:', e)
@@ -195,6 +267,90 @@ export const useRealms = () => {
     } finally {
       loading.value = false
     }
+  }
+
+  const getRealmForRoute = async (realmId: string, shareToken?: string): Promise<RealmAccessResult | null> => {
+    const trimmedToken = typeof shareToken === 'string' ? shareToken.trim() : ''
+    let currentUserId: string | null = null
+    try {
+      currentUserId = await getUserId()
+    } catch {
+      currentUserId = null
+    }
+
+    let query = supabase
+      .from('realms')
+      .select('*')
+      .eq('id', realmId)
+      .limit(1)
+
+    if (currentUserId) {
+      if (trimmedToken) {
+        query = query.or(`user_id.eq.${currentUserId},and(is_shared.eq.true,share_token.eq.${trimmedToken})`)
+      } else {
+        query = query.eq('user_id', currentUserId)
+      }
+    } else if (trimmedToken) {
+      query = query.eq('is_shared', true).eq('share_token', trimmedToken)
+    } else {
+      return null
+    }
+
+    const { data, error: fetchError } = await query
+    if (fetchError) throw fetchError
+
+    const row = (data?.[0] || null) as DbRealm | null
+    if (!row) return null
+
+    return {
+      realm: {
+        ...row.data,
+        id: row.id
+      },
+      ownerId: row.user_id,
+      isOwner: currentUserId === row.user_id,
+      isShared: Boolean(row.is_shared),
+      shareToken: row.share_token ?? null,
+      version: Number(row.version ?? 1),
+      updatedAt: typeof row.updated_at === 'string' ? row.updated_at : null
+    }
+  }
+
+  const enableRealmSharing = async (realmId: string): Promise<{ shareToken: string; shareUrl: string }> => {
+    const userId = await getUserId()
+
+    const { data: rows, error: fetchError } = await supabase
+      .from('realms')
+      .select('share_token')
+      .eq('id', realmId)
+      .eq('user_id', userId)
+      .limit(1)
+
+    if (fetchError) throw fetchError
+    if (!rows?.length) {
+      throw new Error('Realm not found or you do not have permission to share it.')
+    }
+
+    const currentToken = typeof rows[0]?.share_token === 'string' ? rows[0].share_token : ''
+    const shareToken = currentToken || generateShareToken()
+
+    const { error: updateError } = await supabase
+      .from('realms')
+      .update({
+        is_shared: true,
+        share_token: shareToken,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', realmId)
+      .eq('user_id', userId)
+
+    if (updateError) throw updateError
+
+    const runtimeConfig = useRuntimeConfig()
+    const origin = typeof window !== 'undefined' ? window.location.origin : runtimeConfig.public.siteUrl
+    const shareUrl = `${origin}/realms/${realmId}?share=${shareToken}`
+
+    return { shareToken, shareUrl }
   }
 
   /**
@@ -361,6 +517,8 @@ export const useRealms = () => {
     error: readonly(error),
     loadRealms,
     saveRealm,
+    getRealmForRoute,
+    enableRealmSharing,
     deleteRealm,
     calculateRealmValue,
     createEmptyRealm,

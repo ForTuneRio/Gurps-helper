@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { TrashIcon } from '@heroicons/vue/24/solid'
 import { useRealms } from '~/composables/useRealms'
 
@@ -68,25 +68,31 @@ useHead({
 const router = useRouter()
 
 const user = useSupabaseUser()
-watchEffect(() => {
-  if (!user.value) {
-    navigateTo('/auth/login')
+// Delay redirect to avoid false logouts during transient session refreshes.
+let authRedirectTimer: ReturnType<typeof setTimeout> | null = null
+watch(user, (val) => {
+  if (val) {
+    if (authRedirectTimer) {
+      clearTimeout(authRedirectTimer)
+      authRedirectTimer = null
+    }
+    return
   }
-})
+
+  authRedirectTimer = setTimeout(() => {
+    if (!user.value) navigateTo('/auth/login')
+  }, 2000)
+}, { immediate: true })
 
 const { realms, loadRealms, deleteRealm, createEmptyRealm, saveRealm, loading } = useRealms()
 const creating = ref(false)
 const createError = ref('')
 
-watchEffect(() => {
-  console.log('watchEffect triggered. user.value:', user.value)
-  if (user.value) {
-    console.log('User detected, loading realms...')
+watch(user, (val) => {
+  if (val) {
     loadRealms()
-  } else {
-    console.log('user.value is falsy, not loading realms')
   }
-})
+}, { immediate: true })
 
 const openRealm = (id: string) => {
   router.push(`/realms/${id}`)
@@ -106,7 +112,7 @@ const createAndOpenRealm = async () => {
     }
     const newRealm = createEmptyRealm()
     const saved = await saveRealm(newRealm)
-    await router.push(`/realms/${saved.id}`)
+    await router.push(`/realms/${saved.realm.id}`)
   } catch (e: any) {
     createError.value = e?.message || 'Failed to create realm'
     console.error('Failed to create realm:', e)

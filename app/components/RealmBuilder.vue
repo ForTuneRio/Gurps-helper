@@ -1,6 +1,7 @@
 <template>
   <div class="realm-builder">
     <form id="realm-form" @submit.prevent="handleSubmit" class="space-y-4">
+      <fieldset :disabled="isReadOnly" :class="{ 'opacity-85': isReadOnly }" class="space-y-4">
       <!-- FIRST BLOCK: Basic Info (3 columns) -->
       <div class="border border-gray-300 rounded-md p-3 bg-white dark:bg-gray-800">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -1026,6 +1027,7 @@
           @input="resizeDescription"
         />
       </div>
+      </fieldset>
 
     </form>
 
@@ -1039,6 +1041,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useRealms } from '~/composables/useRealms'
+import type { RealmSaveConflictError } from '~/composables/useRealms'
 import { Cog6ToothIcon, TrashIcon } from '@heroicons/vue/24/solid'
 import InfoBox from '~/components/InfoBox.vue'
 import ModifierInfoContent from '~/components/ModifierInfoContent.vue'
@@ -1060,10 +1063,16 @@ import {
   calculateResourcePointCost
 } from '~/utils/realmCalculations'
 
-const props = defineProps<{ realmId?: string }>()
+const props = defineProps<{
+  realmId?: string
+  realmData?: Realm | null
+  readOnly?: boolean
+  baseVersion?: number
+}>()
 const emit = defineEmits<{ 
   close: []
   dirty: [isDirty: boolean]
+  'saved-meta': [payload: { version: number; updatedAt: string | null }]
 }>()
 
 const { saveRealm, createEmptyRealm, realms, loadRealmForEdit } = useRealms()
@@ -1071,12 +1080,14 @@ const realmForm = ref<Realm>(createEmptyRealm())
 const saving = ref(false)
 const saved = ref(false)
 const loadedRealmId = ref<string | null>(null)
+const currentVersion = ref(Number(props.baseVersion ?? 1))
 const isDirty = ref(false)
 const autoSaveTimer = ref<number | null>(null)
 const autoSaveDebounce = ref<number | null>(null)
 const ignoreNextChange = ref(false)
 
 const descriptionRef = ref<HTMLTextAreaElement | null>(null)
+const isReadOnly = computed(() => Boolean(props.readOnly))
 
 const MAX_NUMBER_LENGTH = 30
 
@@ -1370,8 +1381,17 @@ const removeResourcePoint = (index: number) => {
 }
 
 const loadRealmFromStore = () => {
+  if (props.realmData) {
+    if (!isReadOnly.value && isDirty.value) return
+    ignoreNextChange.value = true
+    realmForm.value = loadRealmForEdit(props.realmData)
+    loadedRealmId.value = props.realmData.id
+    isDirty.value = false
+    return
+  }
+
   if (!props.realmId) return
-  if (loadedRealmId.value === props.realmId) return
+  if (loadedRealmId.value === props.realmId && !isReadOnly.value) return
 
   const realm = realms.value.find(r => r.id === props.realmId)
   if (realm) {
@@ -1383,7 +1403,12 @@ const loadRealmFromStore = () => {
 }
 
 onMounted(loadRealmFromStore)
-watch([() => props.realmId, realms], loadRealmFromStore)
+watch([() => props.realmId, realms, () => props.realmData], loadRealmFromStore, { deep: true })
+watch(() => props.baseVersion, (version) => {
+  if (typeof version === 'number' && Number.isFinite(version)) {
+    currentVersion.value = version
+  }
+}, { immediate: true })
 
 watch(
   realmForm,
@@ -1392,6 +1417,7 @@ watch(
       ignoreNextChange.value = false
       return
     }
+    if (isReadOnly.value) return
     isDirty.value = true
 
     if (autoSaveDebounce.value !== null) {
@@ -1417,13 +1443,14 @@ watch(
 onMounted(() => {
   void nextTick(resizeDescription)
   autoSaveTimer.value = window.setInterval(() => {
+    if (isReadOnly.value) return
     if (saving.value || !isDirty.value) return
     if (!realmForm.value.name.trim()) return
     void saveRealmFn({ showSaved: false, closeAfter: false })
   }, 10 * 60 * 1000)
 
   const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-    if (isDirty.value) {
+    if (isDirty.value && !isReadOnly.value) {
       e.preventDefault()
       e.returnValue = ''
       return ''
@@ -1442,9 +1469,11 @@ onMounted(() => {
   })
 })
 
-const saveRealmFn = async (options?: { showSaved?: boolean; closeAfter?: boolean }) => {
+const saveRealmFn = async (options?: { showSaved?: boolean; closeAfter?: boolean; forceOverride?: boolean }) => {
   const showSaved = options?.showSaved ?? true
   const closeAfter = options?.closeAfter ?? true
+  const forceOverride = options?.forceOverride ?? false
+  if (isReadOnly.value) return
   if (saving.value) return
   saving.value = true
   try {
@@ -1465,7 +1494,12 @@ const saveRealmFn = async (options?: { showSaved?: boolean; closeAfter?: boolean
     realmForm.value.fundsAndPeople.bankPlusEarnings = bankPlusEarningsComputed.value
     realmForm.value.resources.resourcePointCost = resourcePointCostComputed.value
 
-    await saveRealm(realmForm.value)
+    const result = await saveRealm(realmForm.value, {
+      expectedVersion: currentVersion.value,
+      force: forceOverride
+    })
+    currentVersion.value = result.version
+    emit('saved-meta', { version: result.version, updatedAt: result.updatedAt })
     isDirty.value = false
     if (showSaved) {
       saved.value = true
@@ -1478,6 +1512,32 @@ const saveRealmFn = async (options?: { showSaved?: boolean; closeAfter?: boolean
     } else if (closeAfter && isEditMode.value) {
       emit('close')
     }
+  } catch (e: unknown) {
+    const conflictError = e as RealmSaveConflictError
+    if (conflictError?.code === 'REALM_CONFLICT') {
+      currentVersion.value = conflictError.serverVersion
+      if (showSaved) {
+        const wantsOverride = window.confirm('Someone else changed this realm since you loaded it. Do you want to override their version with your current changes?')
+        if (wantsOverride) {
+          const retryResult = await saveRealm(realmForm.value, {
+            expectedVersion: currentVersion.value,
+            force: true
+          })
+          currentVersion.value = retryResult.version
+          emit('saved-meta', { version: retryResult.version, updatedAt: retryResult.updatedAt })
+          isDirty.value = false
+          saved.value = true
+          setTimeout(() => {
+            saved.value = false
+            if (closeAfter && isEditMode.value) {
+              emit('close')
+            }
+          }, 2000)
+        }
+      }
+      return
+    }
+    throw e
   } finally {
     saving.value = false
   }

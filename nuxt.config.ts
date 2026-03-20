@@ -73,11 +73,15 @@ export default defineNuxtConfig({
   // Runtime config (can be overridden by environment variables)
   runtimeConfig: {
     // Private keys (only available on server-side)
+    supabaseUrl: process.env.SUPABASE_URL || process.env.NUXT_PUBLIC_SUPABASE_URL || '',
+    supabaseAnonKey: process.env.SUPABASE_ANON_KEY || process.env.NUXT_PUBLIC_SUPABASE_ANON_KEY || '',
     // Public keys (exposed to client-side)
     public: {
       appName: 'GURPS Helper',
       appVersion: '1.0.0',
       siteUrl: 'https://www.gurps-helper.com',
+      supabaseUrl: process.env.NUXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '',
+      supabaseAnonKey: process.env.NUXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '',
     },
   },
 })
