@@ -318,6 +318,7 @@
             <div class="flex justify-between items-center mb-2">
               <h4 class="text-sm font-semibold text-green-700">Enhancements</h4>
               <button
+                v-if="!isReadOnly"
                 type="button"
                 @click="addEnhancement"
                 class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded"
@@ -343,6 +344,7 @@
                       <span class="text-gray-500">Lvl: {{ enhancement.level }}</span>
                       <span class="px-1 bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-200 rounded font-semibold">+{{ enhancement.totalCost }}%</span>
                       <button
+                        v-if="!isReadOnly"
                         type="button"
                         @click="toggleEnhancementEdit(idx)"
                         class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
@@ -371,6 +373,7 @@
                       />
                     </div>
                     <button
+                      v-if="!isReadOnly"
                       type="button"
                       @click="toggleEnhancementEdit(idx)"
                       class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
@@ -422,6 +425,7 @@
                     </div>
                   </div>
                   <button
+                    v-if="!isReadOnly"
                     type="button"
                     @click="removeEnhancement(idx)"
                     class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
@@ -439,6 +443,7 @@
             <div class="flex justify-between items-center mb-2">
               <h4 class="text-sm font-semibold text-red-700">Limitations</h4>
               <button
+                v-if="!isReadOnly"
                 type="button"
                 @click="addLimitation"
                 class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded"
@@ -464,6 +469,7 @@
                       <span class="text-gray-500">Lvl: {{ limitation.level }}</span>
                       <span class="px-1 bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-200 rounded font-semibold">{{ limitation.totalCost }}%</span>
                       <button
+                        v-if="!isReadOnly"
                         type="button"
                         @click="toggleLimitationEdit(idx)"
                         class="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400"
@@ -492,6 +498,7 @@
                       />
                     </div>
                     <button
+                      v-if="!isReadOnly"
                       type="button"
                       @click="toggleLimitationEdit(idx)"
                       class="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400"
@@ -544,6 +551,7 @@
                     </div>
                   </div>
                   <button
+                    v-if="!isReadOnly"
                     type="button"
                     @click="removeLimitation(idx)"
                     class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
@@ -796,6 +804,7 @@
                 <div class="flex justify-between items-center mb-1">
                   <h5 class="text-xs font-semibold text-green-700">Income</h5>
                   <button
+                    v-if="!isReadOnly"
                     type="button"
                     @click="addIndependentIncome"
                     class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded"
@@ -859,6 +868,7 @@
                           <span>$</span>
                         </label>
                         <button
+                          v-if="!isReadOnly"
                           type="button"
                           @click="removeIndependentIncome(idx)"
                           class="ml-auto text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-xs shrink-0"
@@ -876,6 +886,7 @@
                 <div class="flex justify-between items-center mb-1">
                   <h5 class="text-xs font-semibold text-red-700">Debt</h5>
                   <button
+                    v-if="!isReadOnly"
                     type="button"
                     @click="addDebt"
                     class="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded"
@@ -939,6 +950,7 @@
                           <span>$</span>
                         </label>
                         <button
+                          v-if="!isReadOnly"
                           type="button"
                           @click="removeDebt(idx)"
                           class="ml-auto text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 text-xs shrink-0"
@@ -961,6 +973,7 @@
                 Resource Points <span class="text-xs text-gray-500 font-normal">({{ resourcePointCostComputed.toLocaleString() }}$ each)</span>
               </h4>
               <button
+                v-if="!isReadOnly"
                 type="button"
                 @click="addResourcePoint"
                 class="px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded"
@@ -986,6 +999,7 @@
                     class="flex-1 px-1 py-1 border rounded text-xs"
                   />
                   <button
+                    v-if="!isReadOnly"
                     type="button"
                     @click="removeResourcePoint(idx)"
                     class="text-red-600 hover:text-red-800 text-xs px-1"

@@ -9,18 +9,7 @@
         Back to list
       </button>
       <button
-        v-if="!isNew"
-        type="button"
-        @click="toggleViewMode"
-        class="inline-flex items-center rounded-md px-3 py-1.5 text-sm font-medium"
-        :class="isViewOnly
-          ? 'bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-900/40 dark:text-amber-200 dark:hover:bg-amber-900/60'
-          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700'"
-      >
-        {{ isViewOnly ? 'Exit View Mode' : 'View Mode' }}
-      </button>
-      <button
-        v-if="canShare"
+        v-if="canShare && !isViewOnly"
         type="button"
         @click="shareRealm"
         class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700"
@@ -28,10 +17,10 @@
         Share URL
       </button>
       <button
-        v-if="canSaveRealm"
+        v-if="canSaveRealm && !isViewOnly"
         type="submit"
         form="realm-form"
-        :disabled="loading || isViewOnly"
+        :disabled="loading"
         class="inline-flex items-center rounded-md bg-green-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {{ loading ? 'Saving...' : 'Save' }}
@@ -42,8 +31,8 @@
       {{ shareMessage }}
     </div>
 
-    <div v-if="isViewOnly && !isNew" class="mb-3 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
-      View Mode is active.
+    <div v-if="isViewOnly && !isNew" class="mb-3 rounded-md bg-blue-50 px-3 py-2 text-sm text-blue-800 dark:bg-blue-900/30 dark:text-blue-200">
+      You are viewing this realm in read-only mode.
     </div>
 
     <div v-if="isNew" class="p-4">
@@ -101,7 +90,6 @@ const realmBuilderDirty = ref(false)
 const realmAccess = ref<Awaited<ReturnType<typeof getRealmForRoute>>>(null)
 const loadError = ref('')
 const shareMessage = ref('')
-const viewMode = ref(false)
 const realmVersion = ref(1)
 const liveRefreshTimer = ref<number | null>(null)
 
@@ -113,8 +101,8 @@ const canSaveRealm = computed(() => {
 const canShare = computed(() => !isNew.value && Boolean(realmAccess.value?.isOwner))
 
 const isViewOnly = computed(() => {
-  if (isNew.value) return viewMode.value
-  return viewMode.value || !canSaveRealm.value
+  if (isNew.value) return false
+  return Boolean(shareToken.value) || !canSaveRealm.value
 })
 
 const loadRealm = async () => {
@@ -143,11 +131,10 @@ const syncLiveRefreshTimer = () => {
 
   liveRefreshTimer.value = window.setInterval(() => {
     void loadRealm()
-  }, 20 * 1000)
+  }, 15 * 1000)
 }
 
 onMounted(async () => {
-  viewMode.value = route.query.view === '1' || Boolean(shareToken.value)
   await loadRealm()
   syncLiveRefreshTimer()
 })
@@ -167,26 +154,6 @@ watch([realmId, shareToken], async () => {
 watch(isViewOnly, () => {
   syncLiveRefreshTimer()
 })
-
-const toggleViewMode = async () => {
-  if (!isViewOnly.value && realmBuilderDirty.value) {
-    const confirmed = window.confirm('You have unsaved changes. Switching to view mode can replace local edits with live data. Continue?')
-    if (!confirmed) return
-  }
-
-  viewMode.value = !viewMode.value
-  await navigateTo({
-    path: `/realms/${realmId.value}`,
-    query: {
-      ...route.query,
-      view: viewMode.value ? '1' : undefined
-    }
-  }, { replace: true })
-
-  if (viewMode.value) {
-    await loadRealm()
-  }
-}
 
 const shareRealm = async () => {
   if (!canShare.value) return
