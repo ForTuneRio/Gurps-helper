@@ -675,38 +675,6 @@
           <!-- Column 2: Funds (2 sub-columns) -->
           <div>
             <h4 class="text-sm font-semibold text-green-700 mb-2">Funds</h4>
-            <!-- Military (full width) -->
-            <div class="mb-2 border border-gray-200 rounded p-2 bg-gray-50">
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
-                <label class="flex items-center gap-2 text-xs font-medium text-gray-700">
-                  <input
-                    id="wartime"
-                    v-model="realmForm.military.wartime"
-                    type="checkbox"
-                    class="rounded border-gray-300 text-green-600 focus:ring-green-500"
-                  />
-                  <span>Wartime</span>
-                </label>
-                <div>
-                  <label class="block text-xs font-medium text-gray-600 mb-1">Mil. Budget Factor 
-                    <InfoBox title="Military Resources">
-                      <ModifierInfoContent name="Military Resources" />
-                    </InfoBox>
-                  </label>
-                  <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
-                    {{ (militaryBudgetFactorComputed * 100).toFixed(1) }}%
-                  </div>
-                </div>
-                <div>
-                  <label class="flex items-center gap-1 text-xs font-medium text-gray-600 mb-1">
-                    Military Resources
-                  </label>
-                  <div class="px-2 py-1 bg-gray-100 rounded text-xs font-semibold">
-                    {{ militaryResourcesComputed.toLocaleString() }}
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="grid grid-cols-2 gap-2">
               <!-- Sub-column 1: Taxation & Military -->
               <div class="space-y-2">
@@ -1025,6 +993,341 @@
         </div>
       </div>
 
+      <!-- FIFTH BLOCK: Army -->
+      <div class="border border-gray-300 rounded-md p-3 bg-white dark:bg-gray-800 space-y-3">
+        <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+          <h4 class="text-sm font-semibold text-green-700">Army</h4>
+          <button
+            v-if="!isReadOnly"
+            type="button"
+            @click="addCompany"
+            class="inline-flex items-center justify-center rounded bg-green-600 px-2 py-1 text-xs font-medium text-white hover:bg-green-700"
+          >
+            + Add Company
+          </button>
+        </div>
+
+        <div class="border border-gray-200 rounded p-3 bg-gray-50">
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-center">
+            <label class="flex items-center gap-2 text-xs font-medium text-gray-700">
+              <input
+                id="wartime"
+                v-model="realmForm.military.wartime"
+                type="checkbox"
+                class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+              />
+              <span>Wartime</span>
+            </label>
+            <div>
+              <label class="flex items-center gap-1 text-xs font-medium text-gray-600 mb-1">
+                Mil. Budget Factor
+                <InfoBox title="Military Resources">
+                  <ModifierInfoContent name="Military Resources" />
+                </InfoBox>
+              </label>
+              <div class="rounded bg-gray-100 px-2 py-1 text-xs font-semibold">
+                {{ (militaryBudgetFactorComputed * 100).toFixed(1) }}%
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-gray-600 mb-1">Military Resources</label>
+              <div class="rounded bg-gray-100 px-2 py-1 text-xs font-semibold">
+                {{ militaryResourcesComputed.toLocaleString() }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="realmForm.army.companies.length === 0" class="rounded border border-dashed border-gray-300 bg-gray-50 px-3 py-4 text-xs italic text-gray-500">
+          No companies yet.
+        </div>
+
+        <div v-else class="space-y-3">
+          <div
+            v-for="(company, companyIndex) in realmForm.army.companies"
+            :key="company.id"
+            class="rounded-md border border-gray-200 bg-gray-50 p-3"
+          >
+            <div class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+              <div class="space-y-2 flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <h5 class="text-sm font-semibold text-gray-800">{{ company.name || `Company ${companyIndex + 1}` }}</h5>
+                  <span class="rounded bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-200">Raise: {{ getCompanyRaiseTotal(company).toLocaleString() }}</span>
+                  <span class="rounded bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-200">Maintain: {{ getCompanyMaintainTotal(company).toLocaleString() }}</span>
+                  <span class="rounded bg-gray-200 dark:bg-gray-700 px-2 py-0.5 text-xs font-medium text-gray-700 dark:text-gray-200">Total TS: {{ getCompanyTotalTs(company).toLocaleString() }}</span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 text-xs text-gray-600">
+                  <span class="font-medium text-gray-700">Logistics:</span>
+                  <span
+                    v-for="type in getCompanyLogisticsTypes(company)"
+                    :key="type"
+                    class="rounded bg-white px-2 py-0.5 border border-gray-200"
+                  >
+                    {{ type }}
+                  </span>
+                  <span v-if="getCompanyLogisticsTypes(company).length === 0" class="text-gray-400">No units</span>
+                </div>
+
+                <div v-if="getCompanySpecialClassTotals(company).length > 0" class="space-y-1">
+                  <div class="text-xs font-medium text-gray-700">Special Class TS</div>
+                  <div class="flex flex-wrap gap-2">
+                    <span
+                      v-for="item in getCompanySpecialClassTotals(company)"
+                      :key="item.label"
+                      class="rounded bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800"
+                    >
+                      {{ item.label }}: {{ item.value.toLocaleString() }}
+                    </span>
+                  </div>
+                </div>
+
+                <div v-if="getCompanyAntiSpecialClassTotals(company).length > 0" class="space-y-1">
+                  <div class="text-xs font-medium text-gray-700">Anti Special Class TS</div>
+                  <div class="flex flex-wrap gap-2">
+                    <span
+                      v-for="item in getCompanyAntiSpecialClassTotals(company)"
+                      :key="item.label"
+                      class="rounded bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-800"
+                    >
+                      {{ item.label }}: {{ item.value.toLocaleString() }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button
+                  v-if="!isReadOnly"
+                  type="button"
+                  @click="toggleCompanyEdit(company.id)"
+                  class="rounded bg-white px-2 py-1 text-xs font-medium text-gray-700 border border-gray-200 hover:bg-gray-100"
+                >
+                  {{ editingCompany[company.id] ? 'Done' : 'Edit' }}
+                </button>
+                <button
+                  v-if="!isReadOnly"
+                  type="button"
+                  @click="removeCompany(companyIndex)"
+                  class="text-red-600 hover:text-red-800"
+                  title="Delete company"
+                >
+                  <TrashIcon class="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            <div v-if="editingCompany[company.id]" class="mt-3 space-y-3 rounded border border-gray-200 bg-white p-3">
+              <div>
+                <label class="mb-1 block text-xs font-medium text-gray-700">Company Name</label>
+                <input
+                  v-model="company.name"
+                  type="text"
+                  maxlength="120"
+                  placeholder="Company name"
+                  class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                />
+              </div>
+
+              <div class="flex items-center justify-between gap-2">
+                <h6 class="text-xs font-semibold text-gray-700">Units</h6>
+                <button
+                  v-if="!isReadOnly"
+                  type="button"
+                  @click="addUnit(companyIndex)"
+                  class="rounded bg-green-600 px-2 py-1 text-xs font-medium text-white hover:bg-green-700"
+                >
+                  + Add Unit
+                </button>
+              </div>
+
+              <div v-if="company.units.length === 0" class="rounded border border-dashed border-gray-300 bg-gray-50 px-3 py-4 text-xs italic text-gray-500">
+                No units in this company.
+              </div>
+
+              <div v-else class="space-y-3">
+                <div
+                  v-for="(unit, unitIndex) in company.units"
+                  :key="unit.id"
+                  class="rounded border border-gray-200 bg-gray-50 p-3"
+                >
+                  <div class="mb-3 flex items-center justify-between gap-2">
+                    <div class="text-xs font-semibold text-gray-700">{{ unit.name || `Unit ${unitIndex + 1}` }}</div>
+                    <button
+                      v-if="!isReadOnly"
+                      type="button"
+                      @click="removeUnit(companyIndex, unitIndex)"
+                      class="text-red-600 hover:text-red-800"
+                      title="Delete unit"
+                    >
+                      <TrashIcon class="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+                    <div class="xl:col-span-2">
+                      <label class="mb-1 block text-xs font-medium text-gray-700">Unit Name</label>
+                      <input
+                        v-model="unit.name"
+                        type="text"
+                        maxlength="120"
+                        placeholder="Horse Archers"
+                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-xs font-medium text-gray-700">TS</label>
+                      <input
+                        v-model.number="unit.ts"
+                        type="number"
+                        maxlength="30"
+                        data-min="0"
+                        data-max="1000000"
+                        @input="clampNumberInput"
+                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-xs font-medium text-gray-700">Amount</label>
+                      <input
+                        v-model.number="unit.amount"
+                        type="number"
+                        maxlength="30"
+                        data-min="1"
+                        data-max="1000000"
+                        @input="clampNumberInput"
+                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    </div>
+                    <div class="xl:col-span-2">
+                      <label class="mb-1 block text-xs font-medium text-gray-700">Class</label>
+                      <input
+                        v-model="unit.class"
+                        type="text"
+                        maxlength="200"
+                        placeholder="Cv, F, Rec, (F)"
+                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-xs font-medium text-gray-700">WT</label>
+                      <input
+                        v-model="unit.wt"
+                        type="text"
+                        maxlength="80"
+                        placeholder="Mtd"
+                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-xs font-medium text-gray-700">Mob</label>
+                      <input
+                        v-model="unit.mob"
+                        type="text"
+                        maxlength="80"
+                        placeholder="Mounted"
+                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-xs font-medium text-gray-700">Raise</label>
+                      <input
+                        v-model.number="unit.raise"
+                        type="number"
+                        maxlength="30"
+                        data-min="0"
+                        data-max="1000000000000000000"
+                        @input="clampNumberInput"
+                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-xs font-medium text-gray-700">Maintain</label>
+                      <input
+                        v-model.number="unit.maintain"
+                        type="number"
+                        maxlength="30"
+                        data-min="0"
+                        data-max="1000000000000000000"
+                        @input="clampNumberInput"
+                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-xs font-medium text-gray-700">TL</label>
+                      <input
+                        v-model.number="unit.techLevel"
+                        type="number"
+                        maxlength="30"
+                        data-min="0"
+                        data-max="20"
+                        @input="clampNumberInput"
+                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-xs font-medium text-gray-700">Current Unit TL</label>
+                      <input
+                        v-model.number="unit.currentTechLevel"
+                        type="number"
+                        maxlength="30"
+                        data-min="0"
+                        data-max="20"
+                        @input="clampNumberInput"
+                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="mt-3 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                      <div class="text-xs font-medium text-gray-700">Features</div>
+                      <button
+                        v-if="!isReadOnly"
+                        type="button"
+                        @click="addUnitFeature(companyIndex, unitIndex)"
+                        class="rounded bg-white px-2 py-1 text-xs font-medium text-gray-700 border border-gray-200 hover:bg-gray-100"
+                      >
+                        + Add Feature
+                      </button>
+                    </div>
+
+                    <div v-if="unit.features.length === 0" class="text-xs italic text-gray-400">
+                      No features
+                    </div>
+
+                    <div v-else class="space-y-2">
+                      <div
+                        v-for="(feature, featureIndex) in unit.features"
+                        :key="`${unit.id}-feature-${featureIndex}`"
+                        class="flex items-center gap-2"
+                      >
+                        <input
+                          v-model="unit.features[featureIndex]"
+                          type="text"
+                          maxlength="120"
+                          placeholder="Feature"
+                          class="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                        />
+                        <button
+                          v-if="!isReadOnly"
+                          type="button"
+                          @click="removeUnitFeature(companyIndex, unitIndex, featureIndex)"
+                          class="text-red-600 hover:text-red-800"
+                          title="Delete feature"
+                        >
+                          <TrashIcon class="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Description (optional, at bottom) -->
       <div class="border border-gray-300 rounded-md p-3 bg-white dark:bg-gray-800">
         <label for="description" class="block text-xs font-medium text-gray-700 mb-1">
@@ -1059,7 +1362,7 @@ import type { RealmSaveConflictError } from '~/composables/useRealms'
 import { Cog6ToothIcon, TrashIcon } from '@heroicons/vue/24/solid'
 import InfoBox from '~/components/InfoBox.vue'
 import ModifierInfoContent from '~/components/ModifierInfoContent.vue'
-import type { Realm } from '~/types/realm'
+import type { Realm, ArmyCompany, ArmyUnit } from '~/types/realm'
 import {
   getHabitabilityLabel,
   getCitizenLoyaltyLabel,
@@ -1158,9 +1461,187 @@ const resizeDescription = () => {
 
 
 
-// Edit state tracking for enhancements and limitations
+// Edit state tracking for enhancements, limitations, and companies
 const editingEnhancement = ref<Record<number, boolean>>({})
 const editingLimitation = ref<Record<number, boolean>>({})
+const editingCompany = ref<Record<string, boolean>>({})
+
+const specialClassLabels = ['F', 'Cv', 'Rec', 'Eng', 'Art', 'Arm', 'C3l', 'Air', 'Nav'] as const
+const antiSpecialClassLabels = specialClassLabels.map(label => `(${label})`)
+
+const parseFeatureModifiers = (features: string[]): { tsMult: number; raiseMult: number; maintainMult: number } => {
+  let tsMult = 1
+  let raiseMult = 1
+  let maintainMult = 1
+
+  features.forEach((feature) => {
+    const lower = feature.toLowerCase()
+    if (/x([0-9.]+)\s*ts/i.test(lower)) {
+      const match = lower.match(/x([0-9.]+)\s*ts/i)
+      tsMult *= Number(match?.[1]) || 1
+    }
+    if (/x([0-9.]+)\s*raise/i.test(lower)) {
+      const match = lower.match(/x([0-9.]+)\s*raise/i)
+      raiseMult *= Number(match?.[1]) || 1
+    }
+    if (/x([0-9.]+)\s*maintain/i.test(lower)) {
+      const match = lower.match(/x([0-9.]+)\s*maintain/i)
+      maintainMult *= Number(match?.[1]) || 1
+    }
+  })
+
+  return { tsMult, raiseMult, maintainMult }
+}
+
+const createArmyUnit = (): ArmyUnit => ({
+  id: Math.random().toString(36).substr(2, 9),
+  name: '',
+  ts: 0,
+  class: '',
+  wt: '',
+  mob: '',
+  raise: 0,
+  maintain: 0,
+  techLevel: realmForm.value.details.techLevel,
+  currentTechLevel: realmForm.value.details.techLevel,
+  amount: 1,
+  features: []
+})
+
+const createArmyCompany = (): ArmyCompany => ({
+  id: Math.random().toString(36).substr(2, 9),
+  name: '',
+  units: []
+})
+
+const getUnitAmount = (unit: ArmyUnit): number => {
+  const amount = Number(unit.amount)
+  return Number.isFinite(amount) && amount > 0 ? amount : 1
+}
+
+const normalizeClassToken = (token: string): string => {
+  const trimmed = token.trim()
+  if (!trimmed) return ''
+
+  const isAnti = trimmed.startsWith('(') && trimmed.endsWith(')')
+  const core = isAnti ? trimmed.slice(1, -1).trim() : trimmed
+  const normalizedCore = specialClassLabels.find((label) => {
+    const lowered = core.toLowerCase()
+    return label.toLowerCase() === lowered || (label === 'C3l' && lowered === 'c3i')
+  }) ?? core
+
+  return isAnti ? `(${normalizedCore})` : normalizedCore
+}
+
+const parseClassTokens = (value: string): string[] => value
+  .split(',')
+  .map(token => normalizeClassToken(token))
+  .filter(Boolean)
+
+const getWeightedUnitTs = (unit: ArmyUnit): number => {
+  const mods = parseFeatureModifiers(unit.features)
+  return Math.round(unit.ts * getUnitAmount(unit) * mods.tsMult)
+}
+
+const getUnitRaiseCost = (unit: ArmyUnit): number => {
+  const mods = parseFeatureModifiers(unit.features)
+  return Math.round(unit.raise * getUnitAmount(unit) * mods.raiseMult)
+}
+
+const getUnitMaintainCost = (unit: ArmyUnit): number => {
+  const mods = parseFeatureModifiers(unit.features)
+  return Math.round(unit.maintain * getUnitAmount(unit) * mods.maintainMult)
+}
+
+const getCompanyRaiseTotal = (company: ArmyCompany): number => company.units
+  .reduce((sum, unit) => sum + getUnitRaiseCost(unit), 0)
+
+const getCompanyMaintainTotal = (company: ArmyCompany): number => company.units
+  .reduce((sum, unit) => sum + getUnitMaintainCost(unit), 0)
+
+const getCompanyTotalTs = (company: ArmyCompany): number => company.units
+  .reduce((sum, unit) => sum + getWeightedUnitTs(unit), 0)
+
+const buildCompanyClassTotals = (company: ArmyCompany, labels: readonly string[], useAntiTotals: boolean) => labels
+  .map((label) => {
+    const value = company.units.reduce((sum, unit) => {
+      const tokens = parseClassTokens(unit.class)
+      if (useAntiTotals) {
+        // Only use explicit anti-class tokens like (F), (Cv), etc.
+        return tokens.includes(label) ? sum + getWeightedUnitTs(unit) : sum
+      }
+
+      return tokens.includes(label) ? sum + getWeightedUnitTs(unit) : sum
+    }, 0)
+
+    return { label, value }
+  })
+  .filter(item => item.value > 0)
+
+const getCompanySpecialClassTotals = (company: ArmyCompany) => buildCompanyClassTotals(company, specialClassLabels, false)
+const getCompanyAntiSpecialClassTotals = (company: ArmyCompany) => buildCompanyClassTotals(company, antiSpecialClassLabels, true)
+
+const getCompanyLogisticsTypes = (company: ArmyCompany): string[] => {
+  const types = new Set<string>()
+
+  company.units.forEach((unit) => {
+    const mobility = unit.mob.toLowerCase()
+    if (!mobility.trim()) {
+      types.add('Land')
+      return
+    }
+
+    let assigned = false
+    if (/(air|aero|fly|flight|airborne)/i.test(mobility)) {
+      types.add('Air')
+      assigned = true
+    }
+    if (/(nav|naval|sea|ship|boat|sub|marine)/i.test(mobility)) {
+      types.add('Naval')
+      assigned = true
+    }
+    if (!assigned) {
+      types.add('Land')
+    }
+  })
+
+  return ['Land', 'Naval', 'Air'].filter(type => types.has(type))
+}
+
+const addCompany = () => {
+  const company = createArmyCompany()
+  realmForm.value.army.companies.push(company)
+}
+
+const removeCompany = (index: number) => {
+  const confirmed = window.confirm('Delete this company and all its units?')
+  if (!confirmed) return
+  
+  const [company] = realmForm.value.army.companies.splice(index, 1)
+  if (company) {
+    delete editingCompany.value[company.id]
+  }
+}
+
+const toggleCompanyEdit = (companyId: string) => {
+  editingCompany.value[companyId] = !editingCompany.value[companyId]
+}
+
+const addUnit = (companyIndex: number) => {
+  realmForm.value.army.companies[companyIndex]?.units.push(createArmyUnit())
+}
+
+const removeUnit = (companyIndex: number, unitIndex: number) => {
+  realmForm.value.army.companies[companyIndex]?.units.splice(unitIndex, 1)
+}
+
+const addUnitFeature = (companyIndex: number, unitIndex: number) => {
+  realmForm.value.army.companies[companyIndex]?.units[unitIndex]?.features.push('')
+}
+
+const removeUnitFeature = (companyIndex: number, unitIndex: number, featureIndex: number) => {
+  realmForm.value.army.companies[companyIndex]?.units[unitIndex]?.features.splice(featureIndex, 1)
+}
 
 const isEditMode = computed(() => !!props.realmId)
 

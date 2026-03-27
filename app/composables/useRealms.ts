@@ -1,5 +1,5 @@
 import { ref, readonly } from 'vue'
-import type { Realm, ResourcePoint, EnhancementItem, LimitationItem } from '~/types/realm'
+import type { Realm, ResourcePoint, EnhancementItem, LimitationItem, ArmyCompany, ArmyUnit } from '~/types/realm'
 import { useRateLimit } from './useRateLimit'
 
 interface DbRealm {
@@ -178,7 +178,8 @@ export const useRealms = () => {
           ...realm.fundsAndPeople,
           independentIncomes: realm.fundsAndPeople.independentIncomes || [],
           debts: realm.fundsAndPeople.debts || []
-        }
+        },
+        army: normalizeArmy(realm.army)
       }
 
       // Check if realm exists
@@ -410,6 +411,55 @@ export const useRealms = () => {
     { id: '6', name: 'Workforce (M)', value: 0 },
   ]
 
+  const createEmptyArmyUnit = (): ArmyUnit => ({
+    id: Math.random().toString(36).substr(2, 9),
+    name: '',
+    ts: 0,
+    class: '',
+    wt: '',
+    mob: '',
+    raise: 0,
+    maintain: 0,
+    techLevel: 0,
+    currentTechLevel: 0,
+    amount: 1,
+    features: []
+  })
+
+  const normalizeArmyUnit = (unit: Partial<ArmyUnit> | null | undefined): ArmyUnit => {
+    const baseUnit = {
+      id: unit?.id || Math.random().toString(36).substr(2, 9),
+      name: unit?.name || '',
+      class: unit?.class || '',
+      wt: unit?.wt || '',
+      mob: unit?.mob || '',
+      ts: typeof unit?.ts === 'number' ? unit.ts : 0,
+      raise: typeof unit?.raise === 'number' ? unit.raise : 0,
+      maintain: typeof unit?.maintain === 'number' ? unit.maintain : 0,
+      techLevel: typeof unit?.techLevel === 'number' ? unit.techLevel : 0,
+      currentTechLevel: typeof unit?.currentTechLevel === 'number' ? unit.currentTechLevel : (typeof unit?.techLevel === 'number' ? unit.techLevel : 0),
+      amount: typeof unit?.amount === 'number' && unit.amount > 0 ? unit.amount : 1,
+      features: Array.isArray(unit?.features)
+        ? unit.features.filter((feature): feature is string => typeof feature === 'string')
+        : []
+    }
+    return baseUnit
+  }
+
+  const normalizeArmyCompany = (company: Partial<ArmyCompany> | null | undefined): ArmyCompany => ({
+    id: company?.id || Math.random().toString(36).substr(2, 9),
+    name: company?.name || '',
+    units: Array.isArray(company?.units)
+      ? company.units.map(unit => normalizeArmyUnit(unit))
+      : []
+  })
+
+  const normalizeArmy = (army: Realm['army'] | undefined): Realm['army'] => ({
+    companies: Array.isArray(army?.companies)
+      ? army.companies.map(company => normalizeArmyCompany(company))
+      : []
+  })
+
   const createEmptyRealm = (): Realm => ({
     id: Math.random().toString(36).substr(2, 9),
     name: '',
@@ -467,6 +517,7 @@ export const useRealms = () => {
       militaryBudgetFactor: 0,
       militaryResources: 0
     },
+    army: normalizeArmy(undefined),
     resources: {
       resourcePointCost: 0,
       resourcePoints: createDefaultResourcePoints()
@@ -481,6 +532,7 @@ export const useRealms = () => {
     // Ensure arrays are mutable by spreading them
     copy.enhancements = [...(copy.enhancements || [])]
     copy.limitations = [...(copy.limitations || [])]
+    copy.army = normalizeArmy(copy.army)
     copy.resources.resourcePoints = [...(copy.resources.resourcePoints || [])]
     copy.fundsAndPeople.independentIncomes = (copy.fundsAndPeople.independentIncomes || []).map(item => {
       const legacy = item as unknown as { pointCost?: number; level?: number }

@@ -77,6 +77,31 @@ export interface Military {
   militaryResources: number // Computed: population * averageIncome * militaryBudgetFactor
 }
 
+export interface ArmyUnit {
+  id: string
+  name: string
+  ts: number
+  class: string // Comma-separated list like "Cv, F, Rec". Anti-classes can use parentheses, e.g. "(F)"
+  wt: string
+  mob: string
+  raise: number
+  maintain: number
+  techLevel: number
+  currentTechLevel: number
+  amount: number
+  features: string[] // Features like "Heavy armor", "Scout" - can include modifiers like "Scout x1.5 TS"
+}
+
+export interface ArmyCompany {
+  id: string
+  name: string
+  units: ArmyUnit[]
+}
+
+export interface Army {
+  companies: ArmyCompany[]
+}
+
 export interface ResourcePoint {
   id: string
   name: string
@@ -102,5 +127,6 @@ export interface Realm {
   realmValueWithModifiers: number // Computed: realmValue + (realmValue * enhancementsSum/100) + (realmValue * limitationsSum/100)
   fundsAndPeople: FundsAndPeople
   military: Military
+  army: Army
   resources: Resources
 }
