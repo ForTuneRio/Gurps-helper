@@ -416,22 +416,27 @@ export const useRealms = () => {
     name: '',
     ts: 0,
     class: '',
-    wt: '',
+    wt: 0,
     mob: '',
     raise: 0,
     maintain: 0,
     techLevel: 0,
     currentTechLevel: 0,
     amount: 1,
-    features: []
+    features: [],
+    soldierQuality: 'Average',
+    equipmentQuality: 'Basic',
   })
 
+  const VALID_SOLDIER_QUALITIES = ['Elite', 'Good', 'Average', 'Inferior'] as const
+  const VALID_EQUIPMENT_QUALITIES = ['VFine', 'Fine', 'GoodE', 'Basic', 'Poor'] as const
+
   const normalizeArmyUnit = (unit: Partial<ArmyUnit> | null | undefined): ArmyUnit => {
-    const baseUnit = {
+    const baseUnit: ArmyUnit = {
       id: unit?.id || Math.random().toString(36).substr(2, 9),
       name: unit?.name || '',
       class: unit?.class || '',
-      wt: unit?.wt || '',
+      wt: typeof unit?.wt === 'number' ? unit.wt : 0,
       mob: unit?.mob || '',
       ts: typeof unit?.ts === 'number' ? unit.ts : 0,
       raise: typeof unit?.raise === 'number' ? unit.raise : 0,
@@ -441,7 +446,9 @@ export const useRealms = () => {
       amount: typeof unit?.amount === 'number' && unit.amount > 0 ? unit.amount : 1,
       features: Array.isArray(unit?.features)
         ? unit.features.filter((feature): feature is string => typeof feature === 'string')
-        : []
+        : [],
+      soldierQuality: VALID_SOLDIER_QUALITIES.includes(unit?.soldierQuality as any) ? unit!.soldierQuality as ArmyUnit['soldierQuality'] : 'Average',
+      equipmentQuality: VALID_EQUIPMENT_QUALITIES.includes(unit?.equipmentQuality as any) ? unit!.equipmentQuality as ArmyUnit['equipmentQuality'] : 'Basic',
     }
     return baseUnit
   }
@@ -449,6 +456,11 @@ export const useRealms = () => {
   const normalizeArmyCompany = (company: Partial<ArmyCompany> | null | undefined): ArmyCompany => ({
     id: company?.id || Math.random().toString(36).substr(2, 9),
     name: company?.name || '',
+    logistics: {
+      air: Boolean(company?.logistics?.air),
+      land: Boolean(company?.logistics?.land),
+      naval: Boolean(company?.logistics?.naval),
+    },
     units: Array.isArray(company?.units)
       ? company.units.map(unit => normalizeArmyUnit(unit))
       : []

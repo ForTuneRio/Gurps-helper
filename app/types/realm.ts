@@ -77,12 +77,15 @@ export interface Military {
   militaryResources: number // Computed: population * averageIncome * militaryBudgetFactor
 }
 
+export type SoldierQuality = 'Elite' | 'Good' | 'Average' | 'Inferior'
+export type EquipmentQuality = 'VFine' | 'Fine' | 'GoodE' | 'Basic' | 'Poor'
+
 export interface ArmyUnit {
   id: string
   name: string
   ts: number
   class: string // Comma-separated list like "Cv, F, Rec". Anti-classes can use parentheses, e.g. "(F)"
-  wt: string
+  wt: number
   mob: string
   raise: number
   maintain: number
@@ -90,11 +93,18 @@ export interface ArmyUnit {
   currentTechLevel: number
   amount: number
   features: string[] // Features like "Heavy armor", "Scout" - can include modifiers like "Scout x1.5 TS"
+  soldierQuality: SoldierQuality
+  equipmentQuality: EquipmentQuality
 }
 
 export interface ArmyCompany {
   id: string
   name: string
+  logistics: {
+    air: boolean
+    land: boolean
+    naval: boolean
+  }
   units: ArmyUnit[]
 }
 

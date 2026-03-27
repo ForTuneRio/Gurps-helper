@@ -1007,9 +1007,9 @@
           </button>
         </div>
 
-        <div class="border border-gray-200 rounded p-3 bg-gray-50">
+        <div class="border border-gray-200 rounded p-3 bg-gray-50 dark:border-gray-700 dark:bg-gray-900/40">
           <div class="grid grid-cols-1 gap-3 md:grid-cols-3 md:items-center">
-            <label class="flex items-center gap-2 text-xs font-medium text-gray-700">
+            <label class="flex items-center gap-2 text-xs font-medium text-gray-700 dark:text-gray-200">
               <input
                 id="wartime"
                 v-model="realmForm.military.wartime"
@@ -1019,26 +1019,26 @@
               <span>Wartime</span>
             </label>
             <div>
-              <label class="flex items-center gap-1 text-xs font-medium text-gray-600 mb-1">
+              <label class="mb-1 flex items-center gap-1 text-xs font-medium text-gray-600 dark:text-gray-300">
                 Mil. Budget Factor
                 <InfoBox title="Military Resources">
                   <ModifierInfoContent name="Military Resources" />
                 </InfoBox>
               </label>
-              <div class="rounded bg-gray-100 px-2 py-1 text-xs font-semibold">
+              <div class="rounded bg-gray-100 px-2 py-1 text-xs font-semibold dark:bg-gray-800 dark:text-gray-100">
                 {{ (militaryBudgetFactorComputed * 100).toFixed(1) }}%
               </div>
             </div>
             <div>
-              <label class="block text-xs font-medium text-gray-600 mb-1">Military Resources</label>
-              <div class="rounded bg-gray-100 px-2 py-1 text-xs font-semibold">
+              <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-300">Military Resources</label>
+              <div class="rounded bg-gray-100 px-2 py-1 text-xs font-semibold dark:bg-gray-800 dark:text-gray-100">
                 {{ militaryResourcesComputed.toLocaleString() }}
               </div>
             </div>
           </div>
         </div>
 
-        <div v-if="realmForm.army.companies.length === 0" class="rounded border border-dashed border-gray-300 bg-gray-50 px-3 py-4 text-xs italic text-gray-500">
+        <div v-if="realmForm.army.companies.length === 0" class="rounded border border-dashed border-gray-300 bg-gray-50 px-3 py-4 text-xs italic text-gray-500 dark:border-gray-700 dark:bg-gray-900/40 dark:text-gray-400">
           No companies yet.
         </div>
 
@@ -1046,91 +1046,149 @@
           <div
             v-for="(company, companyIndex) in realmForm.army.companies"
             :key="company.id"
-            class="rounded-md border border-gray-200 bg-gray-50 p-3"
+            class="rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900/40"
           >
-            <div class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-              <div class="space-y-2 flex-1">
-                <div class="flex flex-wrap items-center gap-2">
-                  <h5 class="text-sm font-semibold text-gray-800">{{ company.name || `Company ${companyIndex + 1}` }}</h5>
-                  <span class="rounded bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-200">Raise: {{ getCompanyRaiseTotal(company).toLocaleString() }}</span>
-                  <span class="rounded bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-200">Maintain: {{ getCompanyMaintainTotal(company).toLocaleString() }}</span>
-                  <span class="rounded bg-gray-200 dark:bg-gray-700 px-2 py-0.5 text-xs font-medium text-gray-700 dark:text-gray-200">Total TS: {{ getCompanyTotalTs(company).toLocaleString() }}</span>
-                </div>
+            <div v-if="!editingCompany[company.id]" class="p-2">
+              <div class="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                <div class="space-y-2 flex-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <h5 class="text-sm font-semibold text-gray-800 dark:text-gray-100">{{ company.name || `Company ${companyIndex + 1}` }}</h5>
+                    <span class="rounded bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-200">Raise: {{ getCompanyRaiseTotal(company).toLocaleString() }}</span>
+                    <span class="rounded bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-200">Maintain: {{ getCompanyMaintainTotal(company).toLocaleString() }}</span>
+                    <span class="rounded bg-gray-200 dark:bg-gray-700 px-2 py-0.5 text-xs font-medium text-gray-700 dark:text-gray-200">Total TS: {{ getCompanyTotalTs(company).toLocaleString() }}</span>
+                    <span class="rounded bg-purple-100 dark:bg-purple-900/40 px-2 py-0.5 text-xs font-medium text-purple-700 dark:text-purple-200">Total WT: {{ getCompanyWeightTotal(company).toLocaleString() }}</span>
+                  </div>
 
-                <div class="flex flex-wrap items-center gap-2 text-xs text-gray-600">
-                  <span class="font-medium text-gray-700">Logistics:</span>
-                  <span
-                    v-for="type in getCompanyLogisticsTypes(company)"
-                    :key="type"
-                    class="rounded bg-white px-2 py-0.5 border border-gray-200"
-                  >
-                    {{ type }}
-                  </span>
-                  <span v-if="getCompanyLogisticsTypes(company).length === 0" class="text-gray-400">No units</span>
-                </div>
+                  <div class="space-y-1">
+                    <div class="text-xs font-medium text-gray-700 dark:text-gray-200">Purchased Logistics</div>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                      <span class="rounded border border-gray-200 bg-white px-2 py-0.5 font-medium text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200">Required LS: {{ getCompanyRequiredLogisticsLs(company).toLocaleString() }}</span>
+                      <span
+                        v-for="type in getCompanyPurchasedLogistics(company)"
+                        :key="`${company.id}-${type}`"
+                        class="rounded border border-sky-200 bg-sky-50 px-2 py-0.5 font-medium text-sky-700 dark:border-sky-800 dark:bg-sky-950/40 dark:text-sky-200"
+                      >
+                        {{ type }}
+                      </span>
+                      <span v-if="getCompanyPurchasedLogistics(company).length === 0" class="text-gray-400 dark:text-gray-500">No logistics purchased</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                      <span class="rounded border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">Logistics Raise: {{ getCompanyLogisticsRaiseTotal(company).toLocaleString() }}</span>
+                      <span class="rounded border border-amber-200 bg-amber-50 px-2 py-0.5 font-medium text-amber-700 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">Logistics Maintain: {{ getCompanyLogisticsMaintainTotal(company).toLocaleString() }}</span>
+                    </div>
+                  </div>
 
-                <div v-if="getCompanySpecialClassTotals(company).length > 0" class="space-y-1">
-                  <div class="text-xs font-medium text-gray-700">Special Class TS</div>
-                  <div class="flex flex-wrap gap-2">
-                    <span
-                      v-for="item in getCompanySpecialClassTotals(company)"
-                      :key="item.label"
-                      class="rounded bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800"
-                    >
-                      {{ item.label }}: {{ item.value.toLocaleString() }}
-                    </span>
+                  <div v-if="getCompanySpecialClassTotals(company).length > 0" class="space-y-1">
+                    <div class="text-xs font-medium text-gray-700 dark:text-gray-200">Special Class TS</div>
+                    <div class="flex flex-wrap gap-2">
+                      <span
+                        v-for="item in getCompanySpecialClassTotals(company)"
+                        :key="item.label"
+                        class="rounded bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
+                      >
+                        {{ item.label }}: {{ item.value.toLocaleString() }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div v-if="getCompanyAntiSpecialClassTotals(company).length > 0" class="space-y-1">
+                    <div class="text-xs font-medium text-gray-700 dark:text-gray-200">Anti Special Class TS</div>
+                    <div class="flex flex-wrap gap-2">
+                      <span
+                        v-for="item in getCompanyAntiSpecialClassTotals(company)"
+                        :key="item.label"
+                        class="rounded bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-800 dark:bg-rose-950/40 dark:text-rose-200"
+                      >
+                        {{ item.label }}: {{ item.value.toLocaleString() }}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <div v-if="getCompanyAntiSpecialClassTotals(company).length > 0" class="space-y-1">
-                  <div class="text-xs font-medium text-gray-700">Anti Special Class TS</div>
-                  <div class="flex flex-wrap gap-2">
-                    <span
-                      v-for="item in getCompanyAntiSpecialClassTotals(company)"
-                      :key="item.label"
-                      class="rounded bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-800"
-                    >
-                      {{ item.label }}: {{ item.value.toLocaleString() }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="flex items-center gap-2">
                 <button
                   v-if="!isReadOnly"
                   type="button"
                   @click="toggleCompanyEdit(company.id)"
-                  class="rounded bg-white px-2 py-1 text-xs font-medium text-gray-700 border border-gray-200 hover:bg-gray-100"
+                  class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
+                  title="Edit"
                 >
-                  {{ editingCompany[company.id] ? 'Done' : 'Edit' }}
-                </button>
-                <button
-                  v-if="!isReadOnly"
-                  type="button"
-                  @click="removeCompany(companyIndex)"
-                  class="text-red-600 hover:text-red-800"
-                  title="Delete company"
-                >
-                  <TrashIcon class="h-4 w-4" />
+                  <Cog6ToothIcon class="w-4 h-4" />
                 </button>
               </div>
             </div>
 
-            <div v-if="editingCompany[company.id]" class="mt-3 space-y-3 rounded border border-gray-200 bg-white p-3">
-              <div>
-                <label class="mb-1 block text-xs font-medium text-gray-700">Company Name</label>
-                <input
-                  v-model="company.name"
-                  type="text"
-                  maxlength="120"
-                  placeholder="Company name"
-                  class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                />
+            <div v-else class="rounded bg-gray-50 p-2 space-y-3 dark:bg-gray-900/60">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex-1">
+                  <label class="text-xs text-gray-500 dark:text-gray-400">Company Name</label>
+                  <input
+                    v-model="company.name"
+                    type="text"
+                    maxlength="120"
+                    placeholder="Company name"
+                    class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500"
+                  />
+                </div>
+                <div class="flex items-center gap-1">
+                  <button
+                    v-if="!isReadOnly"
+                    type="button"
+                    @click="removeCompany(companyIndex)"
+                    class="text-red-600 hover:text-red-800"
+                    title="Delete company"
+                  >
+                    <TrashIcon class="h-4 w-4" />
+                  </button>
+                  <button
+                    v-if="!isReadOnly"
+                    type="button"
+                    @click="toggleCompanyEdit(company.id)"
+                    class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
+                    title="Done"
+                  >
+                    <Cog6ToothIcon class="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div class="rounded border border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-gray-800">
+                <div class="mb-1 flex items-center gap-1 text-xs font-semibold text-gray-700 dark:text-gray-100">
+                  <span>Logistics</span>
+                  <InfoBox title="Logistics">
+                    <div class="space-y-2 text-sm">
+                      <p>Required LS is calculated automatically from the total maintain cost of the company's combat troops.</p>
+                      <p>Select which logistics types this company has already purchased: Land, Naval, and/or Air.</p>
+                      <p>Raise cost formula: Land = 5,000 x required LS, Naval = 10,000 x required LS, Air = 20,000 x required LS.</p>
+                      <p>Maintain cost is 10% of the raise cost for each selected logistics type.</p>
+                      <p>Land logistics accompany a force, Naval logistics support naval and port-connected forces, and Air logistics can support all elements from an airbase.</p>
+                    </div>
+                  </InfoBox>
+                </div>
+                <div class="mb-2 rounded border border-gray-200 bg-gray-50 px-2 py-1 text-xs font-medium text-gray-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200">
+                  Required LS: {{ getCompanyRequiredLogisticsLs(company).toLocaleString() }}
+                </div>
+                <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                  <label class="flex items-center gap-2 rounded border border-gray-200 bg-gray-50 px-2 py-2 text-xs font-medium text-gray-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200">
+                    <input v-model="company.logistics.land" type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500" />
+                    <span>Land Logistics Purchased</span>
+                  </label>
+                  <label class="flex items-center gap-2 rounded border border-gray-200 bg-gray-50 px-2 py-2 text-xs font-medium text-gray-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200">
+                    <input v-model="company.logistics.naval" type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500" />
+                    <span>Naval Logistics Purchased</span>
+                  </label>
+                  <label class="flex items-center gap-2 rounded border border-gray-200 bg-gray-50 px-2 py-2 text-xs font-medium text-gray-700 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200">
+                    <input v-model="company.logistics.air" type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500" />
+                    <span>Air Logistics Purchased</span>
+                  </label>
+                </div>
+                <div class="mt-2 flex flex-wrap gap-2 text-xs">
+                  <span class="rounded border border-emerald-200 bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200">Raise: {{ getCompanyLogisticsRaiseTotal(company).toLocaleString() }}</span>
+                  <span class="rounded border border-amber-200 bg-amber-50 px-2 py-0.5 font-medium text-amber-700 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">Maintain: {{ getCompanyLogisticsMaintainTotal(company).toLocaleString() }}</span>
+                </div>
               </div>
 
               <div class="flex items-center justify-between gap-2">
-                <h6 class="text-xs font-semibold text-gray-700">Units</h6>
+                <h6 class="text-xs font-semibold text-gray-700 dark:text-gray-100">Units</h6>
                 <button
                   v-if="!isReadOnly"
                   type="button"
@@ -1141,188 +1199,317 @@
                 </button>
               </div>
 
-              <div v-if="company.units.length === 0" class="rounded border border-dashed border-gray-300 bg-gray-50 px-3 py-4 text-xs italic text-gray-500">
+              <div v-if="company.units.length === 0" class="rounded border border-dashed border-gray-300 bg-gray-50 px-3 py-4 text-xs italic text-gray-500 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-400">
                 No units in this company.
               </div>
 
-              <div v-else class="space-y-3">
+              <div v-else class="space-y-1">
                 <div
                   v-for="(unit, unitIndex) in company.units"
                   :key="unit.id"
-                  class="rounded border border-gray-200 bg-gray-50 p-3"
+                  class="border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50"
                 >
-                  <div class="mb-3 flex items-center justify-between gap-2">
-                    <div class="text-xs font-semibold text-gray-700">{{ unit.name || `Unit ${unitIndex + 1}` }}</div>
-                    <button
-                      v-if="!isReadOnly"
-                      type="button"
-                      @click="removeUnit(companyIndex, unitIndex)"
-                      class="text-red-600 hover:text-red-800"
-                      title="Delete unit"
-                    >
-                      <TrashIcon class="h-4 w-4" />
-                    </button>
-                  </div>
-
-                  <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
-                    <div class="xl:col-span-2">
-                      <label class="mb-1 block text-xs font-medium text-gray-700">Unit Name</label>
-                      <input
-                        v-model="unit.name"
-                        type="text"
-                        maxlength="120"
-                        placeholder="Horse Archers"
-                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label class="mb-1 block text-xs font-medium text-gray-700">TS</label>
-                      <input
-                        v-model.number="unit.ts"
-                        type="number"
-                        maxlength="30"
-                        data-min="0"
-                        data-max="1000000"
-                        @input="clampNumberInput"
-                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label class="mb-1 block text-xs font-medium text-gray-700">Amount</label>
-                      <input
-                        v-model.number="unit.amount"
-                        type="number"
-                        maxlength="30"
-                        data-min="1"
-                        data-max="1000000"
-                        @input="clampNumberInput"
-                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    </div>
-                    <div class="xl:col-span-2">
-                      <label class="mb-1 block text-xs font-medium text-gray-700">Class</label>
-                      <input
-                        v-model="unit.class"
-                        type="text"
-                        maxlength="200"
-                        placeholder="Cv, F, Rec, (F)"
-                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label class="mb-1 block text-xs font-medium text-gray-700">WT</label>
-                      <input
-                        v-model="unit.wt"
-                        type="text"
-                        maxlength="80"
-                        placeholder="Mtd"
-                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label class="mb-1 block text-xs font-medium text-gray-700">Mob</label>
-                      <input
-                        v-model="unit.mob"
-                        type="text"
-                        maxlength="80"
-                        placeholder="Mounted"
-                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label class="mb-1 block text-xs font-medium text-gray-700">Raise</label>
-                      <input
-                        v-model.number="unit.raise"
-                        type="number"
-                        maxlength="30"
-                        data-min="0"
-                        data-max="1000000000000000000"
-                        @input="clampNumberInput"
-                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label class="mb-1 block text-xs font-medium text-gray-700">Maintain</label>
-                      <input
-                        v-model.number="unit.maintain"
-                        type="number"
-                        maxlength="30"
-                        data-min="0"
-                        data-max="1000000000000000000"
-                        @input="clampNumberInput"
-                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label class="mb-1 block text-xs font-medium text-gray-700">TL</label>
-                      <input
-                        v-model.number="unit.techLevel"
-                        type="number"
-                        maxlength="30"
-                        data-min="0"
-                        data-max="20"
-                        @input="clampNumberInput"
-                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    </div>
-                    <div>
-                      <label class="mb-1 block text-xs font-medium text-gray-700">Current Unit TL</label>
-                      <input
-                        v-model.number="unit.currentTechLevel"
-                        type="number"
-                        maxlength="30"
-                        data-min="0"
-                        data-max="20"
-                        @input="clampNumberInput"
-                        class="w-full rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="mt-3 space-y-2">
-                    <div class="flex items-center justify-between gap-2">
-                      <div class="text-xs font-medium text-gray-700">Features</div>
+                  <div v-if="!editingUnit[unit.id]" class="px-2 py-1">
+                    <div class="flex items-start justify-between gap-2">
+                      <div class="space-y-1">
+                        <div class="text-xs font-semibold text-gray-700 dark:text-gray-100">{{ unit.name || `Unit ${unitIndex + 1}` }}</div>
+                        <div class="flex flex-wrap items-center gap-3 text-xs text-gray-600 dark:text-gray-300">
+                          <span><strong>WT:</strong> {{ unit.wt.toLocaleString() }} / {{ getUnitWeightTotal(unit).toLocaleString() }}</span>
+                          <span><strong>Mob:</strong> {{ unit.mob || '-' }}</span>
+                          <span><strong>Amount:</strong> {{ unit.amount }}</span>
+                          <span><strong>TS:</strong> {{ unit.ts.toLocaleString() }} / {{ getWeightedUnitTs(unit).toLocaleString() }}</span>
+                          <span><strong>Raise:</strong> {{ unit.raise.toLocaleString() }} / {{ getUnitRaiseCost(unit).toLocaleString() }}</span>
+                          <span><strong>Maintain:</strong> {{ unit.maintain.toLocaleString() }} / {{ getUnitMaintainCost(unit).toLocaleString() }}</span>
+                        </div>
+                        <div class="mt-0.5 flex flex-wrap gap-1">
+                          <span
+                            v-if="unit.soldierQuality !== 'Average'"
+                            class="rounded bg-violet-100 px-1.5 py-0.5 text-[11px] font-medium text-violet-700 dark:bg-violet-900/40 dark:text-violet-200"
+                          >{{ unit.soldierQuality }}</span>
+                          <span
+                            v-if="unit.equipmentQuality !== 'Basic'"
+                            class="rounded bg-amber-100 px-1.5 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-200"
+                          >{{ unit.equipmentQuality === 'GoodE' ? 'Good Equip.' : unit.equipmentQuality }}</span>
+                        </div>
+                        <div v-if="unit.features.length > 0" class="mt-1 flex flex-wrap gap-1">
+                          <span
+                            v-for="(feature, featureIndex) in unit.features"
+                            :key="`${unit.id}-feature-view-${featureIndex}`"
+                            class="rounded bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
+                          >
+                            {{ getFeatureSummary(feature) }}
+                          </span>
+                        </div>
+                      </div>
                       <button
                         v-if="!isReadOnly"
                         type="button"
-                        @click="addUnitFeature(companyIndex, unitIndex)"
-                        class="rounded bg-white px-2 py-1 text-xs font-medium text-gray-700 border border-gray-200 hover:bg-gray-100"
+                        @click="toggleUnitEdit(unit.id)"
+                        class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
+                        title="Edit"
                       >
-                        + Add Feature
+                        <Cog6ToothIcon class="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div v-else class="rounded bg-gray-50 p-2 space-y-3 dark:bg-gray-900/40">
+                    <div class="flex items-center justify-end gap-1">
+                      <button
+                        v-if="!isReadOnly"
+                        type="button"
+                        @click="removeUnit(companyIndex, unitIndex)"
+                        class="text-red-600 hover:text-red-800"
+                        title="Delete unit"
+                      >
+                        <TrashIcon class="h-4 w-4" />
+                      </button>
+                      <button
+                        v-if="!isReadOnly"
+                        type="button"
+                        @click="toggleUnitEdit(unit.id)"
+                        class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
+                        title="Done"
+                      >
+                        <Cog6ToothIcon class="w-4 h-4" />
                       </button>
                     </div>
 
-                    <div v-if="unit.features.length === 0" class="text-xs italic text-gray-400">
-                      No features
-                    </div>
-
-                    <div v-else class="space-y-2">
-                      <div
-                        v-for="(feature, featureIndex) in unit.features"
-                        :key="`${unit.id}-feature-${featureIndex}`"
-                        class="flex items-center gap-2"
-                      >
+                    <div class="grid grid-cols-5 gap-2">
+                      <!-- Row 1: Unit Name, TS, Class, Raise, Maintain -->
+                      <div class="col-span-1">
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Unit Name</label>
                         <input
-                          v-model="unit.features[featureIndex]"
+                          v-model="unit.name"
                           type="text"
                           maxlength="120"
-                          placeholder="Feature"
-                          class="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                          placeholder="Horse Archers"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500"
                         />
+                      </div>
+                      <div>
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">TS</label>
+                        <input
+                          v-model.number="unit.ts"
+                          type="number"
+                          data-min="0"
+                          data-max="1000000"
+                          @input="clampNumberInput"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                      </div>
+                      <div>
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Class</label>
+                        <input
+                          v-model="unit.class"
+                          type="text"
+                          maxlength="200"
+                          placeholder="Cv, F, Rec, (F)"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500"
+                        />
+                      </div>
+                      <div>
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Raise</label>
+                        <input
+                          v-model.number="unit.raise"
+                          type="number"
+                          data-min="0"
+                          data-max="1000000000000000000"
+                          @input="clampNumberInput"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                      </div>
+                      <div>
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Maintain</label>
+                        <input
+                          v-model.number="unit.maintain"
+                          type="number"
+                          data-min="0"
+                          data-max="1000000000000000000"
+                          @input="clampNumberInput"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                      </div>
+                      <!-- Row 2: WT, Mob, TL, Current Unit TL, Amount -->
+                      <div>
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">WT</label>
+                        <input
+                          v-model.number="unit.wt"
+                          type="number"
+                          data-min="0"
+                          data-max="1000000000000000000"
+                          @input="clampNumberInput"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                      </div>
+                      <div>
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Mob</label>
+                        <input
+                          v-model="unit.mob"
+                          type="text"
+                          maxlength="80"
+                          placeholder="Mounted"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500"
+                        />
+                      </div>
+                      <div>
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">TL</label>
+                        <input
+                          v-model.number="unit.techLevel"
+                          type="number"
+                          data-min="0"
+                          data-max="20"
+                          @input="clampNumberInput"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                      </div>
+                      <div>
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Current Unit TL</label>
+                        <input
+                          v-model.number="unit.currentTechLevel"
+                          type="number"
+                          data-min="0"
+                          data-max="20"
+                          @input="clampNumberInput"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                      </div>
+                      <div>
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Amount</label>
+                        <input
+                          v-model.number="unit.amount"
+                          type="number"
+                          data-min="1"
+                          data-max="1000000"
+                          @input="clampNumberInput"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                      </div>
+                      <!-- Row 3: Soldier Quality, Equipment Quality -->
+                      <div class="col-span-2">
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Soldier Quality</label>
+                        <select
+                          v-model="unit.soldierQuality"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        >
+                          <option value="Elite">Elite (+200% TS, +200% Raise, +40% Maintain)</option>
+                          <option value="Good">Good (+150% TS, +100% Raise, +20% Maintain)</option>
+                          <option value="Average">Average (baseline)</option>
+                          <option value="Inferior">Inferior (+50% TS, -50% Raise, -50% Maintain)</option>
+                        </select>
+                      </div>
+                      <div class="col-span-2">
+                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Equipment Quality</label>
+                        <select
+                          v-model="unit.equipmentQuality"
+                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        >
+                          <option value="VFine">Very Fine (+250% TS, +200% Raise, +150% Maintain)</option>
+                          <option value="Fine">Fine (+200% TS, +100% Raise, +100% Maintain)</option>
+                          <option value="GoodE">Good (+150% TS, +50% Raise, +50% Maintain)</option>
+                          <option value="Basic">Basic (baseline)</option>
+                          <option value="Poor">Poor (+75% TS, -25% Raise, -25% Maintain)</option>
+                        </select>
+                      </div>
+                      <div></div>
+                    </div>
+
+                    <div class="mt-3 space-y-2">
+                      <div class="flex items-center justify-between gap-2">
+                        <div class="text-xs font-medium text-gray-700 dark:text-gray-200">Features</div>
                         <button
                           v-if="!isReadOnly"
                           type="button"
-                          @click="removeUnitFeature(companyIndex, unitIndex, featureIndex)"
-                          class="text-red-600 hover:text-red-800"
-                          title="Delete feature"
+                          @click="addUnitFeature(companyIndex, unitIndex)"
+                          class="rounded border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
                         >
-                          <TrashIcon class="h-4 w-4" />
+                          + Add Feature
                         </button>
                       </div>
+
+                      <div v-if="unit.features.length === 0" class="text-xs italic text-gray-400 dark:text-gray-500">
+                        No features
+                      </div>
+
+                      <div v-else class="space-y-3">
+                        <div
+                          v-for="(feature, featureIndex) in unit.features"
+                          :key="`${unit.id}-feature-${featureIndex}`"
+                          class="rounded border border-gray-200 bg-white p-2 dark:border-gray-600 dark:bg-gray-800"
+                        >
+                          <div class="flex items-center gap-2 overflow-x-auto">
+                            <span class="shrink-0 text-xs font-medium text-gray-700 dark:text-gray-200">Name</span>
+                            <input
+                              :value="getFeatureName(unit.features[featureIndex] || '')"
+                              type="text"
+                              maxlength="120"
+                              placeholder="Feature"
+                              @blur="updateFeatureName(companyIndex, unitIndex, featureIndex, $event)"
+                              class="min-w-[220px] flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-500"
+                            />
+                            <span class="shrink-0 text-xs font-medium text-gray-700 dark:text-gray-200">TS</span>
+                            <input
+                              type="number"
+                              inputmode="decimal"
+                              min="0.01"
+                              step="0.01"
+                              data-min="0.01"
+                              data-max="1000000"
+                              :value="extractFeatureModifier(unit.features[featureIndex] || '', 'ts')"
+                              @input="clampNumberInput"
+                              @blur="updateFeatureModifier(companyIndex, unitIndex, featureIndex, 'ts', $event)"
+                              class="w-24 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
+                              title="TS Mult"
+                              placeholder="TS"
+                            />
+                            <span class="shrink-0 text-xs font-medium text-gray-700 dark:text-gray-200">Raise</span>
+                            <input
+                              type="number"
+                              inputmode="decimal"
+                              min="0.01"
+                              step="0.01"
+                              data-min="0.01"
+                              data-max="1000000"
+                              :value="extractFeatureModifier(unit.features[featureIndex] || '', 'raise')"
+                              @input="clampNumberInput"
+                              @blur="updateFeatureModifier(companyIndex, unitIndex, featureIndex, 'raise', $event)"
+                              class="w-24 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
+                              title="Raise Mult"
+                              placeholder="Raise"
+                            />
+                            <span class="shrink-0 text-xs font-medium text-gray-700 dark:text-gray-200">Maintain</span>
+                            <input
+                              type="number"
+                              inputmode="decimal"
+                              min="0.01"
+                              step="0.01"
+                              data-min="0.01"
+                              data-max="1000000"
+                              :value="extractFeatureModifier(unit.features[featureIndex] || '', 'maintain')"
+                              @input="clampNumberInput"
+                              @blur="updateFeatureModifier(companyIndex, unitIndex, featureIndex, 'maintain', $event)"
+                              class="w-24 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
+                              title="Maintain Mult"
+                              placeholder="Maintain"
+                            />
+                            <button
+                              v-if="!isReadOnly"
+                              type="button"
+                              @click="removeUnitFeature(companyIndex, unitIndex, featureIndex)"
+                              class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                              title="Delete feature"
+                            >
+                              <TrashIcon class="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
@@ -1465,9 +1652,38 @@ const resizeDescription = () => {
 const editingEnhancement = ref<Record<number, boolean>>({})
 const editingLimitation = ref<Record<number, boolean>>({})
 const editingCompany = ref<Record<string, boolean>>({})
+const editingUnit = ref<Record<string, boolean>>({})
+
+const toggleUnitEdit = (unitId: string) => {
+  editingUnit.value[unitId] = !editingUnit.value[unitId]
+}
 
 const specialClassLabels = ['F', 'Cv', 'Rec', 'Eng', 'Art', 'Arm', 'C3l', 'Air', 'Nav'] as const
 const antiSpecialClassLabels = specialClassLabels.map(label => `(${label})`)
+
+// --- Quality modifier tables ---
+interface QualityMods { tsMult: number; raiseAdd: number; maintainAdd: number }
+
+const SOLDIER_QUALITY_MODS: Record<string, QualityMods> = {
+  Elite:    { tsMult: 2.0,  raiseAdd: 2.0,  maintainAdd: 0.4  },
+  Good:     { tsMult: 1.5,  raiseAdd: 1.0,  maintainAdd: 0.2  },
+  Average:  { tsMult: 1.0,  raiseAdd: 0.0,  maintainAdd: 0.0  },
+  Inferior: { tsMult: 0.5,  raiseAdd: -0.5, maintainAdd: -0.5 },
+}
+
+const EQUIPMENT_QUALITY_MODS: Record<string, QualityMods> = {
+  VFine: { tsMult: 2.5,  raiseAdd: 2.0,  maintainAdd: 1.5  },
+  Fine:  { tsMult: 2.0,  raiseAdd: 1.0,  maintainAdd: 1.0  },
+  GoodE: { tsMult: 1.5,  raiseAdd: 0.5,  maintainAdd: 0.5  },
+  Basic: { tsMult: 1.0,  raiseAdd: 0.0,  maintainAdd: 0.0  },
+  Poor:  { tsMult: 0.75, raiseAdd: -0.25, maintainAdd: -0.25 },
+}
+
+const getSoldierQMods = (unit: ArmyUnit): QualityMods =>
+  (SOLDIER_QUALITY_MODS[unit.soldierQuality] ?? SOLDIER_QUALITY_MODS.Average)!
+
+const getEquipmentQMods = (unit: ArmyUnit): QualityMods =>
+  (EQUIPMENT_QUALITY_MODS[unit.equipmentQuality] ?? EQUIPMENT_QUALITY_MODS.Basic)!
 
 const parseFeatureModifiers = (features: string[]): { tsMult: number; raiseMult: number; maintainMult: number } => {
   let tsMult = 1
@@ -1498,19 +1714,26 @@ const createArmyUnit = (): ArmyUnit => ({
   name: '',
   ts: 0,
   class: '',
-  wt: '',
+  wt: 0,
   mob: '',
   raise: 0,
   maintain: 0,
   techLevel: realmForm.value.details.techLevel,
   currentTechLevel: realmForm.value.details.techLevel,
   amount: 1,
-  features: []
+  features: [],
+  soldierQuality: 'Average',
+  equipmentQuality: 'Basic',
 })
 
 const createArmyCompany = (): ArmyCompany => ({
   id: Math.random().toString(36).substr(2, 9),
   name: '',
+  logistics: {
+    air: false,
+    land: false,
+    naval: false,
+  },
   units: []
 })
 
@@ -1540,18 +1763,32 @@ const parseClassTokens = (value: string): string[] => value
 
 const getWeightedUnitTs = (unit: ArmyUnit): number => {
   const mods = parseFeatureModifiers(unit.features)
-  return Math.round(unit.ts * getUnitAmount(unit) * mods.tsMult)
+  const sq = getSoldierQMods(unit)
+  const eq = getEquipmentQMods(unit)
+  return Math.round(unit.ts * getUnitAmount(unit) * sq.tsMult * eq.tsMult * mods.tsMult)
 }
 
 const getUnitRaiseCost = (unit: ArmyUnit): number => {
   const mods = parseFeatureModifiers(unit.features)
-  return Math.round(unit.raise * getUnitAmount(unit) * mods.raiseMult)
+  const sq = getSoldierQMods(unit)
+  const eq = getEquipmentQMods(unit)
+  const qualityMult = Math.max(0, 1 + sq.raiseAdd + eq.raiseAdd)
+  return Math.round(unit.raise * getUnitAmount(unit) * qualityMult * mods.raiseMult)
 }
 
 const getUnitMaintainCost = (unit: ArmyUnit): number => {
   const mods = parseFeatureModifiers(unit.features)
-  return Math.round(unit.maintain * getUnitAmount(unit) * mods.maintainMult)
+  const sq = getSoldierQMods(unit)
+  const eq = getEquipmentQMods(unit)
+  const qualityMult = Math.max(0, 1 + sq.maintainAdd + eq.maintainAdd)
+  return Math.round(unit.maintain * getUnitAmount(unit) * qualityMult * mods.maintainMult)
 }
+
+const getUnitWeightTotal = (unit: ArmyUnit): number =>
+  Math.round(unit.wt * getUnitAmount(unit))
+
+const getCompanyWeightTotal = (company: ArmyCompany): number => company.units
+  .reduce((sum, unit) => sum + getUnitWeightTotal(unit), 0)
 
 const getCompanyRaiseTotal = (company: ArmyCompany): number => company.units
   .reduce((sum, unit) => sum + getUnitRaiseCost(unit), 0)
@@ -1561,6 +1798,37 @@ const getCompanyMaintainTotal = (company: ArmyCompany): number => company.units
 
 const getCompanyTotalTs = (company: ArmyCompany): number => company.units
   .reduce((sum, unit) => sum + getWeightedUnitTs(unit), 0)
+
+const getCompanyRequiredLogisticsLs = (company: ArmyCompany): number =>
+  getCompanyMaintainTotal(company)
+
+const getLogisticsRaiseCost = (ls: number, type: 'land' | 'naval' | 'air'): number => {
+  const base = 5000 * Math.max(0, ls)
+  if (type === 'naval') return base * 2
+  if (type === 'air') return base * 4
+  return base
+}
+
+const getLogisticsMaintainCost = (ls: number, type: 'land' | 'naval' | 'air'): number =>
+  Math.round(getLogisticsRaiseCost(ls, type) * 0.1)
+
+const getCompanyLogisticsRaiseTotal = (company: ArmyCompany): number =>
+  (company.logistics.land ? getLogisticsRaiseCost(getCompanyRequiredLogisticsLs(company), 'land') : 0)
+  + (company.logistics.naval ? getLogisticsRaiseCost(getCompanyRequiredLogisticsLs(company), 'naval') : 0)
+  + (company.logistics.air ? getLogisticsRaiseCost(getCompanyRequiredLogisticsLs(company), 'air') : 0)
+
+const getCompanyLogisticsMaintainTotal = (company: ArmyCompany): number =>
+  (company.logistics.land ? getLogisticsMaintainCost(getCompanyRequiredLogisticsLs(company), 'land') : 0)
+  + (company.logistics.naval ? getLogisticsMaintainCost(getCompanyRequiredLogisticsLs(company), 'naval') : 0)
+  + (company.logistics.air ? getLogisticsMaintainCost(getCompanyRequiredLogisticsLs(company), 'air') : 0)
+
+const getCompanyPurchasedLogistics = (company: ArmyCompany): string[] => {
+  const types: string[] = []
+  if (company.logistics.land) types.push('Land')
+  if (company.logistics.naval) types.push('Naval')
+  if (company.logistics.air) types.push('Air')
+  return types
+}
 
 const buildCompanyClassTotals = (company: ArmyCompany, labels: readonly string[], useAntiTotals: boolean) => labels
   .map((label) => {
@@ -1632,7 +1900,14 @@ const addUnit = (companyIndex: number) => {
 }
 
 const removeUnit = (companyIndex: number, unitIndex: number) => {
-  realmForm.value.army.companies[companyIndex]?.units.splice(unitIndex, 1)
+  const confirmed = window.confirm('Delete this unit?')
+  if (!confirmed) return
+
+  const removed = realmForm.value.army.companies[companyIndex]?.units.splice(unitIndex, 1)
+  const unitId = removed?.[0]?.id
+  if (unitId) {
+    delete editingUnit.value[unitId]
+  }
 }
 
 const addUnitFeature = (companyIndex: number, unitIndex: number) => {
@@ -1641,6 +1916,104 @@ const addUnitFeature = (companyIndex: number, unitIndex: number) => {
 
 const removeUnitFeature = (companyIndex: number, unitIndex: number, featureIndex: number) => {
   realmForm.value.army.companies[companyIndex]?.units[unitIndex]?.features.splice(featureIndex, 1)
+}
+
+const stripFeatureModifiers = (feature: string): string => feature
+  .replace(/\s*x[0-9.]+\s*(ts|raise|maintain)\b/gi, '')
+  .replace(/\s+/g, ' ')
+  .trim()
+
+const getFeatureName = (feature: string): string => stripFeatureModifiers(feature)
+
+const extractFeatureModifier = (feature: string, modType: 'ts' | 'raise' | 'maintain'): string => {
+  if (!feature) return '1.0'
+
+  const modKey = modType === 'ts' ? 'TS' : modType === 'raise' ? 'raise' : 'maintain'
+  const regex = new RegExp(`x([0-9.]+)\\s*${modKey}`, 'i')
+  const match = feature.match(regex)
+
+  return match?.[1] ? `${match[1]}` : '1.0'
+}
+
+const getFeatureModifierNumber = (feature: string, modType: 'ts' | 'raise' | 'maintain'): number => {
+  const parsed = Number(extractFeatureModifier(feature, modType))
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1
+}
+
+const composeFeature = (
+  name: string,
+  mods: { ts: number; raise: number; maintain: number }
+): string => {
+  const base = name.trim()
+  const parts: string[] = []
+
+  if (mods.ts !== 1) parts.push(`x${mods.ts} TS`)
+  if (mods.raise !== 1) parts.push(`x${mods.raise} raise`)
+  if (mods.maintain !== 1) parts.push(`x${mods.maintain} maintain`)
+
+  return [base, ...parts].filter(Boolean).join(' ').trim()
+}
+
+const updateFeatureName = (
+  companyIndex: number,
+  unitIndex: number,
+  featureIndex: number,
+  event: Event
+) => {
+  const input = event.target as HTMLInputElement
+  const name = input.value.trim()
+
+  const unit = realmForm.value.army.companies[companyIndex]?.units[unitIndex]
+  if (!unit) return
+
+  const feature = unit.features[featureIndex] || ''
+  unit.features[featureIndex] = composeFeature(name, {
+    ts: getFeatureModifierNumber(feature, 'ts'),
+    raise: getFeatureModifierNumber(feature, 'raise'),
+    maintain: getFeatureModifierNumber(feature, 'maintain')
+  })
+}
+
+const getFeatureSummary = (feature: string): string => {
+  const name = getFeatureName(feature) || 'Feature'
+  const mods: string[] = []
+
+  const ts = getFeatureModifierNumber(feature, 'ts')
+  const raise = getFeatureModifierNumber(feature, 'raise')
+  const maintain = getFeatureModifierNumber(feature, 'maintain')
+
+  if (ts !== 1) mods.push(`TS x${ts}`)
+  if (raise !== 1) mods.push(`Raise x${raise}`)
+  if (maintain !== 1) mods.push(`Maintain x${maintain}`)
+
+  return mods.length > 0 ? `${name} (${mods.join(', ')})` : name
+}
+
+const updateFeatureModifier = (
+  companyIndex: number,
+  unitIndex: number,
+  featureIndex: number,
+  modType: 'ts' | 'raise' | 'maintain',
+  event: Event
+) => {
+  const input = event.target as HTMLInputElement
+  const value = input.value.trim()
+  const numVal = Number(value) || 1.0
+  const mult = numVal <= 0 ? 1.0 : numVal
+
+  const unit = realmForm.value.army.companies[companyIndex]?.units[unitIndex]
+  if (!unit) return
+
+  const feature = unit.features[featureIndex] || ''
+  const name = getFeatureName(feature)
+  const mods = {
+    ts: getFeatureModifierNumber(feature, 'ts'),
+    raise: getFeatureModifierNumber(feature, 'raise'),
+    maintain: getFeatureModifierNumber(feature, 'maintain')
+  }
+
+  mods[modType] = mult
+  unit.features[featureIndex] = composeFeature(name, mods)
 }
 
 const isEditMode = computed(() => !!props.realmId)
@@ -1876,7 +2249,14 @@ const removeResourcePoint = (index: number) => {
 }
 
 const loadRealmFromStore = () => {
-  if (props.realmData) {
+  const storeRealm = props.realmId
+    ? realms.value.find(r => r.id === props.realmId)
+    : null
+
+  // In edit mode, prefer store data to avoid stale props.realmData overwriting fresh changes.
+  const shouldUsePropRealmData = Boolean(props.realmData) && (!props.realmId || isReadOnly.value || !storeRealm)
+
+  if (shouldUsePropRealmData && props.realmData) {
     if (!isReadOnly.value && isDirty.value) return
     ignoreNextChange.value = true
     realmForm.value = loadRealmForEdit(props.realmData)
@@ -1888,10 +2268,9 @@ const loadRealmFromStore = () => {
   if (!props.realmId) return
   if (loadedRealmId.value === props.realmId && !isReadOnly.value) return
 
-  const realm = realms.value.find(r => r.id === props.realmId)
-  if (realm) {
+  if (storeRealm) {
     ignoreNextChange.value = true
-    realmForm.value = loadRealmForEdit(realm as Realm)
+    realmForm.value = loadRealmForEdit(storeRealm as Realm)
     loadedRealmId.value = props.realmId
     isDirty.value = false
   }
