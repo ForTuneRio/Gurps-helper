@@ -981,7 +981,7 @@
                     v-model.number="rp.value"
                     type="number"
                     maxlength="30"
-                    data-min="0"
+                    data-min="-1000000"
                     data-max="1000000"
                     @input="clampNumberInput"
                     class="w-24 px-1 py-1 border rounded text-xs"
