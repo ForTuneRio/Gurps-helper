@@ -78,6 +78,13 @@ const generateShareToken = (): string => {
   return `${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`
 }
 
+const generateEntityId = (): string => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 12)}`
+}
+
 const enforceRealmWriteCooldown = (realmId: string) => {
   const now = Date.now()
   const backoffUntil = backoffUntilByRealm.get(realmId)
@@ -182,19 +189,19 @@ export const useRealms = () => {
         army: normalizeArmy(realm.army)
       }
 
-      // Check if realm exists
-      const existing = realms.value.findIndex(r => r.id === realmToSave.id)
-      
-      if (existing >= 0) {
-        const { data: currentRows, error: currentError } = await supabase
-          .from('realms')
-          .select('version')
-          .eq('id', realmToSave.id)
-          .eq('user_id', userId)
-          .limit(1)
+      const { data: currentRows, error: currentError } = await supabase
+        .from('realms')
+        .select('version')
+        .eq('id', realmToSave.id)
+        .eq('user_id', userId)
+        .limit(1)
 
-        if (currentError) throw currentError
-        const currentVersion = Number(currentRows?.[0]?.version ?? 1)
+      if (currentError) throw currentError
+
+      const hasOwnedRealm = Boolean(currentRows?.length)
+      const currentVersion = Number(currentRows?.[0]?.version ?? 1)
+
+      if (hasOwnedRealm) {
 
         if (!options?.force && typeof options?.expectedVersion === 'number' && currentVersion !== options.expectedVersion) {
           throw buildConflictError(currentVersion)
@@ -224,7 +231,12 @@ export const useRealms = () => {
           throw buildConflictError(currentVersion)
         }
         
-        realms.value[existing] = realmToSave
+        const existingIndex = realms.value.findIndex(r => r.id === realmToSave.id)
+        if (existingIndex >= 0) {
+          realms.value[existingIndex] = realmToSave
+        } else {
+          realms.value.unshift(realmToSave)
+        }
         console.log('Updated existing realm:', realmToSave.name)
 
         const savedVersion = Number(updatedRows[0]?.version ?? currentVersion + 1)
@@ -247,7 +259,44 @@ export const useRealms = () => {
           .select('version, updated_at')
           .single()
 
-        if (insertError) throw insertError
+        if (insertError) {
+          // Recover from stale client state or save races where insert hits an existing id.
+          if (insertError.code === '23505') {
+            const { data: recoveredRows, error: recoveredError } = await supabase
+              .from('realms')
+              .update({
+                name: realmToSave.name,
+                data: realmToSave,
+                updated_at: new Date().toISOString()
+              })
+              .eq('id', realmToSave.id)
+              .eq('user_id', userId)
+              .select('version, updated_at')
+              .limit(1)
+
+            if (recoveredError) throw recoveredError
+            if (recoveredRows?.length) {
+              const existingIndex = realms.value.findIndex(r => r.id === realmToSave.id)
+              if (existingIndex >= 0) {
+                realms.value[existingIndex] = realmToSave
+              } else {
+                realms.value.unshift(realmToSave)
+              }
+
+              console.log('Recovered realm save after duplicate key conflict:', realmToSave.name)
+
+              const savedVersion = Number(recoveredRows[0]?.version ?? currentVersion + 1)
+              const updatedAt = typeof recoveredRows[0]?.updated_at === 'string' ? recoveredRows[0].updated_at : null
+
+              clearBackoff(realm.id)
+              return { realm: realmToSave, version: savedVersion, updatedAt }
+            }
+
+            throw new Error('Realm id conflict detected while creating a new realm. Please create a new realm and try again.')
+          }
+
+          throw insertError
+        }
         
         realms.value.unshift(realmToSave)
         console.log('Created new realm:', realmToSave.name)
@@ -473,7 +522,7 @@ export const useRealms = () => {
   })
 
   const createEmptyRealm = (): Realm => ({
-    id: Math.random().toString(36).substr(2, 9),
+    id: generateEntityId(),
     name: '',
     surroundings: {
       totalArea: 0,

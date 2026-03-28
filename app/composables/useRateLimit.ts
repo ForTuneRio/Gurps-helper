@@ -19,6 +19,8 @@ const rateLimitStatus = ref<RateLimitStatus>({
   isLimited: false
 })
 
+let hasWarnedRateLimitRouteUnavailable = false
+
 /**
  * Composable for checking and managing API rate limits
  * Should be called before making write operations to realms/spaceships
@@ -68,8 +70,10 @@ export const useRateLimit = () => {
 
       return true
     } catch (error: any) {
+      const status = error?.response?.status ?? error?.status
+
       // 429 = Too Many Requests
-      if (error.response?.status === 429) {
+      if (status === 429) {
         const retryAfter = parseInt(error.response.headers['retry-after'] || '60')
         rateLimitStatus.value = {
           remaining: 0,
@@ -77,6 +81,15 @@ export const useRateLimit = () => {
           isLimited: true
         }
         return false
+      }
+
+      // Static deployments don't expose Nuxt server routes like /api/rate-limit.
+      if (status === 404 || status === 405) {
+        if (!hasWarnedRateLimitRouteUnavailable) {
+          console.warn('Rate limit API is unavailable in this deployment; skipping client-side rate limit check.')
+          hasWarnedRateLimitRouteUnavailable = true
+        }
+        return true
       }
 
       // For other errors, log but allow request to proceed
