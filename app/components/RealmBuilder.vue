@@ -981,8 +981,8 @@
                     v-model.number="rp.value"
                     type="number"
                     maxlength="30"
-                    data-min="-1000000"
-                    data-max="1000000"
+                    data-min="-100000"
+                    data-max="100000"
                     @input="clampNumberInput"
                     class="w-24 px-1 py-1 border rounded text-xs"
                   />
@@ -1158,7 +1158,7 @@
                     <div class="space-y-2 text-sm">
                       <p>Required LS is calculated automatically from the total maintain cost of the company's combat troops.</p>
                       <p>Select which logistics types this company has already purchased: Land, Naval, and/or Air.</p>
-                      <p>Raise cost formula: Land = 5,000 x required LS, Naval = 10,000 x required LS, Air = 20,000 x required LS.</p>
+                      <p>Raise cost formula: Land = 5 x required LS, Naval = 10 x required LS, Air = 20 x required LS.</p>
                       <p>Maintain cost is 10% of the raise cost for each selected logistics type.</p>
                       <p>Land logistics accompany a force, Naval logistics support naval and port-connected forces, and Air logistics can support all elements from an airbase.</p>
                     </div>
@@ -1379,8 +1379,10 @@
                         <input
                           v-model.number="unit.amount"
                           type="number"
-                          data-min="1"
+                          step="0.01"
+                          data-min="0.01"
                           data-max="1000000"
+                          data-decimals="2"
                           @input="clampNumberInput"
                           class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
                         />
@@ -1594,6 +1596,29 @@ const descriptionRef = ref<HTMLTextAreaElement | null>(null)
 const isReadOnly = computed(() => Boolean(props.readOnly))
 
 const MAX_NUMBER_LENGTH = 30
+const MIN_ARMY_AMOUNT = 0.01
+
+const limitDecimalPlaces = (value: string, maxDecimals: number): string => {
+  if (!Number.isInteger(maxDecimals) || maxDecimals < 0 || !value.includes('.')) {
+    return value
+  }
+
+  const [integerPart, fractionPart = ''] = value.split('.')
+  if (fractionPart.length <= maxDecimals) {
+    return value
+  }
+
+  return `${integerPart}.${fractionPart.slice(0, maxDecimals)}`
+}
+
+const normalizeArmyAmount = (value: unknown): number => {
+  const amount = Number(value)
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return 1
+  }
+
+  return Math.max(MIN_ARMY_AMOUNT, Math.round(amount * 100) / 100)
+}
 
 const clampNumberInput = (event: Event) => {
   const target = event.target as HTMLInputElement | null
@@ -1602,6 +1627,14 @@ const clampNumberInput = (event: Event) => {
   let value = target.value
   if (value.length > MAX_NUMBER_LENGTH) {
     value = value.slice(0, MAX_NUMBER_LENGTH)
+  }
+
+  const decimalsAttr = target.getAttribute('data-decimals')
+  if (decimalsAttr !== null) {
+    const maxDecimals = Number(decimalsAttr)
+    if (Number.isInteger(maxDecimals) && maxDecimals >= 0) {
+      value = limitDecimalPlaces(value, maxDecimals)
+    }
   }
 
   if (value === '' || value === '-' || value === '.' || value === '-.') {
@@ -1738,8 +1771,7 @@ const createArmyCompany = (): ArmyCompany => ({
 })
 
 const getUnitAmount = (unit: ArmyUnit): number => {
-  const amount = Number(unit.amount)
-  return Number.isFinite(amount) && amount > 0 ? amount : 1
+  return normalizeArmyAmount(unit.amount)
 }
 
 const normalizeClassToken = (token: string): string => {
@@ -1803,7 +1835,7 @@ const getCompanyRequiredLogisticsLs = (company: ArmyCompany): number =>
   getCompanyMaintainTotal(company)
 
 const getLogisticsRaiseCost = (ls: number, type: 'land' | 'naval' | 'air'): number => {
-  const base = 5000 * Math.max(0, ls)
+  const base = 5 * Math.max(0, ls)
   if (type === 'naval') return base * 2
   if (type === 'air') return base * 4
   return base

@@ -479,6 +479,16 @@ export const useRealms = () => {
 
   const VALID_SOLDIER_QUALITIES = ['Elite', 'Good', 'Average', 'Inferior'] as const
   const VALID_EQUIPMENT_QUALITIES = ['VFine', 'Fine', 'GoodE', 'Basic', 'Poor'] as const
+  const MIN_ARMY_AMOUNT = 0.01
+
+  const normalizeArmyAmount = (amount: unknown): number => {
+    const parsedAmount = Number(amount)
+    if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+      return 1
+    }
+
+    return Math.max(MIN_ARMY_AMOUNT, Math.round(parsedAmount * 100) / 100)
+  }
 
   const normalizeArmyUnit = (unit: Partial<ArmyUnit> | null | undefined): ArmyUnit => {
     const baseUnit: ArmyUnit = {
@@ -492,7 +502,7 @@ export const useRealms = () => {
       maintain: typeof unit?.maintain === 'number' ? unit.maintain : 0,
       techLevel: typeof unit?.techLevel === 'number' ? unit.techLevel : 0,
       currentTechLevel: typeof unit?.currentTechLevel === 'number' ? unit.currentTechLevel : (typeof unit?.techLevel === 'number' ? unit.techLevel : 0),
-      amount: typeof unit?.amount === 'number' && unit.amount > 0 ? unit.amount : 1,
+      amount: normalizeArmyAmount(unit?.amount),
       features: Array.isArray(unit?.features)
         ? unit.features.filter((feature): feature is string => typeof feature === 'string')
         : [],
