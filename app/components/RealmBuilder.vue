@@ -1108,6 +1108,15 @@
                 <button
                   v-if="!isReadOnly"
                   type="button"
+                  @click="openCasualtyCalculator(company)"
+                  class="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300"
+                  title="Calculate Casualties"
+                >
+                  <UserMinusIcon class="w-4 h-4" />
+                </button>
+                <button
+                  v-if="!isReadOnly"
+                  type="button"
                   @click="toggleCompanyEdit(company.id)"
                   class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
                   title="Edit"
@@ -1537,6 +1546,14 @@
 
     </form>
 
+    <!-- Casualty Calculator Modal -->
+    <CasualtyCalculator
+      :is-open="casualtyCalculatorOpen"
+      :company="selectedCompanyForCasualties"
+      @close="closeCasualtyCalculator"
+      @apply-casualties="applyCasualties"
+    />
+
     <!-- Success Message -->
     <div v-if="saved" class="p-3 bg-green-50 rounded mt-3">
       <p class="text-green-700 font-semibold text-sm">✓ Realm {{ isEditMode ? 'updated' : 'saved' }} successfully!</p>
@@ -1548,9 +1565,10 @@
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useRealms } from '~/composables/useRealms'
 import type { RealmSaveConflictError } from '~/composables/useRealms'
-import { Cog6ToothIcon, TrashIcon } from '@heroicons/vue/24/solid'
+import { Cog6ToothIcon, TrashIcon, UserMinusIcon } from '@heroicons/vue/24/solid'
 import InfoBox from '~/components/InfoBox.vue'
 import ModifierInfoContent from '~/components/ModifierInfoContent.vue'
+import CasualtyCalculator from '~/components/CasualtyCalculator.vue'
 import type { Realm, ArmyCompany, ArmyUnit } from '~/types/realm'
 import {
   getHabitabilityLabel,
@@ -1686,6 +1704,39 @@ const editingEnhancement = ref<Record<number, boolean>>({})
 const editingLimitation = ref<Record<number, boolean>>({})
 const editingCompany = ref<Record<string, boolean>>({})
 const editingUnit = ref<Record<string, boolean>>({})
+
+// Casualty calculator state
+const casualtyCalculatorOpen = ref(false)
+const selectedCompanyForCasualties = ref<ArmyCompany | null>(null)
+
+const openCasualtyCalculator = (company: ArmyCompany) => {
+  selectedCompanyForCasualties.value = company
+  casualtyCalculatorOpen.value = true
+}
+
+const closeCasualtyCalculator = () => {
+  casualtyCalculatorOpen.value = false
+  selectedCompanyForCasualties.value = null
+}
+
+const applyCasualties = (updatedUnits: ArmyUnit[]) => {
+  const company = selectedCompanyForCasualties.value
+  if (!company) return
+  
+  // Find the company in the form and update its units
+  const companyIndex = realmForm.value.army.companies.findIndex(
+    c => c.id === company.id
+  )
+  
+  if (companyIndex > -1) {
+    const targetCompany = realmForm.value.army.companies[companyIndex]
+    if (targetCompany) {
+      targetCompany.units = updatedUnits
+    }
+  }
+  
+  closeCasualtyCalculator()
+}
 
 const toggleUnitEdit = (unitId: string) => {
   editingUnit.value[unitId] = !editingUnit.value[unitId]
