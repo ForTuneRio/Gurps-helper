@@ -84,6 +84,7 @@ export interface ArmyUnit {
   id: string
   name: string
   ts: number
+  tsExcluded: boolean // If true, TS is shown as (X) and excluded from army total TS, but still counts for special class totals
   class: string // Comma-separated list like "Cv, F, Rec". Anti-classes can use parentheses, e.g. "(F)"
   wt: number
   mob: string

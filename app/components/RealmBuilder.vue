@@ -1226,7 +1226,7 @@
                           <span><strong>WT:</strong> {{ unit.wt.toLocaleString() }} / {{ getUnitWeightTotal(unit).toLocaleString() }}</span>
                           <span><strong>Mob:</strong> {{ unit.mob || '-' }}</span>
                           <span><strong>Amount:</strong> {{ unit.amount }}</span>
-                          <span><strong>TS:</strong> {{ unit.ts.toLocaleString() }} / {{ getWeightedUnitTs(unit).toLocaleString() }}</span>
+                          <span><strong>TS:</strong> <span :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400' : ''">{{ unit.tsExcluded ? `(${unit.ts.toLocaleString()})` : unit.ts.toLocaleString() }}</span> / <span :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400' : ''">{{ unit.tsExcluded ? `(${getWeightedUnitTsRaw(unit).toLocaleString()})` : getWeightedUnitTs(unit).toLocaleString() }}</span></span>
                           <span><strong>Raise:</strong> {{ unit.raise.toLocaleString() }} / {{ getUnitRaiseCost(unit).toLocaleString() }}</span>
                           <span><strong>Maintain:</strong> {{ unit.maintain.toLocaleString() }} / {{ getUnitMaintainCost(unit).toLocaleString() }}</span>
                         </div>
@@ -1298,14 +1298,27 @@
                       </div>
                       <div>
                         <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">TS</label>
-                        <input
-                          v-model.number="unit.ts"
-                          type="number"
-                          data-min="0"
-                          data-max="1000000"
-                          @input="clampNumberInput"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
+                        <div class="flex items-center gap-1">
+                          <input
+                            v-model.number="unit.ts"
+                            type="number"
+                            data-min="0"
+                            data-max="1000000"
+                            @input="clampNumberInput"
+                            class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                          />
+                          <label
+                            class="flex items-center gap-0.5 text-[11px] text-gray-600 dark:text-gray-300 cursor-pointer shrink-0"
+                            :title="'Excluded from army total TS — shown as (TS)'"
+                          >
+                            <input
+                              v-model="unit.tsExcluded"
+                              type="checkbox"
+                              class="rounded border-gray-300 text-amber-500 focus:ring-amber-400"
+                            />
+                            <span class="font-mono">()</span>
+                          </label>
+                        </div>
                       </div>
                       <div>
                         <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Class</label>
@@ -1797,6 +1810,7 @@ const createArmyUnit = (): ArmyUnit => ({
   id: Math.random().toString(36).substr(2, 9),
   name: '',
   ts: 0,
+  tsExcluded: false,
   class: '',
   wt: 0,
   mob: '',
@@ -1844,11 +1858,18 @@ const parseClassTokens = (value: string): string[] => value
   .map(token => normalizeClassToken(token))
   .filter(Boolean)
 
-const getWeightedUnitTs = (unit: ArmyUnit): number => {
+// Returns the unit's weighted TS regardless of tsExcluded (for special class totals)
+const getWeightedUnitTsRaw = (unit: ArmyUnit): number => {
   const mods = parseFeatureModifiers(unit.features)
   const sq = getSoldierQMods(unit)
   const eq = getEquipmentQMods(unit)
   return Math.round(unit.ts * getUnitAmount(unit) * sq.tsMult * eq.tsMult * mods.tsMult)
+}
+
+// Returns 0 for units with tsExcluded — they don't count toward army total TS
+const getWeightedUnitTs = (unit: ArmyUnit): number => {
+  if (unit.tsExcluded) return 0
+  return getWeightedUnitTsRaw(unit)
 }
 
 const getUnitRaiseCost = (unit: ArmyUnit): number => {
@@ -1919,10 +1940,10 @@ const buildCompanyClassTotals = (company: ArmyCompany, labels: readonly string[]
       const tokens = parseClassTokens(unit.class)
       if (useAntiTotals) {
         // Only use explicit anti-class tokens like (F), (Cv), etc.
-        return tokens.includes(label) ? sum + getWeightedUnitTs(unit) : sum
+        return tokens.includes(label) ? sum + getWeightedUnitTsRaw(unit) : sum
       }
 
-      return tokens.includes(label) ? sum + getWeightedUnitTs(unit) : sum
+      return tokens.includes(label) ? sum + getWeightedUnitTsRaw(unit) : sum
     }, 0)
 
     return { label, value }
