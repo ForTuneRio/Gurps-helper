@@ -1668,7 +1668,13 @@ const clampNumberInput = (event: Event) => {
     }
   }
 
-  if (value === '' || value === '-' || value === '.' || value === '-.') {
+  if (value === '') {
+    // Don't touch target.value — for type="number" inputs the browser reports "" when
+    // the user has typed an intermediate state like "-". Overwriting it would erase that.
+    return
+  }
+
+  if (value === '-' || value === '.' || value === '-.') {
     target.value = value
     return
   }
