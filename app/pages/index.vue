@@ -18,15 +18,15 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'GURPS Helper - Free Tools for Realms, Spaceships & Magic',
+  title: 'GURPS Helper',
   meta: [
     {
       name: 'description',
-      content: 'Free GURPS helper for managing realms, spaceships, and calculating Ritual Path Magic spells. Open source portfolio project by ForTuneRio.',
+      content: 'Free GURPS helper for managing realms, spaceships, and calculating Ritual Path Magic spells.',
     },
     {
       name: 'og:title',
-      content: 'GURPS Helper - Free GURPS Tools',
+      content: 'GURPS Helper',
     },
     {
       name: 'og:description',
