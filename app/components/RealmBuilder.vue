@@ -2262,7 +2262,7 @@ const bankPlusEarningsComputed = computed(() =>
 )
 
 const resourcePointCostComputed = computed(() => 
-  calculateResourcePointCost(realmValueWithModComputed.value)
+  calculateResourcePointCost(realmValueComputed.value)
 )
 
 // Enhancement management
