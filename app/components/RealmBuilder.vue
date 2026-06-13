@@ -1259,183 +1259,283 @@
                       <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Name</th>
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">TS</th>
                       <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Class</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">WT</th>
+                      <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Mob</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">TL / Cur TL</th>
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Amt</th>
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Raise</th>
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Maintain</th>
+                      <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Details</th>
                       <th class="px-2 py-1 text-center font-semibold text-gray-700 dark:text-gray-200 w-16">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
-                      v-for="(unit, unitIndex) in company.units"
-                      :key="`${unit.id}-table`"
-                      :class="editingUnit[unit.id] ? 'bg-green-50 dark:bg-green-900/20' : 'bg-white dark:bg-gray-900/40 hover:bg-gray-50 dark:hover:bg-gray-800/40'"
-                      class="border-b border-gray-200 dark:border-gray-700"
-                    >
-                      <!-- Name -->
-                      <td class="px-2 py-1 text-gray-700 dark:text-gray-200">
-                        <input
-                          v-if="editingUnit[unit.id]"
-                          v-model="unit.name"
-                          type="text"
-                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                        <span v-else class="font-medium">{{ unit.name || `Unit ${unitIndex + 1}` }}</span>
-                      </td>
-                      <!-- TS -->
-                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">
-                        <input
-                          v-if="editingUnit[unit.id]"
-                          v-model.number="unit.ts"
-                          type="number"
-                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                        <span v-else :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400 font-medium' : ''">
-                          {{ unit.tsExcluded ? `(${unit.ts.toLocaleString()})` : unit.ts.toLocaleString() }}
-                          /
-                          {{ unit.tsExcluded ? `(${getWeightedUnitTsRaw(unit).toLocaleString()})` : getWeightedUnitTs(unit).toLocaleString() }}
-                        </span>
-                      </td>
-                      <!-- Class -->
-                      <td class="px-2 py-1 text-gray-700 dark:text-gray-200">
-                        <input
-                          v-if="editingUnit[unit.id]"
-                          v-model="unit.class"
-                          type="text"
-                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                        <span v-else>{{ unit.class || '-' }}</span>
-                      </td>
-                      <!-- Amount -->
-                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">
-                        <input
-                          v-if="editingUnit[unit.id]"
-                          v-model.number="unit.amount"
-                          type="number"
-                          step="0.01"
-                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                        <span v-else>{{ unit.amount }}</span>
-                      </td>
-                      <!-- Raise -->
-                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">
-                        <input
-                          v-if="editingUnit[unit.id]"
-                          v-model.number="unit.raise"
-                          type="number"
-                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                        <span v-else>{{ unit.raise.toLocaleString() }} / {{ getUnitRaiseCost(unit).toLocaleString() }}</span>
-                      </td>
-                      <!-- Maintain -->
-                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">
-                        <input
-                          v-if="editingUnit[unit.id]"
-                          v-model.number="unit.maintain"
-                          type="number"
-                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                        <span v-else>{{ unit.maintain.toLocaleString() }} / {{ getUnitMaintainCost(unit).toLocaleString() }}</span>
-                      </td>
-                      <!-- Actions -->
-                      <td class="px-2 py-1 text-center">
-                        <div class="flex items-center justify-center gap-1">
-                          <button
-                            v-if="!isReadOnly && !editingUnit[unit.id]"
-                            type="button"
-                            @click="toggleUnitEdit(unit.id)"
-                            class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                            title="Edit"
-                          >
-                            <PencilIcon class="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            v-if="!isReadOnly && editingUnit[unit.id]"
-                            type="button"
-                            @click="toggleUnitEdit(unit.id)"
-                            class="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
-                            title="Done"
-                          >
-                            <CheckIcon class="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            v-if="!isReadOnly"
-                            type="button"
-                            @click="removeUnit(companyIndex, unitIndex)"
-                            class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                            title="Delete"
-                          >
-                            <TrashIcon class="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                    <template v-for="(unit, unitIndex) in company.units" :key="`${unit.id}-table`">
+                      <tr
+                        :class="editingUnit[unit.id] ? 'bg-green-50 dark:bg-green-900/20' : 'bg-white dark:bg-gray-900/40 hover:bg-gray-50 dark:hover:bg-gray-800/40'"
+                        class="border-b border-gray-200 dark:border-gray-700 align-top"
+                      >
+                        <td class="px-2 py-1 text-gray-700 dark:text-gray-200 min-w-40">
+                          <input
+                            v-if="editingUnit[unit.id]"
+                            v-model="unit.name"
+                            type="text"
+                            class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                          />
+                          <span v-else class="font-medium">{{ unit.name || `Unit ${unitIndex + 1}` }}</span>
+                        </td>
+                        <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200 min-w-40">
+                          <div v-if="editingUnit[unit.id]" class="flex items-center justify-end gap-2">
+                            <input
+                              v-model.number="unit.ts"
+                              type="number"
+                              class="w-16 rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                            />
+                            <label class="flex items-center gap-1 whitespace-nowrap text-[11px] text-amber-700 dark:text-amber-300" title="Exclude TS from total; display it in parentheses">
+                              <input
+                                v-model="unit.tsExcluded"
+                                type="checkbox"
+                                aria-label="Exclude TS from total"
+                                class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                              />
+                              <span>()</span>
+                            </label>
+                            <label class="flex items-center gap-1 whitespace-nowrap text-[11px] font-medium text-cyan-700 dark:text-cyan-200" title="Unit is upgradeable from a lower TL">
+                              <input
+                                v-model="unit.isUpgradeable"
+                                type="checkbox"
+                                aria-label="Unit is upgradeable from lower TL"
+                                class="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                              />
+                              <span>*</span>
+                            </label>
+                          </div>
+                          <span v-else :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400 font-medium' : ''">
+                            {{ unit.tsExcluded ? `(${unit.ts.toLocaleString()})` : unit.ts.toLocaleString() }}
+                            /
+                            {{ unit.tsExcluded ? `(${getWeightedUnitTsRaw(unit).toLocaleString()})` : getWeightedUnitTs(unit).toLocaleString() }}
+                          </span>
+                        </td>
+                        <td class="px-2 py-1 text-gray-700 dark:text-gray-200 min-w-28">
+                          <input
+                            v-if="editingUnit[unit.id]"
+                            v-model="unit.class"
+                            type="text"
+                            class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                          />
+                          <span v-else>{{ unit.class || '-' }}</span>
+                        </td>
+                        <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200 min-w-24">
+                          <input
+                            v-if="editingUnit[unit.id]"
+                            v-model.number="unit.wt"
+                            type="number"
+                            class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                          />
+                          <span v-else>{{ unit.wt.toLocaleString() }} / {{ getUnitWeightTotal(unit).toLocaleString() }}</span>
+                        </td>
+                        <td class="px-2 py-1 text-gray-700 dark:text-gray-200 min-w-24">
+                          <input
+                            v-if="editingUnit[unit.id]"
+                            v-model="unit.mob"
+                            type="text"
+                            class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                          />
+                          <span v-else>{{ unit.mob || '-' }}</span>
+                        </td>
+                        <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200 min-w-28">
+                          <div v-if="editingUnit[unit.id]" class="flex items-center justify-end gap-1">
+                            <input
+                              v-model.number="unit.techLevel"
+                              type="number"
+                              title="Base TL"
+                              class="w-12 rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                            />
+                            <span class="text-[11px] text-gray-500 dark:text-gray-400">/</span>
+                            <input
+                              v-model.number="unit.currentTechLevel"
+                              type="number"
+                              title="Current TL"
+                              class="w-12 rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                            />
+                          </div>
+                          <span v-else>{{ unit.techLevel }} / {{ unit.currentTechLevel }}</span>
+                        </td>
+                        <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200 min-w-24">
+                          <input
+                            v-if="editingUnit[unit.id]"
+                            v-model.number="unit.amount"
+                            type="number"
+                            step="0.01"
+                            class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                          />
+                          <span v-else>{{ unit.amount }}</span>
+                        </td>
+                        <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200 min-w-28">
+                          <input
+                            v-if="editingUnit[unit.id]"
+                            v-model.number="unit.raise"
+                            type="number"
+                            class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                          />
+                          <span v-else>{{ unit.raise.toLocaleString() }} / {{ getUnitRaiseCost(unit).toLocaleString() }}</span>
+                        </td>
+                        <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200 min-w-28">
+                          <input
+                            v-if="editingUnit[unit.id]"
+                            v-model.number="unit.maintain"
+                            type="number"
+                            class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                          />
+                          <span v-else>{{ unit.maintain.toLocaleString() }} / {{ getUnitMaintainCost(unit).toLocaleString() }}</span>
+                        </td>
+                        <td class="px-2 py-1 text-gray-700 dark:text-gray-200 min-w-80">
+                          <div v-if="editingUnit[unit.id]" class="space-y-1">
+                            <div class="flex flex-wrap items-center gap-1.5">
+                              <select
+                                v-model="unit.soldierQuality"
+                                class="w-24 rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                              >
+                                <option value="Elite">Elite</option>
+                                <option value="Good">Good</option>
+                                <option value="Average">Average</option>
+                                <option value="Inferior">Inferior</option>
+                              </select>
+                              <select
+                                v-model="unit.equipmentQuality"
+                                class="w-24 rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                              >
+                                <option value="VFine">Very Fine</option>
+                                <option value="Fine">Fine</option>
+                                <option value="GoodE">Good Equip.</option>
+                                <option value="Basic">Basic</option>
+                                <option value="Poor">Poor</option>
+                              </select>
+                              <button
+                                type="button"
+                                class="rounded border border-green-200 px-2 py-0.5 text-[11px] font-medium text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-950/30"
+                                @click="addUnitFeature(companyIndex, unitIndex)"
+                              >
+                                + Feature
+                              </button>
+                            </div>
+                            <div v-if="unit.features.length > 0" class="space-y-1">
+                              <div
+                                v-for="(feature, featureIndex) in unit.features"
+                                :key="`${unit.id}-feature-edit-${featureIndex}`"
+                                class="flex flex-wrap items-center gap-1 rounded border border-gray-200 bg-gray-50 p-1 dark:border-gray-600 dark:bg-gray-900/40"
+                              >
+                                <input
+                                  :value="getFeatureName(feature)"
+                                  type="text"
+                                  placeholder="Feature name"
+                                  class="min-w-28 flex-1 rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                                  @input="updateFeatureName(companyIndex, unitIndex, featureIndex, $event)"
+                                />
+                                <input
+                                  :value="extractFeatureModifier(feature, 'ts')"
+                                  type="number"
+                                  step="0.1"
+                                  min="0.1"
+                                  placeholder="TS"
+                                  class="w-14 rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                                  @input="updateFeatureModifier(companyIndex, unitIndex, featureIndex, 'ts', $event)"
+                                />
+                                <input
+                                  :value="extractFeatureModifier(feature, 'raise')"
+                                  type="number"
+                                  step="0.1"
+                                  min="0.1"
+                                  placeholder="Raise"
+                                  class="w-14 rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                                  @input="updateFeatureModifier(companyIndex, unitIndex, featureIndex, 'raise', $event)"
+                                />
+                                <input
+                                  :value="extractFeatureModifier(feature, 'maintain')"
+                                  type="number"
+                                  step="0.1"
+                                  min="0.1"
+                                  placeholder="Maintain"
+                                  class="w-14 rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                                  @input="updateFeatureModifier(companyIndex, unitIndex, featureIndex, 'maintain', $event)"
+                                />
+                                <button
+                                  type="button"
+                                  class="rounded border border-red-200 px-1 py-0.5 text-[11px] font-medium text-red-600 hover:bg-red-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-950/30"
+                                  @click="removeUnitFeature(companyIndex, unitIndex, featureIndex)"
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div v-else class="space-y-1">
+                            <div class="flex flex-wrap gap-1">
+                              <span
+                                v-if="unit.soldierQuality !== 'Average'"
+                                class="rounded bg-violet-100 px-1.5 py-0.5 text-[11px] font-medium text-violet-700 dark:bg-violet-900/40 dark:text-violet-200"
+                              >{{ unit.soldierQuality }}</span>
+                              <span
+                                v-if="unit.equipmentQuality !== 'Basic'"
+                                class="rounded bg-amber-100 px-1.5 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-200"
+                              >{{ unit.equipmentQuality === 'GoodE' ? 'Good Equip.' : unit.equipmentQuality }}</span>
+                              <span
+                                v-if="unit.isUpgradeable"
+                                class="rounded bg-cyan-100 px-1.5 py-0.5 text-[11px] font-medium text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-200"
+                                :title="`Unit upgradeable from TL`"
+                              >TL*</span>
+                              <span
+                                v-if="unit.tsExcluded"
+                                class="rounded bg-amber-100 px-1.5 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-200"
+                              >TS Excluded</span>
+                            </div>
+                            <div v-if="unit.features.length > 0" class="flex flex-wrap gap-1">
+                              <span
+                                v-for="(feature, featureIndex) in unit.features"
+                                :key="`${unit.id}-feature-view-${featureIndex}`"
+                                class="rounded bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
+                              >
+                                {{ getFeatureSummary(feature) }}
+                              </span>
+                            </div>
+                            <div v-else class="text-[11px] text-gray-400 dark:text-gray-500">No features</div>
+                          </div>
+                        </td>
+                        <td class="px-2 py-1 text-center">
+                          <div class="flex items-center justify-center gap-5">
+                            <button
+                              v-if="!isReadOnly && !editingUnit[unit.id]"
+                              type="button"
+                              @click="toggleUnitEdit(unit.id)"
+                              class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                              title="Edit"
+                            >
+                              <PencilIcon class="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              v-if="!isReadOnly && editingUnit[unit.id]"
+                              type="button"
+                              @click="toggleUnitEdit(unit.id)"
+                              class="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
+                              title="Done"
+                            >
+                              <CheckIcon class="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              v-if="!isReadOnly"
+                              type="button"
+                              @click="removeUnit(companyIndex, unitIndex)"
+                              class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                              title="Delete"
+                            >
+                              <TrashIcon class="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </template>
                   </tbody>
                 </table>
-              </div>
-
-              <!-- Detailed unit view cards (hidden in edit mode) -->
-              <div v-if="company.units.length > 0" class="space-y-1">
-                <div
-                  v-for="(unit, unitIndex) in company.units"
-                  :key="unit.id"
-                  class="border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50"
-                >
-                  <div v-if="!editingUnit[unit.id]" class="px-2 py-1">
-                    <div class="flex items-start justify-between gap-2">
-                      <div class="space-y-1">
-                        <div class="text-xs font-semibold text-gray-700 dark:text-gray-100">{{ unit.name || `Unit ${unitIndex + 1}` }}</div>
-                        <div class="flex flex-wrap items-center gap-3 text-xs text-gray-600 dark:text-gray-300">
-                          <span><strong>WT:</strong> {{ unit.wt.toLocaleString() }} / {{ getUnitWeightTotal(unit).toLocaleString() }}</span>
-                          <span><strong>Mob:</strong> {{ unit.mob || '-' }}</span>
-                          <span><strong>Amount:</strong> {{ unit.amount }}</span>
-                          <span><strong>TS:</strong> <span :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400' : ''">{{ unit.tsExcluded ? `(${unit.ts.toLocaleString()})` : unit.ts.toLocaleString() }}</span> / <span :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400' : ''">{{ unit.tsExcluded ? `(${getWeightedUnitTsRaw(unit).toLocaleString()})` : getWeightedUnitTs(unit).toLocaleString() }}</span></span>
-                          <span><strong>Raise:</strong> {{ unit.raise.toLocaleString() }} / {{ getUnitRaiseCost(unit).toLocaleString() }}</span>
-                          <span><strong>Maintain:</strong> {{ unit.maintain.toLocaleString() }} / {{ getUnitMaintainCost(unit).toLocaleString() }}</span>
-                        </div>
-                        <div class="mt-0.5 flex flex-wrap gap-1">
-                          <span
-                            v-if="unit.soldierQuality !== 'Average'"
-                            class="rounded bg-violet-100 px-1.5 py-0.5 text-[11px] font-medium text-violet-700 dark:bg-violet-900/40 dark:text-violet-200"
-                          >{{ unit.soldierQuality }}</span>
-                          <span
-                            v-if="unit.equipmentQuality !== 'Basic'"
-                            class="rounded bg-amber-100 px-1.5 py-0.5 text-[11px] font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-200"
-                          >{{ unit.equipmentQuality === 'GoodE' ? 'Good Equip.' : unit.equipmentQuality }}</span>
-                          <span
-                            v-if="unit.isUpgradeable"
-                            class="rounded bg-cyan-100 px-1.5 py-0.5 text-[11px] font-medium text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-200"
-                            :title="`Unit upgradeable from TL`"
-                          >TL*</span>
-                        </div>
-                        <div v-if="unit.features.length > 0" class="mt-1 flex flex-wrap gap-1">
-                          <span
-                            v-for="(feature, featureIndex) in unit.features"
-                            :key="`${unit.id}-feature-view-${featureIndex}`"
-                            class="rounded bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200"
-                          >
-                            {{ getFeatureSummary(feature) }}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        v-if="!isReadOnly"
-                        type="button"
-                        @click="toggleUnitEdit(unit.id)"
-                        class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
-                        title="Edit"
-                      >
-                        <Cog6ToothIcon class="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div v-else class="rounded bg-blue-50 p-2 dark:bg-blue-900/20">
-                    <div class="text-xs text-blue-600 dark:text-blue-200 italic">
-                      Edit mode: Click Edit button to enable row editing
-                    </div>
-                  </div>
-                </div>
               </div>
 
             </div>

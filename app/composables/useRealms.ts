@@ -476,6 +476,7 @@ export const useRealms = () => {
     features: [],
     soldierQuality: 'Average',
     equipmentQuality: 'Basic',
+    isUpgradeable: false,
   })
 
   const VALID_SOLDIER_QUALITIES = ['Elite', 'Good', 'Average', 'Inferior'] as const
