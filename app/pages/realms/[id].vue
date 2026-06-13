@@ -105,6 +105,19 @@ const isViewOnly = computed(() => {
   return Boolean(shareToken.value) || !canSaveRealm.value
 })
 
+const realmTabTitle = computed(() => {
+  if (isNew.value) return 'New Realm - GURPS Helper'
+
+  const domainName = realmAccess.value?.realm?.name?.trim()
+  if (!domainName) return 'Realm - GURPS Helper'
+
+  return `${domainName} - GURPS Helper`
+})
+
+useHead(() => ({
+  title: realmTabTitle.value
+}))
+
 const loadRealm = async () => {
   if (isNew.value) return
 
