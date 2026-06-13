@@ -1127,6 +1127,43 @@
                   <Cog6ToothIcon class="w-4 h-4" />
                 </button>
               </div>
+
+              <div v-if="company.units.length > 0" class="mt-3 overflow-x-auto">
+                <table class="w-full border-collapse text-xs">
+                  <thead>
+                    <tr class="border-b border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800">
+                      <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Name</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">TS</th>
+                      <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Class</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Amt</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Raise</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Maintain</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(unit, unitIndex) in company.units"
+                      :key="`${unit.id}-table`"
+                      class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 hover:bg-gray-50 dark:hover:bg-gray-800/40"
+                    >
+                      <td class="px-2 py-1 text-gray-700 dark:text-gray-200 font-medium">{{ unit.name || `Unit ${unitIndex + 1}` }}</td>
+                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">
+                        <span :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400 font-medium' : ''">
+                          {{ unit.tsExcluded ? `(${unit.ts.toLocaleString()})` : unit.ts.toLocaleString() }}
+                        </span>
+                        / 
+                        <span :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400 font-medium' : ''">
+                          {{ unit.tsExcluded ? `(${getWeightedUnitTsRaw(unit).toLocaleString()})` : getWeightedUnitTs(unit).toLocaleString() }}
+                        </span>
+                      </td>
+                      <td class="px-2 py-1 text-gray-700 dark:text-gray-200">{{ unit.class || '-' }}</td>
+                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">{{ unit.amount }}</td>
+                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">{{ unit.raise.toLocaleString() }} / {{ getUnitRaiseCost(unit).toLocaleString() }}</td>
+                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">{{ unit.maintain.toLocaleString() }} / {{ getUnitMaintainCost(unit).toLocaleString() }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <div v-else class="rounded bg-gray-50 p-2 space-y-3 dark:bg-gray-900/60">
@@ -1213,43 +1250,6 @@
 
               <div v-if="company.units.length === 0" class="rounded border border-dashed border-gray-300 bg-gray-50 px-3 py-4 text-xs italic text-gray-500 dark:border-gray-700 dark:bg-gray-800/60 dark:text-gray-400">
                 No units in this company.
-              </div>
-
-              <div v-else class="mb-3 overflow-x-auto">
-                <table class="w-full border-collapse text-xs">
-                  <thead>
-                    <tr class="border-b border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800">
-                      <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Name</th>
-                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">TS</th>
-                      <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Class</th>
-                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Amt</th>
-                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Raise</th>
-                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Maintain</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(unit, unitIndex) in company.units"
-                      :key="`${unit.id}-table`"
-                      class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/40 hover:bg-gray-50 dark:hover:bg-gray-800/40"
-                    >
-                      <td class="px-2 py-1 text-gray-700 dark:text-gray-200 font-medium">{{ unit.name || `Unit ${unitIndex + 1}` }}</td>
-                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">
-                        <span :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400 font-medium' : ''">
-                          {{ unit.tsExcluded ? `(${unit.ts.toLocaleString()})` : unit.ts.toLocaleString() }}
-                        </span>
-                        / 
-                        <span :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400 font-medium' : ''">
-                          {{ unit.tsExcluded ? `(${getWeightedUnitTsRaw(unit).toLocaleString()})` : getWeightedUnitTs(unit).toLocaleString() }}
-                        </span>
-                      </td>
-                      <td class="px-2 py-1 text-gray-700 dark:text-gray-200">{{ unit.class || '-' }}</td>
-                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">{{ unit.amount }}</td>
-                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">{{ unit.raise.toLocaleString() }} / {{ getUnitRaiseCost(unit).toLocaleString() }}</td>
-                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">{{ unit.maintain.toLocaleString() }} / {{ getUnitMaintainCost(unit).toLocaleString() }}</td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
 
               <div v-if="company.units.length > 0" class="space-y-1">
