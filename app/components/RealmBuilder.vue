@@ -1252,6 +1252,129 @@
                 No units in this company.
               </div>
 
+              <div v-if="company.units.length > 0" class="mt-3 overflow-x-auto">
+                <table class="w-full border-collapse text-xs">
+                  <thead>
+                    <tr class="border-b border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800">
+                      <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Name</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">TS</th>
+                      <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Class</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Amt</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Raise</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Maintain</th>
+                      <th class="px-2 py-1 text-center font-semibold text-gray-700 dark:text-gray-200 w-16">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(unit, unitIndex) in company.units"
+                      :key="`${unit.id}-table`"
+                      :class="editingUnit[unit.id] ? 'bg-green-50 dark:bg-green-900/20' : 'bg-white dark:bg-gray-900/40 hover:bg-gray-50 dark:hover:bg-gray-800/40'"
+                      class="border-b border-gray-200 dark:border-gray-700"
+                    >
+                      <!-- Name -->
+                      <td class="px-2 py-1 text-gray-700 dark:text-gray-200">
+                        <input
+                          v-if="editingUnit[unit.id]"
+                          v-model="unit.name"
+                          type="text"
+                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                        <span v-else class="font-medium">{{ unit.name || `Unit ${unitIndex + 1}` }}</span>
+                      </td>
+                      <!-- TS -->
+                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">
+                        <input
+                          v-if="editingUnit[unit.id]"
+                          v-model.number="unit.ts"
+                          type="number"
+                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                        <span v-else :class="unit.tsExcluded ? 'text-amber-600 dark:text-amber-400 font-medium' : ''">
+                          {{ unit.tsExcluded ? `(${unit.ts.toLocaleString()})` : unit.ts.toLocaleString() }}
+                          /
+                          {{ unit.tsExcluded ? `(${getWeightedUnitTsRaw(unit).toLocaleString()})` : getWeightedUnitTs(unit).toLocaleString() }}
+                        </span>
+                      </td>
+                      <!-- Class -->
+                      <td class="px-2 py-1 text-gray-700 dark:text-gray-200">
+                        <input
+                          v-if="editingUnit[unit.id]"
+                          v-model="unit.class"
+                          type="text"
+                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                        <span v-else>{{ unit.class || '-' }}</span>
+                      </td>
+                      <!-- Amount -->
+                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">
+                        <input
+                          v-if="editingUnit[unit.id]"
+                          v-model.number="unit.amount"
+                          type="number"
+                          step="0.01"
+                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                        <span v-else>{{ unit.amount }}</span>
+                      </td>
+                      <!-- Raise -->
+                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">
+                        <input
+                          v-if="editingUnit[unit.id]"
+                          v-model.number="unit.raise"
+                          type="number"
+                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                        <span v-else>{{ unit.raise.toLocaleString() }} / {{ getUnitRaiseCost(unit).toLocaleString() }}</span>
+                      </td>
+                      <!-- Maintain -->
+                      <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200">
+                        <input
+                          v-if="editingUnit[unit.id]"
+                          v-model.number="unit.maintain"
+                          type="number"
+                          class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                        />
+                        <span v-else>{{ unit.maintain.toLocaleString() }} / {{ getUnitMaintainCost(unit).toLocaleString() }}</span>
+                      </td>
+                      <!-- Actions -->
+                      <td class="px-2 py-1 text-center">
+                        <div class="flex items-center justify-center gap-1">
+                          <button
+                            v-if="!isReadOnly && !editingUnit[unit.id]"
+                            type="button"
+                            @click="toggleUnitEdit(unit.id)"
+                            class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                            title="Edit"
+                          >
+                            <PencilIcon class="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            v-if="!isReadOnly && editingUnit[unit.id]"
+                            type="button"
+                            @click="toggleUnitEdit(unit.id)"
+                            class="text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300"
+                            title="Done"
+                          >
+                            <CheckIcon class="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            v-if="!isReadOnly"
+                            type="button"
+                            @click="removeUnit(companyIndex, unitIndex)"
+                            class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                            title="Delete"
+                          >
+                            <TrashIcon class="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Detailed unit view cards (hidden in edit mode) -->
               <div v-if="company.units.length > 0" class="space-y-1">
                 <div
                   v-for="(unit, unitIndex) in company.units"
@@ -1307,285 +1430,10 @@
                     </div>
                   </div>
 
-                  <div v-else class="rounded bg-gray-50 p-2 space-y-3 dark:bg-gray-900/40">
-                    <div class="flex items-center justify-end gap-1">
-                      <button
-                        v-if="!isReadOnly"
-                        type="button"
-                        @click="removeUnit(companyIndex, unitIndex)"
-                        class="text-red-600 hover:text-red-800"
-                        title="Delete unit"
-                      >
-                        <TrashIcon class="h-4 w-4" />
-                      </button>
-                      <button
-                        v-if="!isReadOnly"
-                        type="button"
-                        @click="toggleUnitEdit(unit.id)"
-                        class="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400"
-                        title="Done"
-                      >
-                        <Cog6ToothIcon class="w-4 h-4" />
-                      </button>
+                  <div v-else class="rounded bg-blue-50 p-2 dark:bg-blue-900/20">
+                    <div class="text-xs text-blue-600 dark:text-blue-200 italic">
+                      Edit mode: Click Edit button to enable row editing
                     </div>
-
-                    <div class="grid grid-cols-5 gap-2">
-                      <!-- Row 1: Unit Name, TS, Class, Raise, Maintain -->
-                      <div class="col-span-1">
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Unit Name</label>
-                        <input
-                          v-model="unit.name"
-                          type="text"
-                          maxlength="120"
-                          placeholder="Horse Archers"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500"
-                        />
-                      </div>
-                      <div>
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">TS</label>
-                        <div class="flex items-center gap-1">
-                          <input
-                            v-model.number="unit.ts"
-                            type="number"
-                            data-min="0"
-                            data-max="1000000"
-                            @input="clampNumberInput"
-                            class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                          />
-                          <label
-                            class="flex items-center gap-0.5 text-[11px] text-gray-600 dark:text-gray-300 cursor-pointer shrink-0"
-                            :title="'Excluded from army total TS — shown as (TS)'"
-                          >
-                            <input
-                              v-model="unit.tsExcluded"
-                              type="checkbox"
-                              class="rounded border-gray-300 text-amber-500 focus:ring-amber-400"
-                            />
-                            <span class="font-mono">()</span>
-                          </label>
-                          <label
-                            class="flex items-center gap-0.5 text-[11px] text-gray-600 dark:text-gray-300 cursor-pointer shrink-0"
-                            :title="'Mark if unit is upgradeable from TL'"
-                          >
-                            <input
-                              v-model="unit.isUpgradeable"
-                              type="checkbox"
-                              class="rounded border-gray-300 text-cyan-500 focus:ring-cyan-400"
-                            />
-                            <span class="font-mono">*</span>
-                          </label>
-                        </div>
-                      </div>
-                      <div>
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Class</label>
-                        <input
-                          v-model="unit.class"
-                          type="text"
-                          maxlength="200"
-                          placeholder="Cv, F, Rec, (F)"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500"
-                        />
-                      </div>
-                      <div>
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Raise</label>
-                        <input
-                          v-model.number="unit.raise"
-                          type="number"
-                          data-min="0"
-                          data-max="1000000000000000000"
-                          @input="clampNumberInput"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                      </div>
-                      <div>
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Maintain</label>
-                        <input
-                          v-model.number="unit.maintain"
-                          type="number"
-                          data-min="0"
-                          data-max="1000000000000000000"
-                          @input="clampNumberInput"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                      </div>
-                      <!-- Row 2: WT, Mob, TL, Current Unit TL, Amount -->
-                      <div>
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">WT</label>
-                        <input
-                          v-model.number="unit.wt"
-                          type="number"
-                          data-min="0"
-                          data-max="1000000000000000000"
-                          @input="clampNumberInput"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                      </div>
-                      <div>
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Mob</label>
-                        <input
-                          v-model="unit.mob"
-                          type="text"
-                          maxlength="80"
-                          placeholder="Mounted"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500"
-                        />
-                      </div>
-                      <div>
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">TL</label>
-                        <input
-                          v-model.number="unit.techLevel"
-                          type="number"
-                          data-min="0"
-                          data-max="20"
-                          @input="clampNumberInput"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                      </div>
-                      <div>
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Current Unit TL</label>
-                        <input
-                          v-model.number="unit.currentTechLevel"
-                          type="number"
-                          data-min="0"
-                          data-max="20"
-                          @input="clampNumberInput"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                      </div>
-                      <div>
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Amount</label>
-                        <input
-                          v-model.number="unit.amount"
-                          type="number"
-                          step="0.01"
-                          data-min="0.01"
-                          data-max="1000000"
-                          data-decimals="2"
-                          @input="clampNumberInput"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        />
-                      </div>
-                      <!-- Row 3: Soldier Quality, Equipment Quality -->
-                      <div class="col-span-2">
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Soldier Quality</label>
-                        <select
-                          v-model="unit.soldierQuality"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        >
-                          <option value="Elite">Elite (+200% TS, +200% Raise, +40% Maintain)</option>
-                          <option value="Good">Good (+150% TS, +100% Raise, +20% Maintain)</option>
-                          <option value="Average">Average (baseline)</option>
-                          <option value="Inferior">Inferior (-50% TS, -50% Raise, -50% Maintain)</option>
-                        </select>
-                      </div>
-                      <div class="col-span-2">
-                        <label class="mb-0.5 block text-[11px] font-medium text-gray-700 dark:text-gray-200">Equipment Quality</label>
-                        <select
-                          v-model="unit.equipmentQuality"
-                          class="w-full rounded border border-gray-300 px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                        >
-                          <option value="VFine">Very Fine (+250% TS, +200% Raise, +150% Maintain)</option>
-                          <option value="Fine">Fine (+200% TS, +100% Raise, +100% Maintain)</option>
-                          <option value="GoodE">Good (+150% TS, +50% Raise, +50% Maintain)</option>
-                          <option value="Basic">Basic (baseline)</option>
-                          <option value="Poor">Poor (+75% TS, -25% Raise, -25% Maintain)</option>
-                        </select>
-                      </div>
-                      <div></div>
-                    </div>
-
-                    <div class="mt-3 space-y-2">
-                      <div class="flex items-center justify-between gap-2">
-                        <div class="text-xs font-medium text-gray-700 dark:text-gray-200">Features</div>
-                        <button
-                          v-if="!isReadOnly"
-                          type="button"
-                          @click="addUnitFeature(companyIndex, unitIndex)"
-                          class="rounded border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
-                        >
-                          + Add Feature
-                        </button>
-                      </div>
-
-                      <div v-if="unit.features.length === 0" class="text-xs italic text-gray-400 dark:text-gray-500">
-                        No features
-                      </div>
-
-                      <div v-else class="space-y-3">
-                        <div
-                          v-for="(feature, featureIndex) in unit.features"
-                          :key="`${unit.id}-feature-${featureIndex}`"
-                          class="rounded border border-gray-200 bg-white p-2 dark:border-gray-600 dark:bg-gray-800"
-                        >
-                          <div class="flex items-center gap-2 overflow-x-auto">
-                            <span class="shrink-0 text-xs font-medium text-gray-700 dark:text-gray-200">Name</span>
-                            <input
-                              :value="getFeatureName(unit.features[featureIndex] || '')"
-                              type="text"
-                              maxlength="120"
-                              placeholder="Feature"
-                              @blur="updateFeatureName(companyIndex, unitIndex, featureIndex, $event)"
-                              class="min-w-[220px] flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder:text-gray-500"
-                            />
-                            <span class="shrink-0 text-xs font-medium text-gray-700 dark:text-gray-200">TS</span>
-                            <input
-                              type="number"
-                              inputmode="decimal"
-                              min="0.01"
-                              step="0.01"
-                              data-min="0.01"
-                              data-max="1000000"
-                              :value="extractFeatureModifier(unit.features[featureIndex] || '', 'ts')"
-                              @input="clampNumberInput"
-                              @blur="updateFeatureModifier(companyIndex, unitIndex, featureIndex, 'ts', $event)"
-                              class="w-24 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
-                              title="TS Mult"
-                              placeholder="TS"
-                            />
-                            <span class="shrink-0 text-xs font-medium text-gray-700 dark:text-gray-200">Raise</span>
-                            <input
-                              type="number"
-                              inputmode="decimal"
-                              min="0.01"
-                              step="0.01"
-                              data-min="0.01"
-                              data-max="1000000"
-                              :value="extractFeatureModifier(unit.features[featureIndex] || '', 'raise')"
-                              @input="clampNumberInput"
-                              @blur="updateFeatureModifier(companyIndex, unitIndex, featureIndex, 'raise', $event)"
-                              class="w-24 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
-                              title="Raise Mult"
-                              placeholder="Raise"
-                            />
-                            <span class="shrink-0 text-xs font-medium text-gray-700 dark:text-gray-200">Maintain</span>
-                            <input
-                              type="number"
-                              inputmode="decimal"
-                              min="0.01"
-                              step="0.01"
-                              data-min="0.01"
-                              data-max="1000000"
-                              :value="extractFeatureModifier(unit.features[featureIndex] || '', 'maintain')"
-                              @input="clampNumberInput"
-                              @blur="updateFeatureModifier(companyIndex, unitIndex, featureIndex, 'maintain', $event)"
-                              class="w-24 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100"
-                              title="Maintain Mult"
-                              placeholder="Maintain"
-                            />
-                            <button
-                              v-if="!isReadOnly"
-                              type="button"
-                              @click="removeUnitFeature(companyIndex, unitIndex, featureIndex)"
-                              class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                              title="Delete feature"
-                            >
-                              <TrashIcon class="h-4 w-4" />
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
                   </div>
                 </div>
               </div>
@@ -1634,7 +1482,7 @@
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 import { useRealms } from '~/composables/useRealms'
 import type { RealmSaveConflictError } from '~/composables/useRealms'
-import { Cog6ToothIcon, TrashIcon, UserMinusIcon } from '@heroicons/vue/24/solid'
+import { Cog6ToothIcon, TrashIcon, UserMinusIcon, PencilIcon, CheckIcon } from '@heroicons/vue/24/solid'
 import InfoBox from '~/components/InfoBox.vue'
 import ModifierInfoContent from '~/components/ModifierInfoContent.vue'
 import CasualtyCalculator from '~/components/CasualtyCalculator.vue'
