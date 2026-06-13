@@ -96,6 +96,7 @@ export interface ArmyUnit {
   features: string[] // Features like "Heavy armor", "Scout" - can include modifiers like "Scout x1.5 TS"
   soldierQuality: SoldierQuality
   equipmentQuality: EquipmentQuality
+  isUpgradeable: boolean // If true, unit is marked as upgradeable from TL, shows TL* badge
 }
 
 export interface ArmyCompany {

@@ -510,6 +510,7 @@ export const useRealms = () => {
         : [],
       soldierQuality: VALID_SOLDIER_QUALITIES.includes(unit?.soldierQuality as any) ? unit!.soldierQuality as ArmyUnit['soldierQuality'] : 'Average',
       equipmentQuality: VALID_EQUIPMENT_QUALITIES.includes(unit?.equipmentQuality as any) ? unit!.equipmentQuality as ArmyUnit['equipmentQuality'] : 'Basic',
+      isUpgradeable: unit?.isUpgradeable === true,
     }
     return baseUnit
   }
