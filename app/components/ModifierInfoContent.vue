@@ -288,6 +288,35 @@
       <p>Use this together with Average Income and any GM rules for technological progression.</p>
     </template>
 
+    <template v-else-if="name === 'Density per mile²'">
+      <p class="mb-2"><span class="font-semibold">Maximum Sustainable Carrying Capacity</span> by Technology Level (TL), in people per square mile.</p>
+      <table class="w-full text-left text-xs mb-3">
+        <thead>
+          <tr class="border-b border-gray-300 dark:border-gray-600">
+            <th class="px-1 py-1">TL</th>
+            <th class="px-1 py-1">Carrying Capacity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="px-1 py-1">0</td><td class="px-1 py-1">12</td></tr>
+          <tr><td class="px-1 py-1">1</td><td class="px-1 py-1">20</td></tr>
+          <tr><td class="px-1 py-1">2</td><td class="px-1 py-1">28</td></tr>
+          <tr><td class="px-1 py-1">3</td><td class="px-1 py-1">40</td></tr>
+          <tr><td class="px-1 py-1">4</td><td class="px-1 py-1">60</td></tr>
+          <tr><td class="px-1 py-1">5</td><td class="px-1 py-1">80</td></tr>
+          <tr><td class="px-1 py-1">6</td><td class="px-1 py-1">120</td></tr>
+          <tr><td class="px-1 py-1">7</td><td class="px-1 py-1">200</td></tr>
+          <tr><td class="px-1 py-1">8</td><td class="px-1 py-1">280</td></tr>
+          <tr><td class="px-1 py-1">9</td><td class="px-1 py-1">400</td></tr>
+          <tr><td class="px-1 py-1">10</td><td class="px-1 py-1">600</td></tr>
+          <tr><td class="px-1 py-1">11</td><td class="px-1 py-1">800</td></tr>
+          <tr><td class="px-1 py-1">12</td><td class="px-1 py-1">1,200</td></tr>
+        </tbody>
+      </table>
+
+      <p>For purely hunter-gatherer realms, divide carrying capacity by 10.</p>
+    </template>
+
     <template v-else-if="name === 'Education Rating'">
       <p class="mb-2"><span class="font-semibold">Education Rating (ER)</span> is a literacy and education scale from 0 to 6. It modifies rolls for science, medicine, and technology tasks. Apply the inverse modifier to propaganda attempts.</p>
 

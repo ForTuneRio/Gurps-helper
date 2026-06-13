@@ -574,8 +574,11 @@
             <h4 class="text-sm font-semibold text-green-700 mb-2">People</h4>
             <div class="space-y-2">
               <div>
-                <label for="density" class="block text-xs font-medium text-gray-700 mb-1">
+                <label for="density" class="flex items-center gap-1 text-xs font-medium text-gray-700 mb-1">
                   Density per mile²
+                  <InfoBox title="Density per mile²">
+                    <ModifierInfoContent name="Density per mile²" />
+                  </InfoBox>
                 </label>
                 <input
                   id="density"
