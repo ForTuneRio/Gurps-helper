@@ -1033,7 +1033,7 @@
               </div>
             </div>
             <div>
-              <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-300">Military Resources</label>
+              <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-300">Military Resources <span class="text-[11px] font-normal text-amber-700 dark:text-amber-300">(used {{ totalArmyMaintainUsed.toLocaleString() }})</span></label>
               <div class="rounded bg-gray-100 px-2 py-1 text-xs font-semibold dark:bg-gray-800 dark:text-gray-100">
                 {{ militaryResourcesComputed.toLocaleString() }}
               </div>
@@ -1135,7 +1135,7 @@
                       <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Name</th>
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">TS</th>
                       <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Class</th>
-                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Amt</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Amount</th>
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Raise</th>
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Maintain</th>
                     </tr>
@@ -1269,7 +1269,7 @@
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">WT</th>
                       <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Mob</th>
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">TL / Cur TL</th>
-                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Amt</th>
+                      <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Amount</th>
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Raise</th>
                       <th class="px-2 py-1 text-right font-semibold text-gray-700 dark:text-gray-200">Maintain</th>
                       <th class="px-2 py-1 text-left font-semibold text-gray-700 dark:text-gray-200">Details</th>
@@ -1963,6 +1963,9 @@ const getCompanyLogisticsMaintainTotal = (company: ArmyCompany): number =>
   + (company.logistics.naval ? getLogisticsMaintainCost(getCompanyRequiredLogisticsLs(company), 'naval') : 0)
   + (company.logistics.air ? getLogisticsMaintainCost(getCompanyRequiredLogisticsLs(company), 'air') : 0)
 
+const getCompanyTotalMaintainUsed = (company: ArmyCompany): number =>
+  getCompanyMaintainTotal(company) + getCompanyLogisticsMaintainTotal(company)
+
 const getCompanyPurchasedLogistics = (company: ArmyCompany): string[] => {
   const types: string[] = []
   if (company.logistics.land) types.push('Land')
@@ -2236,6 +2239,10 @@ const militaryResourcesComputed = computed(() =>
     averageIncomeComputed.value,
     militaryBudgetFactorComputed.value
   )
+)
+
+const totalArmyMaintainUsed = computed(() =>
+  realmForm.value.army.companies.reduce((sum, company) => sum + getCompanyTotalMaintainUsed(company), 0)
 )
 
 // Taxation & Revenue calculations
