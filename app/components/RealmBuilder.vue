@@ -1372,21 +1372,27 @@
                           <span v-else>{{ unit.amount }}</span>
                         </td>
                         <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200 min-w-28">
-                          <input
-                            v-if="editingUnit[unit.id]"
-                            v-model.number="unit.raise"
-                            type="number"
-                            class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                          />
+                          <div v-if="editingUnit[unit.id]" class="flex items-center justify-end gap-1">
+                            <input
+                              v-model.number="unit.raise"
+                              type="number"
+                              class="w-16 rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                            />
+                            <span class="text-[11px] text-gray-500 dark:text-gray-400">/</span>
+                            <span class="w-16 text-xs text-right text-gray-600 dark:text-gray-300">{{ getUnitRaiseCost(unit).toLocaleString() }}</span>
+                          </div>
                           <span v-else>{{ unit.raise.toLocaleString() }} / {{ getUnitRaiseCost(unit).toLocaleString() }}</span>
                         </td>
                         <td class="px-2 py-1 text-right text-gray-700 dark:text-gray-200 min-w-28">
-                          <input
-                            v-if="editingUnit[unit.id]"
-                            v-model.number="unit.maintain"
-                            type="number"
-                            class="w-full rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-                          />
+                          <div v-if="editingUnit[unit.id]" class="flex items-center justify-end gap-1">
+                            <input
+                              v-model.number="unit.maintain"
+                              type="number"
+                              class="w-16 rounded border border-gray-300 px-1 py-0.5 text-xs text-right dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+                            />
+                            <span class="text-[11px] text-gray-500 dark:text-gray-400">/</span>
+                            <span class="w-16 text-xs text-right text-gray-600 dark:text-gray-300">{{ getUnitMaintainCost(unit).toLocaleString() }}</span>
+                          </div>
                           <span v-else>{{ unit.maintain.toLocaleString() }} / {{ getUnitMaintainCost(unit).toLocaleString() }}</span>
                         </td>
                         <td class="px-2 py-1 text-gray-700 dark:text-gray-200 min-w-80">
