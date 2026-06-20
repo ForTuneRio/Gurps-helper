@@ -1300,7 +1300,7 @@
                               />
                               <span>()</span>
                             </label>
-                            <label class="flex items-center gap-1 whitespace-nowrap text-[11px] font-medium text-cyan-700 dark:text-cyan-200" title="Unit is upgradeable from a lower TL">
+                            <label class="flex items-center gap-1 whitespace-nowrap text-[11px] font-medium text-cyan-700 dark:text-cyan-200" title="Double TS every TL after the unit first appears">
                               <input
                                 v-model="unit.isUpgradeable"
                                 type="checkbox"
@@ -1482,7 +1482,7 @@
                               <span
                                 v-if="unit.isUpgradeable"
                                 class="rounded bg-cyan-100 px-1.5 py-0.5 text-[11px] font-medium text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-200"
-                                :title="`Unit upgradeable from TL`"
+                                :title="`Double TS every TL after the unit first appears`"
                               >TL*</span>
                               <span
                                 v-if="unit.tsExcluded"
@@ -1869,12 +1869,25 @@ const parseClassTokens = (value: string): string[] => value
   .map(token => normalizeClassToken(token))
   .filter(Boolean)
 
+const getUpgradeableTlMultiplier = (unit: ArmyUnit): number => {
+  if (!unit.isUpgradeable) {
+    return 1
+  }
+
+  const baseTl = Number.isFinite(unit.techLevel) ? unit.techLevel : 0
+  const currentTl = Number.isFinite(unit.currentTechLevel) ? unit.currentTechLevel : baseTl
+  const tlIncrease = Math.max(0, Math.floor(currentTl - baseTl))
+
+  return 2 ** tlIncrease
+}
+
 // Returns the unit's weighted TS regardless of tsExcluded (for special class totals)
 const getWeightedUnitTsRaw = (unit: ArmyUnit): number => {
   const mods = parseFeatureModifiers(unit.features)
   const sq = getSoldierQMods(unit)
   const eq = getEquipmentQMods(unit)
-  return Math.round(unit.ts * getUnitAmount(unit) * sq.tsMult * eq.tsMult * mods.tsMult)
+  const tlMultiplier = getUpgradeableTlMultiplier(unit)
+  return Math.round(unit.ts * tlMultiplier * getUnitAmount(unit) * sq.tsMult * eq.tsMult * mods.tsMult)
 }
 
 // Returns 0 for units with tsExcluded — they don't count toward army total TS
