@@ -1200,6 +1200,13 @@
                 </div>
               </div>
 
+              <div class="flex flex-wrap items-center gap-2 p-2">
+                <span class="rounded bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-200">Raise: {{ getCompanyRaiseTotal(company).toLocaleString() }}</span>
+                <span class="rounded bg-amber-100 dark:bg-amber-900/40 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-200">Maintain: {{ getCompanyMaintainTotal(company).toLocaleString() }}</span>
+                <span class="rounded bg-gray-200 dark:bg-gray-700 px-2 py-0.5 text-xs font-medium text-gray-700 dark:text-gray-200">Total TS: {{ getCompanyTotalTs(company).toLocaleString() }}</span>
+                <span class="rounded bg-purple-100 dark:bg-purple-900/40 px-2 py-0.5 text-xs font-medium text-purple-700 dark:text-purple-200">Total WT: {{ getCompanyWeightTotal(company).toLocaleString() }}</span>
+              </div>
+
               <div class="rounded border border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-gray-800">
                 <div class="mb-1 flex items-center gap-1 text-xs font-semibold text-gray-700 dark:text-gray-100">
                   <span>Logistics</span>
